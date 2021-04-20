@@ -1,2 +1,2 @@
 # CasperGIS
-My simle gis program based on NetBeans Platform
+My simple gis program based on NetBeans Platform
