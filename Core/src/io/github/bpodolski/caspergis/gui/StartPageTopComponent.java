@@ -10,6 +10,7 @@ import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.NbPreferences;
 
 /**
  * Top component which displays something.
@@ -41,7 +42,7 @@ public final class StartPageTopComponent extends TopComponent {
         initComponents();
         setName(Bundle.CTL_StartPageTopComponent());
         setToolTipText(Bundle.HINT_StartPageTopComponent());
-        putClientProperty(TopComponent.PROP_DRAGGING_DISABLED, Boolean.TRUE);
+//        putClientProperty(TopComponent.PROP_DRAGGING_DISABLED, Boolean.TRUE);
 
     }
 
@@ -75,6 +76,7 @@ public final class StartPageTopComponent extends TopComponent {
     @Override
     public void componentClosed() {
         // TODO add custom code on component closing
+        NbPreferences.forModule(StartPageTopComponent.class).put("isStartPage", "N");
     }
 
     void writeProperties(java.util.Properties p) {

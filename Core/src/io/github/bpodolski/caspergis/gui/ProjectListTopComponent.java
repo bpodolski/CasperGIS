@@ -25,7 +25,7 @@ import org.openide.util.NbBundle.Messages;
 )
 @TopComponent.Registration(mode = "explorer", openAtStartup = true)
 @ActionID(category = "Window", id = "io.github.bpodolski.caspergis.gui.ProjectListTopComponent")
-@ActionReference(path = "Menu/Window" /*, position = 333 */)
+@ActionReference(path = "Menu/Window" , position = 313 )
 @TopComponent.OpenActionRegistration(
         displayName = "#CTL_ProjectListAction",
         preferredID = "ProjectListTopComponent"

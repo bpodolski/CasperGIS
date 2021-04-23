@@ -2,7 +2,7 @@
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
     <folder name="Windows2">
-        <file name="WindowManager.wswmgr" url="gui/modes/windowmanager.wswmgr"/>
+        <file name="WindowManager.wswmgr" url="gui/modes/WindowManager.wswmgr"/>
         
         <folder name="Modes">
             <folder name="explorer">
