@@ -54,29 +54,58 @@ public final class StartPageTopComponent extends TopComponent {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        cbShowOnStart = new javax.swing.JCheckBox();
+
+        cbShowOnStart.setSelected(true);
+        org.openide.awt.Mnemonics.setLocalizedText(cbShowOnStart, org.openide.util.NbBundle.getMessage(StartPageTopComponent.class, "StartPageTopComponent.cbShowOnStart.text")); // NOI18N
+        cbShowOnStart.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbShowOnStartActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(cbShowOnStart)
+                .addContainerGap(305, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(272, Short.MAX_VALUE)
+                .addComponent(cbShowOnStart)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void cbShowOnStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbShowOnStartActionPerformed
+        if (this.cbShowOnStart.isSelected()) {
+            NbPreferences.forModule(StartPageTopComponent.class).put("isStartPage", "T");
+        } else {
+            NbPreferences.forModule(StartPageTopComponent.class).put("isStartPage", "N");
+        }
+    }//GEN-LAST:event_cbShowOnStartActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox cbShowOnStart;
     // End of variables declaration//GEN-END:variables
     @Override
     public void componentOpened() {
-        // TODO add custom code on component opening
+        this.cbShowOnStart.setSelected(NbPreferences.forModule(StartPageTopComponent.class).get("isStartPage", "").toUpperCase().equals("T"));
     }
 
     @Override
     public void componentClosed() {
-        // TODO add custom code on component closing
-        NbPreferences.forModule(StartPageTopComponent.class).put("isStartPage", "N");
+        if (this.cbShowOnStart.isSelected()) {
+            NbPreferences.forModule(StartPageTopComponent.class).put("isStartPage", "T");
+        } else {
+            NbPreferences.forModule(StartPageTopComponent.class).put("isStartPage", "N");
+        }
+
     }
 
     void writeProperties(java.util.Properties p) {
