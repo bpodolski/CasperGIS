@@ -6,6 +6,7 @@
 package io.github.bpodolski.caspergis;
 
 import io.github.bpodolski.caspergis.gui.StartPageTopComponent;
+import java.io.File;
 import org.openide.modules.ModuleInstall;
 import org.openide.util.NbPreferences;
 import org.openide.windows.WindowManager;
@@ -14,13 +15,21 @@ public class Installer extends ModuleInstall {
 
     @Override
     public void validate() {
+
+        //test - first run of CasperGIS app
+        if (NbPreferences.forModule(CasperInfo.class).get("FIRST_RUN", "").equals("")) {
+            CasperInfo.nbPreferences();
+            createWorkscape();
+            NbPreferences.forModule(CasperInfo.class).put("FIRST_RUN", "F");
+        }
+
         /*variable show pokazująca czy platforma jest gotowa do pracy - wszystkie 
         pliki projektów, systemowe, mienne są ustawione i sprawdzone
         aby móc korzystać z różnych narzędzi*/
         NbPreferences.forModule(CasperInfo.class).put("CG_READY", "F");
-        CasperInfo.nbPreferences();
+
     }
-    
+
     @Override
     public void restored() {
         this.setLAF();
@@ -53,5 +62,12 @@ public class Installer extends ModuleInstall {
 
             }
         });
+    }
+
+    private void createWorkscape() {
+        File fUserWorkspace = new File(NbPreferences.forModule(CasperInfo.class).get("CG_USER_WORKSCAPE", ""));
+        File fUserWorkspaceTmp = new File(NbPreferences.forModule(CasperInfo.class).get("CG_USER_TMPWORKSCAPE", ""));
+        fUserWorkspace.mkdir();
+        fUserWorkspaceTmp.mkdir();
     }
 }

@@ -28,24 +28,23 @@ public class CgUtils {
     public static void unZipFile(InputStream source, File fDir) throws IOException {
 
         try {
-            ZipInputStream zipIn = new ZipInputStream(source);
-
-            ZipEntry entry = zipIn.getNextEntry();
-            // iterates over entries in the zip file
-            while (entry != null) {
-                String filePath = fDir.getPath() + File.separator + entry.getName();
-                if (!entry.isDirectory()) {
-                    // if the entry is a file, extracts it
-                    extractFile(zipIn, filePath);
-                } else {
-                    // if the entry is a directory, make the directory
-                    File dir = new File(filePath);
-                    dir.mkdirs();
+            try (ZipInputStream zipIn = new ZipInputStream(source)) {
+                ZipEntry entry = zipIn.getNextEntry();
+                // iterates over entries in the zip file
+                while (entry != null) {
+                    String filePath = fDir.getPath() + File.separator + entry.getName();
+                    if (!entry.isDirectory()) {
+                        // if the entry is a file, extracts it
+                        extractFile(zipIn, filePath);
+                    } else {
+                        // if the entry is a directory, make the directory
+                        File dir = new File(filePath);
+                        dir.mkdirs();
+                    }
+                    zipIn.closeEntry();
+                    entry = zipIn.getNextEntry();
                 }
-                zipIn.closeEntry();
-                entry = zipIn.getNextEntry();
             }
-            zipIn.close();
         } catch (FileNotFoundException ex) {
             Exceptions.printStackTrace(ex);
         } catch (IOException ex) {
@@ -54,36 +53,36 @@ public class CgUtils {
     }
 
     private static void extractFile(ZipInputStream zipIn, String filePath) throws IOException {
-        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(filePath));
-        byte[] bytesIn = new byte[4096];
-        int read = 0;
-        while ((read = zipIn.read(bytesIn)) != -1) {
-            bos.write(bytesIn, 0, read);
+        try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(filePath))) {
+            byte[] bytesIn = new byte[4096];
+            int read = 0;
+            while ((read = zipIn.read(bytesIn)) != -1) {
+                bos.write(bytesIn, 0, read);
+            }
         }
-        bos.close();
     }
 
     public static boolean isWindows() {
 
-        return (OS.indexOf("win") >= 0);
+        return (OS.contains("win"));
 
     }
 
     public static boolean isMac() {
 
-        return (OS.indexOf("mac") >= 0);
+        return (OS.contains("mac"));
 
     }
 
     public static boolean isUnix() {
 
-        return (OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0);
+        return (OS.contains("nix") || OS.contains("nux") || OS.indexOf("aix") > 0);
 
     }
 
     public static boolean isSolaris() {
 
-        return (OS.indexOf("sunos") >= 0);
+        return (OS.contains("sunos"));
 
     }
 
