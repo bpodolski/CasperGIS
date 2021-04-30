@@ -5,9 +5,9 @@
  */
 package io.github.bpodolski.caspergis.utils;
 
-
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -16,12 +16,17 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import org.netbeans.api.io.IOProvider;
+import org.netbeans.api.io.InputOutput;
 import org.openide.util.Exceptions;
+
 /**
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
 public class CgUtils {
+
+    public static final InputOutput io = IOProvider.getDefault().getIO("Output", false);
 
     private static final String OS = System.getProperty("os.name").toLowerCase();
 
