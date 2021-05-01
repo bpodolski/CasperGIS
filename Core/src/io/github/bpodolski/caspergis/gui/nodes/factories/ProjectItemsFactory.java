@@ -7,6 +7,7 @@ package io.github.bpodolski.caspergis.gui.nodes.factories;
 
 import io.github.bpodolski.caspergis.beans.ProjectBean;
 import io.github.bpodolski.caspergis.beans.ProjectElementBean;
+import java.util.ArrayList;
 import java.util.List;
 import org.openide.nodes.ChildFactory;
 
@@ -18,7 +19,19 @@ public class ProjectItemsFactory extends ChildFactory<ProjectElementBean> {
 
     private ProjectBean projectBean;
 //    private MapGetterService mapGetterService;
-    private List<ProjectElementBean> projectElementList;
+//    private PrintoutGetterService printoutGetterService;
+    private List<ProjectElementBean> projectElementList = new ArrayList();
+
+    public ProjectItemsFactory(ProjectBean projectBean) {
+        this.projectBean = projectBean;
+//        this.mapGetterService = Lookup.getDefault().lookup(MapGetterService.class);
+//        this.printoutGetterService = Lookup.getDefault().lookup(PrintoutGetterService.class);
+
+        projectElementList.addAll(null) ;//= mapGetterService.getMapList(projectBean);
+        projectElementList.addAll(null) ;//= printoutGetterService.getPrintoutList(projectBean);
+
+
+    }
 
     @Override
     protected boolean createKeys(List<ProjectElementBean> list) {

@@ -5,11 +5,26 @@
  */
 package io.github.bpodolski.caspergis.gui;
 
+import io.github.bpodolski.caspergis.gui.nodes.factories.SystemFactory;
+import java.awt.BorderLayout;
+import java.beans.IntrospectionException;
+import java.beans.PropertyVetoException;
 import org.netbeans.api.settings.ConvertAsProperties;
+import org.openide.actions.CopyAction;
+import org.openide.actions.CutAction;
+import org.openide.actions.DeleteAction;
+import org.openide.actions.PasteAction;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
+import org.openide.explorer.ExplorerManager;
+import org.openide.explorer.ExplorerUtils;
+import org.openide.explorer.view.ListView;
+import org.openide.nodes.AbstractNode;
+import org.openide.nodes.Children;
+import org.openide.nodes.Node;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.actions.SystemAction;
 
 /**
  * Top component which displays something.
@@ -35,8 +50,12 @@ import org.openide.util.NbBundle.Messages;
     "CTL_ProjectListTopComponent=ProjectList Window",
     "HINT_ProjectListTopComponent=This is a ProjectList window"
 })
-public final class ProjectListTopComponent extends TopComponent {
+public final class ProjectListTopComponent extends TopComponent  implements ExplorerManager.Provider {
 
+        private final ExplorerManager mgr = new ExplorerManager();
+//    OutlineView view = new OutlineView();
+    ListView view = new ListView();
+    
     public ProjectListTopComponent() {
         initComponents();
         setName(Bundle.CTL_ProjectListTopComponent());
@@ -44,6 +63,10 @@ public final class ProjectListTopComponent extends TopComponent {
         putClientProperty(TopComponent.PROP_CLOSING_DISABLED, Boolean.TRUE);
         putClientProperty(TopComponent.PROP_MAXIMIZATION_DISABLED, Boolean.TRUE);
 
+         this.add(view, BorderLayout.CENTER);
+
+        initActions();
+        associateLookup(ExplorerUtils.createLookup(mgr, getActionMap()));
     }
 
     /**
@@ -54,16 +77,7 @@ public final class ProjectListTopComponent extends TopComponent {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
+        setLayout(new java.awt.BorderLayout());
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -88,5 +102,36 @@ public final class ProjectListTopComponent extends TopComponent {
     void readProperties(java.util.Properties p) {
         String version = p.getProperty("version");
         // TODO read your settings according to their version
+    }
+
+    @Override
+    public ExplorerManager getExplorerManager() {
+       return mgr; //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void initActions() {
+           CutAction cut = SystemAction.get(CutAction.class);
+        getActionMap().put(cut.getActionMapKey(), ExplorerUtils.actionCut(mgr));
+        
+        CopyAction copy = SystemAction.get(CopyAction.class);
+        getActionMap().put(copy.getActionMapKey(), ExplorerUtils.actionCopy(mgr));
+        
+        PasteAction paste = SystemAction.get(PasteAction.class);
+        getActionMap().put(paste.getActionMapKey(), ExplorerUtils.actionPaste(mgr));
+        
+        DeleteAction delete = SystemAction.get(DeleteAction.class);
+        getActionMap().put(delete.getActionMapKey(), ExplorerUtils.actionDelete(mgr, true));
+    }
+    
+        //po wyswietleniu się okna  - funkcja wywoływana przez instalator
+    public void initView() throws IntrospectionException, PropertyVetoException {
+        
+        Children sysChildren = Children.create(new SystemFactory(), true);
+        Node rootNode = new AbstractNode(sysChildren);
+        rootNode.setDisplayName("System");
+        mgr.setRootContext(rootNode);
+        rootNode.setPreferred(false);
+        view.setShowParentNode(false);
+        
     }
 }

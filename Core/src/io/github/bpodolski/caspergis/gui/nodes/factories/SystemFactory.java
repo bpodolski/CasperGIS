@@ -1,0 +1,55 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package io.github.bpodolski.caspergis.gui.nodes.factories;
+
+import io.github.bpodolski.caspergis.beans.ProjectBean;
+import io.github.bpodolski.caspergis.gui.nodes.ProjectNode;
+import io.github.bpodolski.caspergis.services.ProjectGetter;
+import java.beans.IntrospectionException;
+import java.util.ArrayList;
+import java.util.List;
+import org.openide.nodes.ChildFactory;
+import org.openide.nodes.Node;
+import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
+
+/**
+ *
+ * @author Bartłomiej Podolski <bartp@poczta.fm>
+ */
+public class SystemFactory extends ChildFactory<ProjectBean> {
+   
+    @Override
+    protected boolean createKeys(List<ProjectBean> toPopulate) {
+        ProjectGetter projectService  = Lookup.getDefault().lookup(ProjectGetter.class);
+        
+        List<ProjectBean> listP = new ArrayList();
+        ProjectBean systemProjectBean = projectService.getSystemProject();
+        listP.add(systemProjectBean);
+        
+        listP.addAll( projectService.getProjectList());    
+        
+        toPopulate.addAll(listP);
+        return true;
+    }
+
+    @Override
+    protected Node createNodeForKey(ProjectBean key) {
+        ProjectNode node = null;
+        try {
+            node = new ProjectNode(key, new ProjectItemsFactory( key ));
+        } catch (IntrospectionException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        return node;
+    }
+
+//    @Override
+//    protected boolean createKeys(List<ProjectBean> list) {
+//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//    }
+
+}

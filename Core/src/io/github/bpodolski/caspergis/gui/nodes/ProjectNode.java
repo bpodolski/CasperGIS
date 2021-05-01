@@ -20,7 +20,7 @@ public class ProjectNode  extends BeanNode<ProjectBean> {
     
     public ProjectNode(ProjectBean bean, ProjectItemsFactory factory) throws IntrospectionException {
         super(bean, Children.create(factory, true), Lookups.singleton(bean));
-////        setIconBaseWithExtension("pl/krameko/appgeo/icons/layer.png");
+////        setIconBaseWithExtension("io/github/bpodolski/caspergis/res/icons/layer.png");
     }
     
 }

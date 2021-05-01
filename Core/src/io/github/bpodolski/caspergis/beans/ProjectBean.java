@@ -16,8 +16,13 @@ public class ProjectBean {
     String name;
     String path;
     ArrayList<MapBean> listMapBean;
-    ArrayList<PrintOutBean> listPrintOutBean;
+    ArrayList<PrintoutBean> listPrintOutBean;
 
+    public ProjectBean(String name) {
+        this.name = name;
+    }
+
+    
     public String getName() {
         return name;
     }
@@ -42,11 +47,11 @@ public class ProjectBean {
         this.listMapBean = listMapBean;
     }
 
-    public ArrayList<PrintOutBean> getListPrintOutBean() {
+    public ArrayList<PrintoutBean> getListPrintOutBean() {
         return listPrintOutBean;
     }
 
-    public void setListPrintOutBean(ArrayList<PrintOutBean> listPrintOutBean) {
+    public void setListPrintOutBean(ArrayList<PrintoutBean> listPrintOutBean) {
         this.listPrintOutBean = listPrintOutBean;
     }
     
