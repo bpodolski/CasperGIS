@@ -6,6 +6,8 @@
 package io.github.bpodolski.caspergis;
 
 import java.io.File;
+import org.netbeans.api.io.IOProvider;
+import org.netbeans.api.io.InputOutput;
 import org.openide.util.NbPreferences;
 
 /**
@@ -14,6 +16,8 @@ import org.openide.util.NbPreferences;
  */
 public class CasperInfo {
 
+    public static final InputOutput io = IOProvider.getDefault().getIO("Output", false);
+    
     public static final String EXIF_TOOL_ZIP = "/pl/com/caspergis/externaltools/res/exiftool.zip";
     public static final String IMAGE_MAGICK_ZIP = "/pl/com/caspergis/externaltools/res/imagemagick.zip";
     public static final String GDAL_ZIP = "/pl/com/caspergis/externaltools/res/gdal.zip";

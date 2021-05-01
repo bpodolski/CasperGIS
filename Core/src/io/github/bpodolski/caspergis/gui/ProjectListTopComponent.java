@@ -56,7 +56,7 @@ public final class ProjectListTopComponent extends TopComponent  implements Expl
 //    OutlineView view = new OutlineView();
     ListView view = new ListView();
     
-    public ProjectListTopComponent() {
+    public ProjectListTopComponent() throws IntrospectionException, PropertyVetoException {
         initComponents();
         setName(Bundle.CTL_ProjectListTopComponent());
         setToolTipText(Bundle.HINT_ProjectListTopComponent());
@@ -67,6 +67,7 @@ public final class ProjectListTopComponent extends TopComponent  implements Expl
 
         initActions();
         associateLookup(ExplorerUtils.createLookup(mgr, getActionMap()));
+        initView();
     }
 
     /**
@@ -123,8 +124,7 @@ public final class ProjectListTopComponent extends TopComponent  implements Expl
         getActionMap().put(delete.getActionMapKey(), ExplorerUtils.actionDelete(mgr, true));
     }
     
-        //po wyswietleniu się okna  - funkcja wywoływana przez instalator
-    public void initView() throws IntrospectionException, PropertyVetoException {
+      public void initView() throws IntrospectionException, PropertyVetoException {
         
         Children sysChildren = Children.create(new SystemFactory(), true);
         Node rootNode = new AbstractNode(sysChildren);

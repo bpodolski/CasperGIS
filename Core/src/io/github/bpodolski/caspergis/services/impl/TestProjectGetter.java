@@ -15,11 +15,7 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-@ServiceProvider(
-service = ProjectGetter.class,
-path = "CasperServices",
-position = 10,
-supersedes={"io.github.bpodolski.caspergis.services.DefaultProjectGetter"})
+@ServiceProvider(service = ProjectGetter.class)
 public class TestProjectGetter extends ProjectGetter{
 
      @Override

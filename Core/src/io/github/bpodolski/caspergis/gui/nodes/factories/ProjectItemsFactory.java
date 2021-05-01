@@ -26,9 +26,9 @@ public class ProjectItemsFactory extends ChildFactory<ProjectElementBean> {
         this.projectBean = projectBean;
 //        this.mapGetterService = Lookup.getDefault().lookup(MapGetterService.class);
 //        this.printoutGetterService = Lookup.getDefault().lookup(PrintoutGetterService.class);
-
-        projectElementList.addAll(null) ;//= mapGetterService.getMapList(projectBean);
-        projectElementList.addAll(null) ;//= printoutGetterService.getPrintoutList(projectBean);
+////
+////        projectElementList.addAll(null) ;//= mapGetterService.getMapList(projectBean);
+////        projectElementList.addAll(null) ;//= printoutGetterService.getPrintoutList(projectBean);
 
 
     }
