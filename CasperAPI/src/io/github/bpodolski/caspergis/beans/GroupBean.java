@@ -16,39 +16,40 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package io.github.bpodolski.caspergis.beans;;
+package io.github.bpodolski.caspergis.beans;
 
-import io.github.bpodolski.caspergis.utils.BeanType;
 import java.util.ArrayList;
-//import org.geotools.map.MapContent;
 
 /**
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-public class MapBean  extends ProjectElementBean{
+public class GroupBean extends MapElementBean {
 
-    private ArrayList elementList = new ArrayList();
-
-    public MapBean(ArrayList bpaList) {
-       this(bpaList, "Layers");
+    private int transparency = 0;
+    private boolean visible = true;
+    
+    public GroupBean(ArrayList<MapElementBean> mapElementBeanList) {
+        this.setName("Grupa");
+        this.setDisplayName("Grupa");
+        this.setBeanType(BeanType.GROUP);
+        this.getMapElementBeans().addAll(mapElementBeanList);
     }
     
-    public MapBean(ArrayList bpaList, String name) {
-        this.setName(name);
-        this.setDisplayName(name);
-        this.elementList = bpaList;
-        this.setBeanType(BeanType.MAP);
+    public int getTransparency() {
+        return transparency;
     }
     
-    public ArrayList getElementList() {
-        return elementList;
+    public void setTransparency(int transparency) {
+        this.transparency = transparency;
     }
-
-    public void setElementList(ArrayList elementList) {
-        this.elementList = elementList;
+    
+    public boolean isVisible() {
+        return visible;
     }
-
-   
+    
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
     
 }

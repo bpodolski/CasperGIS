@@ -9,6 +9,6 @@ package io.github.bpodolski.caspergis.beans;
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-public class PrintOutBean   extends ProjectElementBean{
-    
+public class PrintoutBean   extends ProjectElementBean{
+           ////        setIconBaseWithExtension("io/github/bpodolski/caspergis/res/icons/layer.png");
 }

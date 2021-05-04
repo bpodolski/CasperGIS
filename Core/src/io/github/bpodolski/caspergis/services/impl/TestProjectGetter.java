@@ -26,7 +26,7 @@ public class TestProjectGetter extends ProjectGetter{
 
         @Override
         public List<ProjectBean> getProjectList() {
-            ArrayList<ProjectBean> projectList = new ArrayList();
+            ArrayList<ProjectBean> projectList = new ArrayList<ProjectBean>();
             for (int i=1;i<4;i++){projectList.add(new ProjectBean(i+".TestProject"));}
             return projectList;
         }

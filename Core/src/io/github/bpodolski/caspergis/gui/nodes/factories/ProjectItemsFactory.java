@@ -20,7 +20,7 @@ public class ProjectItemsFactory extends ChildFactory<ProjectElementBean> {
     private ProjectBean projectBean;
 //    private MapGetterService mapGetterService;
 //    private PrintoutGetterService printoutGetterService;
-    private List<ProjectElementBean> projectElementList = new ArrayList();
+    private List<ProjectElementBean> projectElementList = new ArrayList<ProjectElementBean>();
 
     public ProjectItemsFactory(ProjectBean projectBean) {
         this.projectBean = projectBean;

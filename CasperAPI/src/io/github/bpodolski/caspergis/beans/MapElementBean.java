@@ -18,7 +18,6 @@
  */
 package io.github.bpodolski.caspergis.beans;
 
-import io.github.bpodolski.caspergis.utils.BeanType;
 import io.github.bpodolski.caspergis.utils.LayerFileFilter;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -27,23 +26,19 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
 public class MapElementBean implements Transferable {
 
-   
-    private List<MapElementBean> mapElementBeans;  
+    private List<MapElementBean> mapElementBeans;
     public static final DataFlavor MAPELEMENT_FLAVOR = new DataFlavor(MapElementBean.class, "MapElementBean");
     public static final LayerFileFilter LAYER_FILEFILTER = new LayerFileFilter();
-
 
     private BeanType beanType = BeanType.MAP_ELEMENT;
     private String name = "Map Element";
     private String displayName = "Map Element";
-
 
     public BeanType getBeanType() {
         return beanType;
@@ -95,7 +90,5 @@ public class MapElementBean implements Transferable {
         }
         return mapElementBeans;
     }
-
-   
 
 }

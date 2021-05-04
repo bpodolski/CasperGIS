@@ -20,7 +20,6 @@ package io.github.bpodolski.caspergis.beans;
 
 //import org.geotools.map.Layer;
 
-import io.github.bpodolski.caspergis.utils.BeanType;
 
 //import org.geotools.styling.Style;
 

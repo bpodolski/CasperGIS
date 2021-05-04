@@ -39,7 +39,7 @@ public abstract class ProjectGetter {
 
         @Override
         public List<ProjectBean> getProjectList() {
-            ArrayList<ProjectBean> projectList = new ArrayList();
+            ArrayList<ProjectBean> projectList = new <ProjectBean>ArrayList();
             for (int i=1;i<4;i++){projectList.add(new ProjectBean(i+".TestProject"));}
             return projectList;
         }

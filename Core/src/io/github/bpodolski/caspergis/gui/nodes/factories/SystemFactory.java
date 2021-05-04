@@ -26,7 +26,7 @@ public class SystemFactory extends ChildFactory<ProjectBean> {
 
     @Override
     protected boolean createKeys(List<ProjectBean> toPopulate) {
-        List<ProjectBean> listP = new ArrayList();
+        List<ProjectBean> listP = new ArrayList<ProjectBean>();
         ProjectBean systemProjectBean = null;
 
         ProjectGetter projectService = Lookup.getDefault().lookup(ProjectGetter.class);

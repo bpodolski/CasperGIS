@@ -6,7 +6,6 @@
 package io.github.bpodolski.caspergis.beans;
 
 import static io.github.bpodolski.caspergis.beans.MapElementBean.MAPELEMENT_FLAVOR;
-import io.github.bpodolski.caspergis.utils.BeanType;
 import io.github.bpodolski.caspergis.utils.LayerFileFilter;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
