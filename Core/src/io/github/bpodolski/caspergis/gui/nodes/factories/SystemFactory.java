@@ -5,13 +5,11 @@
  */
 package io.github.bpodolski.caspergis.gui.nodes.factories;
 
-import io.github.bpodolski.caspergis.CasperInfo;
 import io.github.bpodolski.caspergis.beans.ProjectBean;
 import io.github.bpodolski.caspergis.gui.nodes.ProjectNode;
 import io.github.bpodolski.caspergis.services.ProjectGetter;
 import java.beans.IntrospectionException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import org.openide.nodes.ChildFactory;
 import org.openide.nodes.Node;
@@ -26,7 +24,7 @@ public class SystemFactory extends ChildFactory<ProjectBean> {
 
     @Override
     protected boolean createKeys(List<ProjectBean> toPopulate) {
-        List<ProjectBean> listP = new ArrayList<ProjectBean>();
+        List<ProjectBean> listP = new ArrayList<>();
         ProjectBean systemProjectBean = null;
 
         ProjectGetter projectService = Lookup.getDefault().lookup(ProjectGetter.class);
@@ -51,8 +49,4 @@ public class SystemFactory extends ChildFactory<ProjectBean> {
         return node;
     }
 
-//    @Override
-//    protected boolean createKeys(List<ProjectBean> list) {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//    }
 }

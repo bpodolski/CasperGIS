@@ -5,6 +5,7 @@
  */
 package io.github.bpodolski.caspergis;
 
+import io.github.bpodolski.caspergis.api.CasperInfo;
 import io.github.bpodolski.caspergis.gui.StartPageTopComponent;
 import java.io.File;
 import org.openide.modules.ModuleInstall;

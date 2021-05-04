@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package io.github.bpodolski.caspergis;
+package io.github.bpodolski.caspergis.api;
 
 import java.io.File;
 import org.netbeans.api.io.IOProvider;
@@ -33,7 +33,7 @@ public class CasperInfo {
     public static String appGdalTranslate = System.getProperty("CasperGIS.gdal.gdal_translate");
     public static String appOgr2ogr = System.getProperty("CasperGIS.gdal.ogr2ogr");
 
-    static void nbPreferences() {
+    public static void nbPreferences() {
 // katalog instalacji aplikacji 
         NbPreferences.forModule(CasperInfo.class).put("CGAPP_HOME", System.getProperty("netbeans.home"));
 // katalog podręczny aplikacji dla użytkownika 

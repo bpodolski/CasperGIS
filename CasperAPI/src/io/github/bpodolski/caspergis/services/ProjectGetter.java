@@ -33,14 +33,14 @@ public abstract class ProjectGetter {
 
         @Override
         public ProjectBean getSystemProject() {
-            ProjectBean systemProject = new ProjectBean("SystemTestProject");
+            ProjectBean systemProject = new ProjectBean("SystemTestProject - DefImpl");
             return systemProject;
         }
 
         @Override
         public List<ProjectBean> getProjectList() {
             ArrayList<ProjectBean> projectList = new <ProjectBean>ArrayList();
-            for (int i=1;i<4;i++){projectList.add(new ProjectBean(i+".TestProject"));}
+            for (int i=1;i<4;i++){projectList.add(new ProjectBean(i+".TestProject - DefImpl"));}
             return projectList;
         }
 
