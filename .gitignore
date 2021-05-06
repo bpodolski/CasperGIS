@@ -4,3 +4,9 @@
 /Project/build/
 /System/nbproject/private/
 /Project/nbproject/private/
+/EXT-exiftool/build/
+/EXT-exiftool/nbproject/private/
+/EXT-gdal/nbproject/private/
+/EXT-imagemagick/nbproject/private/
+/EXT-gdal/build/
+/EXT-imagemagick/build/

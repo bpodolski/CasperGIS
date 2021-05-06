@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: true
+OpenIDE-Module: io.github.bpodolski.caspergis.lib.sqlite
+OpenIDE-Module-Localizing-Bundle: io/github/bpodolski/caspergis/lib/sqlite/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+

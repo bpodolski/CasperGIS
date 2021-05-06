@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: true
+OpenIDE-Module: io.github.bpodolski.caspergis.ext.exiftool
+OpenIDE-Module-Install: io/github/bpodolski/caspergis/ext/exiftool/Installer.class
+OpenIDE-Module-Localizing-Bundle: io/github/bpodolski/caspergis/ext/exiftool/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+

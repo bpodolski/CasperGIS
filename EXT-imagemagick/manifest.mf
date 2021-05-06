@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: true
+OpenIDE-Module: io.github.bpodolski.caspergis.ext.imagemagick
+OpenIDE-Module-Install: io/github/bpodolski/caspergis/ext/imagemagick/Installer.class
+OpenIDE-Module-Localizing-Bundle: io/github/bpodolski/caspergis/ext/imagemagick/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+

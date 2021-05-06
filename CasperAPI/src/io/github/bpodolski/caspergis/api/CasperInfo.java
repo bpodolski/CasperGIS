@@ -16,40 +16,89 @@ import org.openide.util.NbPreferences;
  */
 public class CasperInfo {
 
+    /**
+     * Helper to get Otput
+     */
     public static final InputOutput io = IOProvider.getDefault().getIO("Output", false);
     
-    public static final String EXIF_TOOL_ZIP = "/pl/com/caspergis/externaltools/res/exiftool.zip";
-    public static final String IMAGE_MAGICK_ZIP = "/pl/com/caspergis/externaltools/res/imagemagick.zip";
-    public static final String GDAL_ZIP = "/pl/com/caspergis/externaltools/res/gdal.zip";
+    /**
+     *Name of NbProperties - Path to NB Platform Appp instal directory
+     */
+    public static final String CGAPP_HOME = "CGAPP_HOME";
 
-    public static String userWorkspace = System.getProperty("netbeans.user") + File.separatorChar + "UserWorkspace"; // katalog podręczny aplikacji dla użytkownika
-    public static String userWorkspaceTmp = userWorkspace + File.separatorChar + "tmp"; // katalog podręczny aplikacji dla użytkownika
+    /**
+     *Name of NbProperties - Path to user directory
+     */
+    public static final String CG_USER = "CG_USER";
 
-    public static String DB_SYSTEM_PATH = userWorkspace + File.separatorChar + "CasperSystem.cgpr"; // katalog podręczny aplikacji dla użytkownika
-    public static String DB_DEFAULT_PROJECT_PATH = userWorkspace + File.separatorChar + "DefaultCasperProject.cgpr";
+    /**
+     *Name of NbProperties - Path to user directory
+     */
+    public static final String CG_USER_HOME = "CG_USER_HOME";
 
-    public static String appExiftool = System.getProperty("CasperGIS.exiftool.exiftool");
-    public static String appConvert = System.getProperty("CasperGIS.imagemagick.convert");
-    public static String appGdalTranslate = System.getProperty("CasperGIS.gdal.gdal_translate");
-    public static String appOgr2ogr = System.getProperty("CasperGIS.gdal.ogr2ogr");
+    /**
+     *Name of NbProperties - Path to user workspace directory
+     */
+    public static final String CG_USER_WORKSCAPE = "CG_USER_WORKSCAPE";
 
+    /**
+     *Name of NbProperties - Path to user temporary directory
+     */
+    public static final String CG_USER_TMPWORKSCAPE = "CG_USER_TMPWORKSCAPE";
+
+    /**
+     *Name of NbProperties - Path to system database
+     */
+    public static final String DB_SYSTEM_PATH = "DB_SYSTEM_PATH";
+
+    /**
+     *Name of NbProperties - Path to default project
+     */
+    public static final String DB_DEFAULT_PROJECT_PATH = "DB_DEFAULT_PROJECT_PATH";
+
+    /**
+     *Name of NbProperties - - Path for EXIFTOOL tool - exiftool
+     * Tool need to manipulate EXIF tags of foto, usefull for geotaging
+     */
+    public static final String EXT_TOOL_EXIFTOOL = "EXT_TOOL_EXIFTOOL";
+
+    /**
+     *Name of NbProperties - - Path for IMAGEMAGICK tool - convert
+     * Tool for images manipulation
+     */
+    public static final String EXT_TOOL_IMGCONVERT = "EXT_TOOL_IMGCONVERT";
+
+    /**
+     *Name of NbProperties - Path for GDAL tool - ogr2ogr
+     *A command line tool that converts one data source to another Ogr data source.
+     */
+    public static final String EXT_TOOL_GDALOGR2OGR = "EXT_TOOL_GDALOGR2OGR";
+
+    /**
+     *Name of NbProperties - Path for GDAL tool - gdal_translate 
+     * The gdal_translate utility can be used to convert raster data between different formats,
+     * and make some others operations. 
+     */
+    public static final String EXT_TOOL_GDALTRANSLATE = "EXT_TOOL_GDALTRANSLATE";
+
+    /**
+     * Put NbPreferences
+     */
     public static void nbPreferences() {
-// katalog instalacji aplikacji 
-        NbPreferences.forModule(CasperInfo.class).put("CGAPP_HOME", System.getProperty("netbeans.home"));
-// katalog podręczny aplikacji dla użytkownika 
-        NbPreferences.forModule(CasperInfo.class).put("CG_USER", System.getProperty("netbeans.user"));
-// systemowy katalog użytkownika
-        NbPreferences.forModule(CasperInfo.class).put("CG_USER_HOME", System.getProperty("user.home"));
-// katalog aplikacji dla użytkownika
-        NbPreferences.forModule(CasperInfo.class).put("CG_USER_WORKSCAPE", System.getProperty("netbeans.user") + File.separatorChar + "UserWorkspace");
-// katalog podręczny aplikacji dla użytkownika
-        NbPreferences.forModule(CasperInfo.class).put("CG_USER_TMPWORKSCAPE", System.getProperty("netbeans.user") + File.separatorChar + "UserWorkspace" + File.separatorChar + "tmp");
+ 
+        NbPreferences.forModule(CasperInfo.class).put(CasperInfo.CGAPP_HOME, System.getProperty("netbeans.home"));
 
+        NbPreferences.forModule(CasperInfo.class).put(CasperInfo.CG_USER, System.getProperty("netbeans.user"));
 
-// Path to system DB config
-        NbPreferences.forModule(CasperInfo.class).put("DB_SYSTEM_PATH", NbPreferences.forModule(CasperInfo.class).get("CG_USER_WORKSCAPE","") + File.separatorChar + "CasperSystem.cgpr");
-// Path to default project
-        NbPreferences.forModule(CasperInfo.class).put("DB_DEFAULT_PROJECT_PATH", NbPreferences.forModule(CasperInfo.class).get("CG_USER_WORKSCAPE","") + File.separatorChar + "DefaultCasperProject.cgpr");
+        NbPreferences.forModule(CasperInfo.class).put(CasperInfo.CG_USER_HOME, System.getProperty("user.home"));
+
+        NbPreferences.forModule(CasperInfo.class).put(CasperInfo.CG_USER_WORKSCAPE, System.getProperty("netbeans.user") + File.separatorChar + "UserWorkspace");
+
+        NbPreferences.forModule(CasperInfo.class).put(CasperInfo.CG_USER_TMPWORKSCAPE, System.getProperty("netbeans.user") + File.separatorChar + "UserWorkspace" + File.separatorChar + "tmp");
+
+        NbPreferences.forModule(CasperInfo.class).put(CasperInfo.DB_SYSTEM_PATH, NbPreferences.forModule(CasperInfo.class).get("CG_USER_WORKSCAPE", "") + File.separatorChar + "CasperSystem.cgpr");
+
+        NbPreferences.forModule(CasperInfo.class).put(CasperInfo.DB_DEFAULT_PROJECT_PATH, NbPreferences.forModule(CasperInfo.class).get("CG_USER_WORKSCAPE", "") + File.separatorChar + "DefaultCasperProject.cgpr");
     }
 
 }
