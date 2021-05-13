@@ -5,10 +5,28 @@
  */
 package io.github.bpodolski.caspergis.beans;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-public class PrintoutBean   extends ProjectElementBean{
-           ////        setIconBaseWithExtension("io/github/bpodolski/caspergis/res/icons/layer.png");
+public class PrintoutBean extends ProjectElementBean{
+         
+   private ArrayList<ProjectElementBean> projectElementBeans;
+
+
+    public PrintoutBean(ArrayList<ProjectElementBean> projectElementBeans) {
+       this(projectElementBeans, "Printouts");
+       this.setBeanType(BeanType.PRINTOUT);
+    }
+    
+    public PrintoutBean(ArrayList<ProjectElementBean> projectElementBeans, String name) {
+        this.setName(name);
+        this.setDisplayName(name);
+        this.projectElementBeans = projectElementBeans;
+        this.setBeanType(BeanType.PRINTOUT);
+    }
+
+    
 }

@@ -25,10 +25,19 @@ import org.openide.util.Exceptions;
  */
 public class CgUtils {
 
+    /**
+     * Helper to get Output
+     */
     public static final InputOutput io = IOProvider.getDefault().getIO("Output", false);
 
     private static final String OS = System.getProperty("os.name").toLowerCase();
 
+    /**
+     * Unpacking the zip archive contained in the package into a directory 
+     * @param source InputStream with archive from package
+     * @param fDir destinaton directory
+     * @throws IOException
+     */
     public static void unZipFile(InputStream source, File fDir) throws IOException {
 
         try {
@@ -66,30 +75,52 @@ public class CgUtils {
         }
     }
 
+    /**
+     * Test system
+     * @return true if Windows
+     */
     public static boolean isWindows() {
 
         return (OS.contains("win"));
 
     }
 
+    /**
+     * Test system
+     * @return true if Mac
+     */
     public static boolean isMac() {
 
         return (OS.contains("mac"));
 
     }
 
+    /**
+     * Test system
+     * @return true if Linux/Unix
+     */
     public static boolean isUnix() {
 
         return (OS.contains("nix") || OS.contains("nux") || OS.indexOf("aix") > 0);
 
     }
 
+    /**
+     * Test system
+     * @return true if Solaris
+     */
     public static boolean isSolaris() {
 
         return (OS.contains("sunos"));
 
     }
 
+    /**
+     * Copying files via stream 
+     * @param source source file
+     * @param dest destination file
+     * @throws IOException
+     */
     public static void copyFileUsingStream(File source, File dest) throws IOException {
         InputStream is = null;
         OutputStream os = null;

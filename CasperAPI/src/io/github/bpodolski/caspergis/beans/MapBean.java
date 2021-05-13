@@ -27,27 +27,26 @@ import java.util.ArrayList;
  */
 public class MapBean  extends ProjectElementBean{
 
-    private ArrayList elementList = new ArrayList();
+    private ArrayList<MapElementBean> mapElementList = new ArrayList();
 
-    public MapBean(ArrayList bpaList) {
-       this(bpaList, "Layers");
+    public MapBean(ArrayList<MapElementBean> mapElementList) {
+       this(mapElementList, "Layers");
     }
     
-    public MapBean(ArrayList bpaList, String name) {
+    public MapBean(ArrayList<MapElementBean> mapElementList, String name) {
         this.setName(name);
         this.setDisplayName(name);
-        this.elementList = bpaList;
+        this.mapElementList = mapElementList;
         this.setBeanType(BeanType.MAP);
     }
-    
-    public ArrayList getElementList() {
-        return elementList;
+
+    public ArrayList<MapElementBean> getMapElementList() {
+        return mapElementList;
     }
 
-    public void setElementList(ArrayList elementList) {
-        this.elementList = elementList;
+    public void setMapElementList(ArrayList<MapElementBean> mapElementList) {
+        this.mapElementList = mapElementList;
     }
-
-   
     
+  
 }

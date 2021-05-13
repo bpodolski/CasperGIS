@@ -19,7 +19,7 @@ public class CasperInfo {
     /**
      * Helper to get Otput
      */
-    public static final InputOutput io = IOProvider.getDefault().getIO("Output", false);
+    public static final InputOutput io = IOProvider.getDefault().getIO("Output", true);
     
     /**
      *Name of NbProperties - Path to NB Platform Appp instal directory

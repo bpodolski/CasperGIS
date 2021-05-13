@@ -18,7 +18,9 @@ import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.ExplorerUtils;
+import org.openide.explorer.view.ListTableView;
 import org.openide.explorer.view.ListView;
+import org.openide.explorer.view.OutlineView;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
@@ -40,7 +42,7 @@ import org.openide.util.actions.SystemAction;
 )
 @TopComponent.Registration(mode = "explorer", openAtStartup = true)
 @ActionID(category = "Window", id = "io.github.bpodolski.caspergis.gui.ProjectListTopComponent")
-@ActionReference(path = "Menu/Window" , position = 313 )
+@ActionReference(path = "Menu/Window", position = 313)
 @TopComponent.OpenActionRegistration(
         displayName = "#CTL_ProjectListAction",
         preferredID = "ProjectListTopComponent"
@@ -50,20 +52,17 @@ import org.openide.util.actions.SystemAction;
     "CTL_ProjectListTopComponent=ProjectList Window",
     "HINT_ProjectListTopComponent=This is a ProjectList window"
 })
-public final class ProjectListTopComponent extends TopComponent  implements ExplorerManager.Provider {
+public final class ProjectListTopComponent extends TopComponent implements ExplorerManager.Provider {
 
-        private final ExplorerManager mgr = new ExplorerManager();
-//    OutlineView view = new OutlineView();
-    ListView view = new ListView();
-    
+    private final ExplorerManager mgr = new ExplorerManager();
+
+
     public ProjectListTopComponent() throws IntrospectionException, PropertyVetoException {
         initComponents();
         setName(Bundle.CTL_ProjectListTopComponent());
         setToolTipText(Bundle.HINT_ProjectListTopComponent());
         putClientProperty(TopComponent.PROP_CLOSING_DISABLED, Boolean.TRUE);
         putClientProperty(TopComponent.PROP_MAXIMIZATION_DISABLED, Boolean.TRUE);
-
-         this.add(view, BorderLayout.CENTER);
 
         initActions();
         associateLookup(ExplorerUtils.createLookup(mgr, getActionMap()));
@@ -78,10 +77,28 @@ public final class ProjectListTopComponent extends TopComponent  implements Expl
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        beanTreeView1 = new org.openide.explorer.view.BeanTreeView();
+        nodeRenderer1 = new org.openide.explorer.view.NodeRenderer();
+        listView1 = new org.openide.explorer.view.ListView();
+        pnl = new javax.swing.JPanel();
+        view = new org.openide.explorer.view.BeanTreeView();
+
         setLayout(new java.awt.BorderLayout());
+
+        pnl.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        pnl.setPreferredSize(new java.awt.Dimension(10, 26));
+        add(pnl, java.awt.BorderLayout.SOUTH);
+
+        view.setRootVisible(false);
+        add(view, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private org.openide.explorer.view.BeanTreeView beanTreeView1;
+    private org.openide.explorer.view.ListView listView1;
+    private org.openide.explorer.view.NodeRenderer nodeRenderer1;
+    private javax.swing.JPanel pnl;
+    private org.openide.explorer.view.BeanTreeView view;
     // End of variables declaration//GEN-END:variables
     @Override
     public void componentOpened() {
@@ -107,31 +124,33 @@ public final class ProjectListTopComponent extends TopComponent  implements Expl
 
     @Override
     public ExplorerManager getExplorerManager() {
-       return mgr; //To change body of generated methods, choose Tools | Templates.
+        return mgr; //To change body of generated methods, choose Tools | Templates.
     }
 
     private void initActions() {
-           CutAction cut = SystemAction.get(CutAction.class);
+        CutAction cut = SystemAction.get(CutAction.class);
         getActionMap().put(cut.getActionMapKey(), ExplorerUtils.actionCut(mgr));
-        
+
         CopyAction copy = SystemAction.get(CopyAction.class);
         getActionMap().put(copy.getActionMapKey(), ExplorerUtils.actionCopy(mgr));
-        
+
         PasteAction paste = SystemAction.get(PasteAction.class);
         getActionMap().put(paste.getActionMapKey(), ExplorerUtils.actionPaste(mgr));
-        
+
         DeleteAction delete = SystemAction.get(DeleteAction.class);
         getActionMap().put(delete.getActionMapKey(), ExplorerUtils.actionDelete(mgr, true));
     }
-    
-      public void initView() throws IntrospectionException, PropertyVetoException {
+
+    public void initView() throws IntrospectionException, PropertyVetoException {
+
+        this.add(view, BorderLayout.CENTER);
         
         Children sysChildren = Children.create(new SystemFactory(), true);
         Node rootNode = new AbstractNode(sysChildren);
         rootNode.setDisplayName("System");
         mgr.setRootContext(rootNode);
         rootNode.setPreferred(false);
-        view.setShowParentNode(false);
-        
+
+
     }
 }

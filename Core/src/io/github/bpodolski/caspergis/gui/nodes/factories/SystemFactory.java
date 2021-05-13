@@ -42,7 +42,7 @@ public class SystemFactory extends ChildFactory<ProjectBean> {
     protected Node createNodeForKey(ProjectBean key) {
         ProjectNode node = null;
         try {
-            node = new ProjectNode(key, new ProjectItemsFactory(key));
+            node = new ProjectNode(key);
         } catch (IntrospectionException ex) {
             Exceptions.printStackTrace(ex);
         }

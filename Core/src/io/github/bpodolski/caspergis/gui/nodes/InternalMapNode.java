@@ -5,7 +5,7 @@
  */
 package io.github.bpodolski.caspergis.gui.nodes;
 
-import io.github.bpodolski.caspergis.beans.PrintoutBean;
+import io.github.bpodolski.caspergis.beans.MapBean;
 import java.beans.IntrospectionException;
 import javax.swing.Action;
 import org.openide.nodes.BeanNode;
@@ -14,11 +14,12 @@ import org.openide.nodes.BeanNode;
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-public class PrintoutNode extends BeanNode<PrintoutBean> {
+public class InternalMapNode extends BeanNode<MapBean> {
 
-    public PrintoutNode(PrintoutBean bean) throws IntrospectionException {
+    public InternalMapNode(MapBean bean) throws IntrospectionException {
         super(bean);
-        setIconBaseWithExtension("io/github/bpodolski/caspergis/res/printout.png");
+        setIconBaseWithExtension("io/github/bpodolski/caspergis/res/map.png");
+
     }
 
     @Override
