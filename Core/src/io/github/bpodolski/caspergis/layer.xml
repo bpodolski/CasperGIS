@@ -1,6 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
+    <folder name="Menu">
+        <folder name="Edit">
+            <file name="org-netbeans-modules-search-FindInFilesAction-separatorBefore.instance_hidden"/>
+            <file name="org-netbeans-modules-search-FindInFilesAction.shadow_hidden"/>
+            <file name="org-netbeans-modules-search-ReplaceInFilesAction.shadow_hidden"/>
+            <file name="org-openide-actions-ReplaceAction.shadow_hidden"/>
+        </folder>
+        <folder name="File">
+            <file name="Separator3.instance_hidden"/>
+            <file name="org-netbeans-modules-print-action-PageSetupAction.shadow_hidden"/>
+            <file name="org-netbeans-modules-print-action-PrintAction.shadow_hidden"/>
+            <file name="org-openide-actions-SaveAllAction.shadow_hidden"/>
+            <file name="org-openide-actions-SaveAsAction.shadow_hidden"/>
+        </folder>
+        <file name="GoTo_hidden"/>
+        <folder name="View">
+            <file name="Separator1.instance_hidden"/>
+            <file name="org-netbeans-core-multiview-EditorsAction.instance_hidden"/>
+            <file name="org-netbeans-core-multiview-SplitAction.instance_hidden"/>
+        </folder>
+        <folder name="Window">
+            <file name="Separator3.instance_hidden"/>
+            <file name="Tools_hidden"/>
+            <file name="Web_hidden"/>
+        </folder>
+    </folder>
+    <folder name="OptionsDialog">
+        <file name="Advanced.instance_hidden"/>
+        <file name="Advanced_hidden"/>
+        <file name="Appearance.instance_hidden"/>
+        <file name="Appearance_hidden"/>
+        <file name="General.instance_hidden"/>
+        <file name="Keymaps.instance_hidden"/>
+        <file name="Keywords_hidden"/>
+    </folder>
+    <folder name="OptionsExport">
+        <file name="Advanced_hidden"/>
+        <file name="General_hidden"/>
+        <file name="Keymaps_hidden"/>
+        <file name="Keyring_hidden"/>
+        <file name="Templates_hidden"/>
+    </folder>
+    <file name="QuickSearch_hidden"/>
     <folder name="Windows2">
         <file name="WindowManager.wswmgr" url="gui/modes/WindowManager.wswmgr"/>
         

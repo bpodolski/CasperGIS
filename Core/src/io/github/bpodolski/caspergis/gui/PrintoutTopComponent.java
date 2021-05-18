@@ -5,6 +5,9 @@
  */
 package io.github.bpodolski.caspergis.gui;
 
+import io.github.bpodolski.caspergis.beans.PrintoutBean;
+import org.openide.util.lookup.Lookups;
+
 import org.openide.windows.TopComponent;
 
 /**
@@ -13,11 +16,21 @@ import org.openide.windows.TopComponent;
  */
 public class PrintoutTopComponent extends TopComponent {
 
+    PrintoutBean printoutBean;
+
     /**
      * Creates new form PrintoutTopComponent
      */
     public PrintoutTopComponent() {
         initComponents();
+    }
+
+    public PrintoutTopComponent(PrintoutBean printoutBean) {
+        this.printoutBean = printoutBean;
+        setName(printoutBean.getName());
+        setToolTipText(printoutBean.getName());
+        associateLookup(Lookups.singleton(printoutBean));
+        this.printoutBean = printoutBean;
     }
 
     /**
