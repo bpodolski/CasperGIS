@@ -36,7 +36,7 @@ public class LayerBean extends MapElementBean {
 //    Layer layer;
 
     public LayerBean(String name) {
-        this.setName(name);
+        super(null, name);
         this.setBeanType(BeanType.LAYER);        
     }
 

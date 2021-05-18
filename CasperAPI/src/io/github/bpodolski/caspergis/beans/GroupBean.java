@@ -29,11 +29,9 @@ public class GroupBean extends MapElementBean {
     private int transparency = 0;
     private boolean visible = true;
     
-    public GroupBean(ArrayList<MapElementBean> mapElementBeanList) {
-        this.setName("Grupa");
-        this.setDisplayName("Grupa");
-        this.setBeanType(BeanType.GROUP);
-        this.getMapElementBeans().addAll(mapElementBeanList);
+       public GroupBean(String name) {
+        super(null, name);
+        this.setBeanType(BeanType.GROUP);        
     }
     
     public int getTransparency() {

@@ -40,6 +40,15 @@ public class MapElementBean implements Transferable {
     private String name = "Map Element";
     private String displayName = "Map Element";
 
+    public MapElementBean(List<MapElementBean> mapElementBeans, String name) {
+        this.mapElementBeans = mapElementBeans;
+        this.name = name;
+    }
+    
+    
+    
+    
+
     public BeanType getBeanType() {
         return beanType;
     }
