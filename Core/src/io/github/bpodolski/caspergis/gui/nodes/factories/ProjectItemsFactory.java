@@ -40,11 +40,10 @@ public class ProjectItemsFactory extends ChildFactory<ProjectElementBean> {
         this.projectBean = projectBean;
         this.mapGetterService = Lookup.getDefault().lookup(MapGetter.class);
         this.printoutGetterService = Lookup.getDefault().lookup(PrintoutGetter.class);
-////
-        projectElementList.addAll(mapGetterService.getMapList(projectBean));
-        projectElementList.addAll(printoutGetterService.getPrintoutList(projectBean));
 
-        CasperInfo.io.getOut().println("ProjectItemsFactory; projectElementList.size = " + projectElementList.size());
+        projectElementList.addAll(mapGetterService.getMapList(projectBean));
+//        projectElementList.addAll(printoutGetterService.getPrintoutList(projectBean));
+
 
     }
 

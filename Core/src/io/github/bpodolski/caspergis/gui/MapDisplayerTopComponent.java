@@ -6,6 +6,12 @@
 package io.github.bpodolski.caspergis.gui;
 
 import io.github.bpodolski.caspergis.beans.MapBean;
+import io.github.bpodolski.caspergis.gui.nodes.InternalMapNode;
+import java.beans.IntrospectionException;
+import org.openide.explorer.ExplorerManager;
+import org.openide.nodes.AbstractNode;
+import org.openide.nodes.Node;
+import org.openide.util.Exceptions;
 import org.openide.util.lookup.Lookups;
 import org.openide.windows.TopComponent;
 
@@ -13,22 +19,21 @@ import org.openide.windows.TopComponent;
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-public class MapDisplayerTopComponent extends TopComponent {
+public class MapDisplayerTopComponent extends TopComponent implements ExplorerManager.Provider{
 
-    MapBean mapBean;
+    private final MapBean mapBean;
+    private final ExplorerManager mgr = new ExplorerManager();
+
     /**
      * Creates new form MapDisplayerTopComponent
      */
-    public MapDisplayerTopComponent() {
-        initComponents();
-    }
-
     public MapDisplayerTopComponent(MapBean mapBean) {
         initComponents();
         setName(mapBean.getName());
         setToolTipText(mapBean.getName());
         associateLookup(Lookups.singleton(mapBean));
         this.mapBean = mapBean;
+        initView();
     }
 
     /**
@@ -84,5 +89,21 @@ public class MapDisplayerTopComponent extends TopComponent {
     void readProperties(java.util.Properties p) {
         String version = p.getProperty("version");
         // TODO read your settings according to their version
+    }
+
+    private void initView() {
+        Node rootNode = null;
+        try {
+            rootNode = new InternalMapNode(this.mapBean);
+        } catch (IntrospectionException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+
+        mgr.setRootContext(rootNode);
+    }
+
+    @Override
+    public ExplorerManager getExplorerManager() {
+      return mgr;
     }
 }

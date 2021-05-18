@@ -50,7 +50,7 @@ public class MapNode extends BeanNode<MapBean> {
 
     @Override
     public Action getPreferredAction() {
-        return null;
+        return SystemAction.get(OpenAction.class);
     }
 
     private TopComponent findTopComponent(MapBean mapBean) {

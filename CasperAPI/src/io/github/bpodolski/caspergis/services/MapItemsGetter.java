@@ -31,7 +31,7 @@ public abstract class MapItemsGetter {
         @Override
         public List<MapElementBean> getMapItems(MapBean mapBean) {
             ArrayList<MapElementBean> mapItemsList = new <PrintoutBean>ArrayList();
-            for (int i = 1; i < 2; i++) {
+            for (int i = 1; i < 10; i++) {
                 mapItemsList.add(new MapElementBean(null, i + ".TestLayer - DefImpl"));
             }
             return mapItemsList;
