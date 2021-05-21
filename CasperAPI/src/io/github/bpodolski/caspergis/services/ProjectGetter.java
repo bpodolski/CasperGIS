@@ -11,7 +11,7 @@ import java.util.List;
 import org.openide.util.Lookup;
 
 /**
- *
+ * Abstract class - The base for the service that provides the list of projects from system database
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
 public abstract class ProjectGetter {

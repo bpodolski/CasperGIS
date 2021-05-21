@@ -12,11 +12,16 @@ import java.util.List;
 import org.openide.util.Lookup;
 
 /**
- *
+ * Abstract class - The base for the service that provides the list of maps in project
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
 public abstract class MapGetter {
 
+    /**
+     *Base function of service - get the list of maps in project
+     * @param projectBean 
+     * @return list of maps
+     */
     public abstract List<MapBean> getMapList(ProjectBean projectBean);
 
     public static MapGetter getDefault() {

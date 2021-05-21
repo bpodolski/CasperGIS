@@ -12,7 +12,7 @@ import java.util.List;
 import org.openide.util.Lookup;
 
 /**
- *
+ * Abstract class - The base for the service that provides the list of printouts in project
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
 public abstract class PrintoutGetter {

@@ -13,12 +13,22 @@ import java.util.List;
 import org.openide.util.Lookup;
 
 /**
- *
+ * Abstract class - The base for the service that provides the list of maps items in map of project
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
 public abstract class MapItemsGetter {
-     public abstract List<MapElementBean> getMapItems(MapBean mapBean);
 
+    /**
+     * Get list of map items like layers or groups
+     * @param mapBean
+     * @return
+     */
+    public abstract List<MapElementBean> getMapItems(MapBean mapBean);
+
+    /**
+     * Get default getter when other are unavaible
+     * @return
+     */
     public static MapItemsGetter getDefault() {
         MapItemsGetter mapItemsGetter = Lookup.getDefault().lookup(MapItemsGetter.class);
         if (mapItemsGetter == null) {

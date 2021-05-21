@@ -13,6 +13,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import org.netbeans.api.io.IOProvider;
@@ -33,7 +35,8 @@ public class CgUtils {
     private static final String OS = System.getProperty("os.name").toLowerCase();
 
     /**
-     * Unpacking the zip archive contained in the package into a directory 
+     * Unpacking the zip archive contained in the package into a directory
+     *
      * @param source InputStream with archive from package
      * @param fDir destinaton directory
      * @throws IOException
@@ -77,6 +80,7 @@ public class CgUtils {
 
     /**
      * Test system
+     *
      * @return true if Windows
      */
     public static boolean isWindows() {
@@ -87,6 +91,7 @@ public class CgUtils {
 
     /**
      * Test system
+     *
      * @return true if Mac
      */
     public static boolean isMac() {
@@ -97,6 +102,7 @@ public class CgUtils {
 
     /**
      * Test system
+     *
      * @return true if Linux/Unix
      */
     public static boolean isUnix() {
@@ -107,6 +113,7 @@ public class CgUtils {
 
     /**
      * Test system
+     *
      * @return true if Solaris
      */
     public static boolean isSolaris() {
@@ -116,7 +123,8 @@ public class CgUtils {
     }
 
     /**
-     * Copying files via stream 
+     * Copying files via stream
+     *
      * @param source source file
      * @param dest destination file
      * @throws IOException
@@ -136,5 +144,14 @@ public class CgUtils {
             is.close();
             os.close();
         }
+    }
+
+    /**
+     * Helper to get integer ID for object
+     * @return integer ID for object
+     */
+    public static int createIntId() {
+        LocalDateTime now = LocalDateTime.now();
+        return (int) now.toEpochSecond(ZoneOffset.UTC);
     }
 }

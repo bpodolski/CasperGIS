@@ -5,9 +5,15 @@
  */
 package io.github.bpodolski.caspergis.gui;
 
+import io.github.bpodolski.caspergis.beans.MapBean;
+import io.github.bpodolski.caspergis.gui.nodes.InternalMapNode;
+import java.beans.IntrospectionException;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
+import org.openide.explorer.ExplorerManager;
+import org.openide.nodes.Node;
+import org.openide.util.Exceptions;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
 
@@ -35,7 +41,10 @@ import org.openide.util.NbBundle.Messages;
     "CTL_ActiveMapEditorTopComponent=ActiveMapEditor Window",
     "HINT_ActiveMapEditorTopComponent=This is a ActiveMapEditor window"
 })
-public final class ActiveMapEditorTopComponent extends TopComponent {
+public final class ActiveMapEditorTopComponent extends TopComponent implements ExplorerManager.Provider {
+
+    private final ExplorerManager mgr = new ExplorerManager();
+    MapBean mapBean = new MapBean(null, "Layers");
 
     public ActiveMapEditorTopComponent() {
         initComponents();
@@ -43,6 +52,8 @@ public final class ActiveMapEditorTopComponent extends TopComponent {
         setToolTipText(Bundle.HINT_ActiveMapEditorTopComponent());
         putClientProperty(TopComponent.PROP_CLOSING_DISABLED, Boolean.TRUE);
         putClientProperty(TopComponent.PROP_DRAGGING_DISABLED, Boolean.TRUE);
+        
+        initView();
 
     }
 
@@ -54,27 +65,61 @@ public final class ActiveMapEditorTopComponent extends TopComponent {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        testBtn = new javax.swing.JButton();
         view = new org.openide.explorer.view.BeanTreeView();
+        pnlMap = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        txt = new javax.swing.JTextArea();
+
+        org.openide.awt.Mnemonics.setLocalizedText(testBtn, org.openide.util.NbBundle.getMessage(ActiveMapEditorTopComponent.class, "ActiveMapEditorTopComponent.testBtn.text")); // NOI18N
+        testBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                testBtnActionPerformed(evt);
+            }
+        });
+
+        pnlMap.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        pnlMap.setLayout(new java.awt.BorderLayout());
+
+        txt.setColumns(20);
+        txt.setRows(5);
+        jScrollPane1.setViewportView(txt);
+
+        pnlMap.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(220, Short.MAX_VALUE)
-                .addComponent(view, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(21, 21, 21))
+                .addComponent(pnlMap, javax.swing.GroupLayout.DEFAULT_SIZE, 459, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(view, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(testBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(pnlMap, javax.swing.GroupLayout.DEFAULT_SIZE, 486, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addGap(32, 32, 32)
-                .addComponent(view, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(151, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(testBtn)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(view, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void testBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_testBtnActionPerformed
+
+    }//GEN-LAST:event_testBtnActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JPanel pnlMap;
+    private javax.swing.JButton testBtn;
+    private javax.swing.JTextArea txt;
     private org.openide.explorer.view.BeanTreeView view;
     // End of variables declaration//GEN-END:variables
     @Override
@@ -97,5 +142,21 @@ public final class ActiveMapEditorTopComponent extends TopComponent {
     void readProperties(java.util.Properties p) {
         String version = p.getProperty("version");
         // TODO read your settings according to their version
+    }
+
+    private void initView() {
+        Node rootNode = null;
+        try {
+            rootNode = new InternalMapNode(this.mapBean);
+        } catch (IntrospectionException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+
+        mgr.setRootContext(rootNode);
+    }
+
+    @Override
+    public ExplorerManager getExplorerManager() {
+        return mgr;
     }
 }

@@ -8,8 +8,10 @@ package io.github.bpodolski.caspergis.gui;
 import io.github.bpodolski.caspergis.beans.MapBean;
 import io.github.bpodolski.caspergis.gui.nodes.InternalMapNode;
 import java.beans.IntrospectionException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import org.openide.explorer.ExplorerManager;
-import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
 import org.openide.util.lookup.Lookups;
@@ -19,7 +21,7 @@ import org.openide.windows.TopComponent;
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-public class MapDisplayerTopComponent extends TopComponent implements ExplorerManager.Provider{
+public class MapDisplayerTopComponent extends TopComponent implements ExplorerManager.Provider {
 
     private final MapBean mapBean;
     private final ExplorerManager mgr = new ExplorerManager();
@@ -46,27 +48,63 @@ public class MapDisplayerTopComponent extends TopComponent implements ExplorerMa
     private void initComponents() {
 
         view = new org.openide.explorer.view.BeanTreeView();
+        pnlMap = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        txt = new javax.swing.JTextArea();
+        testBtn = new javax.swing.JButton();
+
+        view.setRootVisible(false);
+
+        pnlMap.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        pnlMap.setLayout(new java.awt.BorderLayout());
+
+        txt.setColumns(20);
+        txt.setRows(5);
+        jScrollPane1.setViewportView(txt);
+
+        pnlMap.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+
+        org.openide.awt.Mnemonics.setLocalizedText(testBtn, org.openide.util.NbBundle.getMessage(MapDisplayerTopComponent.class, "MapDisplayerTopComponent.testBtn.text")); // NOI18N
+        testBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                testBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(200, Short.MAX_VALUE)
-                .addComponent(view, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(21, 21, 21))
+                .addComponent(pnlMap, javax.swing.GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(view, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(testBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(pnlMap, javax.swing.GroupLayout.DEFAULT_SIZE, 487, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addGap(32, 32, 32)
-                .addComponent(view, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(29, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(testBtn)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(view, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void testBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_testBtnActionPerformed
+
+    }//GEN-LAST:event_testBtnActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JPanel pnlMap;
+    private javax.swing.JButton testBtn;
+    private javax.swing.JTextArea txt;
     private org.openide.explorer.view.BeanTreeView view;
     // End of variables declaration//GEN-END:variables
 @Override
@@ -104,6 +142,6 @@ public class MapDisplayerTopComponent extends TopComponent implements ExplorerMa
 
     @Override
     public ExplorerManager getExplorerManager() {
-      return mgr;
+        return mgr;
     }
 }

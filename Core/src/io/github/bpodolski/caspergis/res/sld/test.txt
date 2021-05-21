@@ -1,0 +1,8 @@
+    public ArrayList<PrintoutBean> getListPrintOutBean() {
+        return listPrintOutBean;
+    }
+
+    public void setListPrintOutBean(ArrayList<PrintoutBean> listPrintOutBean) {
+        this.listPrintOutBean = listPrintOutBean;
+    }
+    

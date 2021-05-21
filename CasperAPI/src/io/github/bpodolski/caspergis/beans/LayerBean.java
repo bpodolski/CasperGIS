@@ -19,10 +19,9 @@
 package io.github.bpodolski.caspergis.beans;
 
 //import org.geotools.map.Layer;
-
+import java.util.List;
 
 //import org.geotools.styling.Style;
-
 /**
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
@@ -31,13 +30,17 @@ public class LayerBean extends MapElementBean {
 
     private int transparency = 0;
     private boolean visible = true;
-    
+
 //    Style style;
 //    Layer layer;
-
     public LayerBean(String name) {
-        super(null, name);
-        this.setBeanType(BeanType.LAYER);        
+        this(null, name);
+
+    }
+
+    public LayerBean(List<MapElementBean> mapElementBeans, String name) {
+        super(mapElementBeans, name);
+        this.setBeanType(BeanType.LAYER);
     }
 
     public int getTransparency() {
