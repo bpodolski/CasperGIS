@@ -44,7 +44,6 @@ public class MapElementBean implements Transferable {
         this.mapElementBeans = mapElementBeans;
         this.name = name;
     }
-       
 
     public BeanType getBeanType() {
         return beanType;
@@ -96,5 +95,6 @@ public class MapElementBean implements Transferable {
         }
         return mapElementBeans;
     }
+
 
 }

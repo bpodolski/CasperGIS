@@ -8,10 +8,15 @@ package io.github.bpodolski.caspergis.gui;
 import io.github.bpodolski.caspergis.beans.MapBean;
 import io.github.bpodolski.caspergis.gui.nodes.InternalMapNode;
 import java.beans.IntrospectionException;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import javax.swing.ActionMap;
+import javax.swing.text.DefaultEditorKit;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.explorer.ExplorerManager;
+import org.openide.explorer.ExplorerUtils;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
 import org.openide.windows.TopComponent;
@@ -41,7 +46,7 @@ import org.openide.util.NbBundle.Messages;
     "CTL_ActiveMapEditorTopComponent=ActiveMapEditor Window",
     "HINT_ActiveMapEditorTopComponent=This is a ActiveMapEditor window"
 })
-public final class ActiveMapEditorTopComponent extends TopComponent implements ExplorerManager.Provider {
+public final class ActiveMapEditorTopComponent extends TopComponent implements ExplorerManager.Provider, PropertyChangeListener {
 
     private final ExplorerManager mgr = new ExplorerManager();
     MapBean mapBean = new MapBean(null, "Layers");
@@ -52,8 +57,11 @@ public final class ActiveMapEditorTopComponent extends TopComponent implements E
         setToolTipText(Bundle.HINT_ActiveMapEditorTopComponent());
         putClientProperty(TopComponent.PROP_CLOSING_DISABLED, Boolean.TRUE);
         putClientProperty(TopComponent.PROP_DRAGGING_DISABLED, Boolean.TRUE);
-        
+
         initView();
+        initActions();
+        
+        mgr.addPropertyChangeListener(this);
 
     }
 
@@ -158,5 +166,35 @@ public final class ActiveMapEditorTopComponent extends TopComponent implements E
     @Override
     public ExplorerManager getExplorerManager() {
         return mgr;
+    }
+
+    private void initActions() {
+        ActionMap map = this.getActionMap();
+        
+        map.put("delete", ExplorerUtils.actionDelete(mgr, true));
+        map.put("cut", ExplorerUtils.actionCut(mgr));
+        map.put("copy", ExplorerUtils.actionCopy(mgr));
+        map.put("paste", ExplorerUtils.actionPaste(mgr));
+        
+        associateLookup(ExplorerUtils.createLookup(mgr, map));
+        
+//        map.put(DefaultEditorKit.copyAction, ExplorerUtils.actionCopy(mgr));
+//        map.put(DefaultEditorKit.cutAction, ExplorerUtils.actionCut(mgr));
+//        map.put(DefaultEditorKit.pasteAction, ExplorerUtils.actionPaste(mgr));
+//        map.put("delete", ExplorerUtils.actionDelete(mgr, true)); // or false
+     
+        
+        
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (evt.getPropertyName().equals("selectedNodes")) {
+            Node[] selectedNode = (Node[]) evt.getNewValue();
+            for (Node node : selectedNode) {
+
+                io.github.bpodolski.caspergis.utils.CgUtils.io.getOut().println("node: " + node.getDisplayName());
+            }
+        }
     }
 }

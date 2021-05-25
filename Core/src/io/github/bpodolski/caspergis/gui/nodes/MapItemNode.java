@@ -7,12 +7,23 @@ package io.github.bpodolski.caspergis.gui.nodes;
 
 import io.github.bpodolski.caspergis.beans.MapElementBean;
 import io.github.bpodolski.caspergis.gui.nodes.factories.MapItemsFactory;
+import java.awt.datatransfer.Transferable;
+import java.awt.event.ActionEvent;
 import java.beans.IntrospectionException;
+import java.io.IOException;
+import javax.swing.AbstractAction;
 import javax.swing.Action;
+import org.openide.actions.CopyAction;
+import org.openide.actions.CutAction;
+import org.openide.actions.DeleteAction;
+import org.openide.actions.MoveDownAction;
+import org.openide.actions.MoveUpAction;
+import org.openide.actions.ReorderAction;
 import org.openide.nodes.BeanNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Index;
 import org.openide.nodes.Node;
+import org.openide.util.actions.SystemAction;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 import org.openide.util.lookup.Lookups;
@@ -53,7 +64,7 @@ public class MapItemNode extends BeanNode<MapElementBean> {
 
             @Override
             public void reorder(int[] perm) {
-                factory.reorder(perm);
+                factory.getMapItemModel().reorder(perm);
 
             }
         });
@@ -63,6 +74,39 @@ public class MapItemNode extends BeanNode<MapElementBean> {
     @Override
     public Action getPreferredAction() {
         return null;
+    }
+
+    @Override
+    public Action[] getActions(boolean context) {
+        return new Action[]{
+            CutAction.get(CutAction.class),
+            CopyAction.get(CopyAction.class),
+            DeleteAction.get(DeleteAction.class),
+            SystemAction.get(MoveUpAction.class),
+            SystemAction.get(MoveDownAction.class)
+        };
+    }
+
+    @Override
+    public boolean canCut() {
+        return true;
+    }
+
+    @Override
+    public boolean canCopy() {
+        return true;
+    }
+
+    @Override
+    public boolean canDestroy() {
+        return true;
+    }
+
+
+    //add Drag support
+    @Override
+    public Transferable drag() throws IOException {
+        return bean;
     }
 
 }
