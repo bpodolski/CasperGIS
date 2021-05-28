@@ -6,12 +6,12 @@
 package io.github.bpodolski.caspergis.gui;
 
 import io.github.bpodolski.caspergis.beans.MapBean;
+import io.github.bpodolski.caspergis.beans.RegistryMapBean;
 import io.github.bpodolski.caspergis.gui.nodes.InternalMapNode;
 import java.beans.IntrospectionException;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.ActionMap;
-import javax.swing.text.DefaultEditorKit;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -19,8 +19,13 @@ import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.ExplorerUtils;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.lookup.AbstractLookup;
+import org.openide.util.lookup.InstanceContent;
+import org.openide.util.lookup.ProxyLookup;
+import org.openide.windows.WindowManager;
 
 /**
  * Top component which displays something.
@@ -50,6 +55,15 @@ public final class ActiveMapEditorTopComponent extends TopComponent implements E
 
     private final ExplorerManager mgr = new ExplorerManager();
     MapBean mapBean = new MapBean(null, "Layers");
+    RegistryMapBean regMapBean = null;
+
+    InstanceContent instanceContent = new InstanceContent();
+
+    Lookup lookupMapBean = null;
+    Lookup lookupAction = null;
+    ProxyLookup proxyLookup;
+
+    LayerListTopComponent layerListTC = null;
 
     public ActiveMapEditorTopComponent() {
         initComponents();
@@ -58,10 +72,24 @@ public final class ActiveMapEditorTopComponent extends TopComponent implements E
         putClientProperty(TopComponent.PROP_CLOSING_DISABLED, Boolean.TRUE);
         putClientProperty(TopComponent.PROP_DRAGGING_DISABLED, Boolean.TRUE);
 
+        regMapBean = new RegistryMapBean(this.mapBean);
+        
         initView();
         initActions();
-        
+
         mgr.addPropertyChangeListener(this);
+
+        lookupMapBean= new AbstractLookup (this.instanceContent);        
+        instanceContent.add(regMapBean);
+        proxyLookup = new ProxyLookup(lookupAction, lookupMapBean);
+        
+        associateLookup(this.proxyLookup);
+
+        findLayerListTC();
+        if (layerListTC != null) {
+            layerListTC.setExplorerManager(mgr);
+        }
+
 
     }
 
@@ -85,6 +113,8 @@ public final class ActiveMapEditorTopComponent extends TopComponent implements E
                 testBtnActionPerformed(evt);
             }
         });
+
+        view.setRootVisible(false);
 
         pnlMap.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         pnlMap.setLayout(new java.awt.BorderLayout());
@@ -161,6 +191,7 @@ public final class ActiveMapEditorTopComponent extends TopComponent implements E
         }
 
         mgr.setRootContext(rootNode);
+
     }
 
     @Override
@@ -170,21 +201,13 @@ public final class ActiveMapEditorTopComponent extends TopComponent implements E
 
     private void initActions() {
         ActionMap map = this.getActionMap();
-        
+
         map.put("delete", ExplorerUtils.actionDelete(mgr, true));
         map.put("cut", ExplorerUtils.actionCut(mgr));
         map.put("copy", ExplorerUtils.actionCopy(mgr));
         map.put("paste", ExplorerUtils.actionPaste(mgr));
-        
-        associateLookup(ExplorerUtils.createLookup(mgr, map));
-        
-//        map.put(DefaultEditorKit.copyAction, ExplorerUtils.actionCopy(mgr));
-//        map.put(DefaultEditorKit.cutAction, ExplorerUtils.actionCut(mgr));
-//        map.put(DefaultEditorKit.pasteAction, ExplorerUtils.actionPaste(mgr));
-//        map.put("delete", ExplorerUtils.actionDelete(mgr, true)); // or false
-     
-        
-        
+
+        this.lookupAction = ExplorerUtils.createLookup(mgr, map);
     }
 
     @Override
@@ -196,5 +219,10 @@ public final class ActiveMapEditorTopComponent extends TopComponent implements E
                 io.github.bpodolski.caspergis.utils.CgUtils.io.getOut().println("node: " + node.getDisplayName());
             }
         }
+    }
+
+    private void findLayerListTC() {
+        layerListTC = (LayerListTopComponent) WindowManager.getDefault().findTopComponent("LayerListTopComponent");
+
     }
 }

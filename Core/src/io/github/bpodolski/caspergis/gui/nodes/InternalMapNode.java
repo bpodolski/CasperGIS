@@ -63,7 +63,7 @@ public class InternalMapNode extends BeanNode<MapBean> {
 
             @Override
             public void reorder(int[] perm) {
-                factory.getMapItemModel().reorder(perm);
+                factory.reorder(perm);
 
             }
         });

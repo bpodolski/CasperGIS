@@ -91,7 +91,7 @@ public class MapElementBean implements Transferable {
 
     public List<MapElementBean> getMapElementBeans() {
         if (mapElementBeans == null) {
-            mapElementBeans = new ArrayList<MapElementBean>();
+            mapElementBeans = new ArrayList<>();
         }
         return mapElementBeans;
     }

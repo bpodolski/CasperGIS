@@ -8,19 +8,15 @@ package io.github.bpodolski.caspergis.gui.nodes;
 import io.github.bpodolski.caspergis.beans.MapElementBean;
 import io.github.bpodolski.caspergis.gui.nodes.factories.MapItemsFactory;
 import java.awt.datatransfer.Transferable;
-import java.awt.event.ActionEvent;
 import java.beans.IntrospectionException;
 import java.io.IOException;
-import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.openide.actions.CopyAction;
 import org.openide.actions.CutAction;
 import org.openide.actions.DeleteAction;
 import org.openide.actions.MoveDownAction;
 import org.openide.actions.MoveUpAction;
-import org.openide.actions.ReorderAction;
 import org.openide.nodes.BeanNode;
-import org.openide.nodes.Children;
 import org.openide.nodes.Index;
 import org.openide.nodes.Node;
 import org.openide.util.actions.SystemAction;
@@ -44,12 +40,13 @@ public class MapItemNode extends BeanNode<MapElementBean> {
     }
 
     public MapItemNode(MapElementBean bean, final MapItemsFactory factory, InstanceContent instContent) throws IntrospectionException {
-        super(bean, Children.create(factory, true), new ProxyLookup(Lookups.singleton(bean), new AbstractLookup(instContent)));
+        super(bean, null, new ProxyLookup(Lookups.singleton(bean), new AbstractLookup(instContent)));
+        //        Children.create(factory, true)
         this.bean = bean;
         this.factory = factory;
         this.setDisplayName(bean.getName());
         this.instContent = instContent;
-
+        
         instContent.add(new Index.Support() {
 
             @Override
@@ -64,7 +61,7 @@ public class MapItemNode extends BeanNode<MapElementBean> {
 
             @Override
             public void reorder(int[] perm) {
-                factory.getMapItemModel().reorder(perm);
+                factory.reorder(perm);
 
             }
         });
@@ -102,6 +99,11 @@ public class MapItemNode extends BeanNode<MapElementBean> {
         return true;
     }
 
+    @Override
+    public void destroy() throws IOException {
+        factory.removeChild(bean);
+        fireNodeDestroyed();
+    }
 
     //add Drag support
     @Override

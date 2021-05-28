@@ -5,11 +5,25 @@
  */
 package io.github.bpodolski.caspergis.gui;
 
+import io.github.bpodolski.caspergis.beans.MapBean;
+import io.github.bpodolski.caspergis.beans.RegistryMapBean;
+import java.beans.IntrospectionException;
+import java.util.Collection;
+import javax.swing.ActionMap;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
+import org.openide.explorer.ExplorerManager;
+import org.openide.explorer.ExplorerUtils;
+import org.openide.nodes.BeanNode;
+import org.openide.nodes.Node;
+import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
+import org.openide.util.LookupEvent;
+import org.openide.util.LookupListener;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.Utilities;
 
 /**
  * Top component which displays something.
@@ -35,7 +49,12 @@ import org.openide.util.NbBundle.Messages;
     "CTL_LayerListTopComponent=LayerList Window",
     "HINT_LayerListTopComponent=This is a LayerList window"
 })
-public final class LayerListTopComponent extends TopComponent {
+public final class LayerListTopComponent extends TopComponent implements ExplorerManager.Provider,
+        LookupListener {
+
+    private MapBean mapBean = null;
+    private Lookup.Result<RegistryMapBean> result = null;
+    private ExplorerManager mgr = new ExplorerManager();
 
     public LayerListTopComponent() {
         initComponents();
@@ -43,6 +62,9 @@ public final class LayerListTopComponent extends TopComponent {
         setToolTipText(Bundle.HINT_LayerListTopComponent());
         putClientProperty(TopComponent.PROP_CLOSING_DISABLED, Boolean.TRUE);
         putClientProperty(TopComponent.PROP_MAXIMIZATION_DISABLED, Boolean.TRUE);
+
+        initView();
+//        initActions();
 
     }
 
@@ -54,31 +76,41 @@ public final class LayerListTopComponent extends TopComponent {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel1 = new javax.swing.JLabel();
         view = new org.openide.explorer.view.BeanTreeView();
         pnl = new javax.swing.JPanel();
+        lbl = new javax.swing.JLabel();
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(LayerListTopComponent.class, "LayerListTopComponent.jLabel1.text")); // NOI18N
 
         setLayout(new java.awt.BorderLayout());
-
-        view.setRootVisible(false);
         add(view, java.awt.BorderLayout.CENTER);
 
         pnl.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         pnl.setPreferredSize(new java.awt.Dimension(10, 26));
+        pnl.setLayout(new java.awt.CardLayout());
+
+        org.openide.awt.Mnemonics.setLocalizedText(lbl, org.openide.util.NbBundle.getMessage(LayerListTopComponent.class, "LayerListTopComponent.lbl.text")); // NOI18N
+        pnl.add(lbl, "card2");
+
         add(pnl, java.awt.BorderLayout.SOUTH);
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel lbl;
     private javax.swing.JPanel pnl;
     private org.openide.explorer.view.BeanTreeView view;
     // End of variables declaration//GEN-END:variables
     @Override
     public void componentOpened() {
-        // TODO add custom code on component opening
+        result = Utilities.actionsGlobalContext().lookupResult(RegistryMapBean.class);
+        result.addLookupListener(this);
     }
 
     @Override
     public void componentClosed() {
-        // TODO add custom code on component closing
+        result.removeLookupListener(this);
     }
 
     void writeProperties(java.util.Properties p) {
@@ -92,4 +124,64 @@ public final class LayerListTopComponent extends TopComponent {
         String version = p.getProperty("version");
         // TODO read your settings according to their version
     }
+
+    public void setExplorerManager(ExplorerManager mgr) {
+        this.mgr = mgr;
+
+        ActionMap map = this.getActionMap();
+
+        map.put("delete", ExplorerUtils.actionDelete(mgr, true));
+        map.put("cut", ExplorerUtils.actionCut(mgr));
+        map.put("copy", ExplorerUtils.actionCopy(mgr));
+        map.put("paste", ExplorerUtils.actionPaste(mgr));
+
+        associateLookup(ExplorerUtils.createLookup(mgr, map));
+//        initActions();
+    }
+
+    @Override
+    public ExplorerManager getExplorerManager() {
+        return mgr;
+    }
+
+    private void initView() {
+        Node rootNode;
+        try {
+            rootNode = new BeanNode("[..]");
+            rootNode.setName("[..]");
+            mgr.setRootContext(rootNode);
+        } catch (IntrospectionException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+
+    }
+
+//    private void initActions() {
+//        ActionMap map = this.getActionMap();
+//
+//        map.put("delete", ExplorerUtils.actionDelete(mgr, true));
+//        map.put("cut", ExplorerUtils.actionCut(mgr));
+//        map.put("copy", ExplorerUtils.actionCopy(mgr));
+//        map.put("paste", ExplorerUtils.actionPaste(mgr));
+//
+//        associateLookup(ExplorerUtils.createLookup(mgr, map));
+//
+//    }
+    @Override
+    public void resultChanged(LookupEvent ev) {
+        Collection<? extends RegistryMapBean> allRegistryMapBeans = result.allInstances();
+        if (!allRegistryMapBeans.isEmpty()) {
+            RegistryMapBean reg = allRegistryMapBeans.iterator().next();
+            mapBean = reg.getMapBean();
+            lbl.setText(mapBean.getName());
+
+//            initActions();
+            view.addNotify();
+        } else if (mapBean != null) {
+            lbl.setText(mapBean.getName());
+        } else {
+            lbl.setText("[no selection]");
+        }
+    }
+
 }
