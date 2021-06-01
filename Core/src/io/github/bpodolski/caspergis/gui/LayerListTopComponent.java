@@ -11,6 +11,10 @@ import java.beans.IntrospectionException;
 import java.util.Collection;
 import javax.swing.ActionMap;
 import org.netbeans.api.settings.ConvertAsProperties;
+import org.openide.actions.CopyAction;
+import org.openide.actions.CutAction;
+import org.openide.actions.DeleteAction;
+import org.openide.actions.PasteAction;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.explorer.ExplorerManager;
@@ -24,6 +28,7 @@ import org.openide.util.LookupListener;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.Utilities;
+import org.openide.util.actions.SystemAction;
 
 /**
  * Top component which displays something.
@@ -130,13 +135,19 @@ public final class LayerListTopComponent extends TopComponent implements Explore
 
         ActionMap map = this.getActionMap();
 
-        map.put("delete", ExplorerUtils.actionDelete(mgr, true));
-        map.put("cut", ExplorerUtils.actionCut(mgr));
-        map.put("copy", ExplorerUtils.actionCopy(mgr));
-        map.put("paste", ExplorerUtils.actionPaste(mgr));
+        CutAction cut = SystemAction.get(CutAction.class);
+        getActionMap().put(cut.getActionMapKey(), ExplorerUtils.actionCut(mgr));
+
+        CopyAction copy = SystemAction.get(CopyAction.class);
+        getActionMap().put(copy.getActionMapKey(), ExplorerUtils.actionCopy(mgr));
+
+        PasteAction paste = SystemAction.get(PasteAction.class);
+        getActionMap().put(paste.getActionMapKey(), ExplorerUtils.actionPaste(mgr));
+
+        DeleteAction delete = SystemAction.get(DeleteAction.class);
+        getActionMap().put(delete.getActionMapKey(), ExplorerUtils.actionDelete(mgr, true));
 
         associateLookup(ExplorerUtils.createLookup(mgr, map));
-//        initActions();
     }
 
     @Override
@@ -156,17 +167,6 @@ public final class LayerListTopComponent extends TopComponent implements Explore
 
     }
 
-//    private void initActions() {
-//        ActionMap map = this.getActionMap();
-//
-//        map.put("delete", ExplorerUtils.actionDelete(mgr, true));
-//        map.put("cut", ExplorerUtils.actionCut(mgr));
-//        map.put("copy", ExplorerUtils.actionCopy(mgr));
-//        map.put("paste", ExplorerUtils.actionPaste(mgr));
-//
-//        associateLookup(ExplorerUtils.createLookup(mgr, map));
-//
-//    }
     @Override
     public void resultChanged(LookupEvent ev) {
         Collection<? extends RegistryMapBean> allRegistryMapBeans = result.allInstances();

@@ -1,0 +1,184 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package io.github.bpodolski.caspergis.gui.geotools;
+
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.GeneralPath;
+import java.awt.geom.Rectangle2D;
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.HashSet;
+import java.util.Set;
+import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JToolBar;
+import org.geotools.data.FeatureSource;
+import org.geotools.data.simple.SimpleFeatureCollection;
+import org.geotools.data.simple.SimpleFeatureIterator;
+import org.geotools.factory.CommonFactoryFinder;
+import org.geotools.geometry.jts.JTS;
+import org.geotools.geometry.jts.ReferencedEnvelope;
+import org.geotools.map.MapContent;
+import org.geotools.referencing.operation.transform.AffineTransform2D;
+import org.geotools.swing.JMapFrame;
+import org.geotools.swing.JMapPane;
+import org.geotools.swing.MapLayerTable;
+import org.geotools.swing.action.InfoAction;
+import org.geotools.swing.action.NoToolAction;
+import org.geotools.swing.action.PanAction;
+import org.geotools.swing.action.ResetAction;
+import org.geotools.swing.action.ZoomInAction;
+import org.geotools.swing.action.ZoomOutAction;
+import org.geotools.swing.event.MapMouseEvent;
+import org.geotools.swing.tool.CursorTool;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.io.WKTWriter;
+import org.opengis.feature.simple.SimpleFeature;
+import org.opengis.feature.type.GeometryDescriptor;
+import org.opengis.filter.Filter;
+import org.opengis.filter.FilterFactory2;
+import org.opengis.filter.identity.FeatureId;
+import org.opengis.referencing.operation.MathTransform;
+/**
+ *
+ * @author Bartłomiej Podolski <bartp@poczta.fm>
+ */
+public class JMapPanelCG extends javax.swing.JPanel {
+
+     private static final Color LINE_COLOUR = Color.BLUE;
+    private static final Color FILL_COLOUR = Color.CYAN;
+    private static final Color SELECTED_COLOUR = Color.YELLOW;
+
+    private FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2();
+    private String geometryAttributeName;
+
+    /*
+     * The following toolbar button names are primarily for unit testing
+     * but could also be useful for applications wanting to control appearance
+     * and behaviour at run-time.
+     */
+    /**
+     * Name assigned to toolbar button for feature info queries.
+     */
+    public static final String TOOLBAR_INFO_BUTTON_NAME = "ToolbarInfoButton";
+    /**
+     * Name assigned to toolbar button for map panning.
+     */
+    public static final String TOOLBAR_PAN_BUTTON_NAME = "ToolbarPanButton";
+    /**
+     * Name assigned to toolbar button for default pointer.
+     */
+    public static final String TOOLBAR_POINTER_BUTTON_NAME = "ToolbarPointerButton";
+    /**
+     * Name assigned to toolbar button for map reset.
+     */
+    public static final String TOOLBAR_RESET_BUTTON_NAME = "ToolbarResetButton";
+    /**
+     * Name assigned to toolbar button for map zoom in.
+     */
+    public static final String TOOLBAR_ZOOMIN_BUTTON_NAME = "ToolbarZoomInButton";
+    /**
+     * Name assigned to toolbar button for map zoom out.
+     */
+    public static final String TOOLBAR_ZOOMOUT_BUTTON_NAME = "ToolbarZoomOutButton";
+
+    /**
+     * Constants for available toolbar buttons used with the {@link #enableTool}
+     * method.
+     */
+    public enum Tool {
+        /**
+         * Simple mouse cursor, used to unselect previous cursor tool.
+         */
+        POINTER,
+        /**
+         * The feature info cursor tool
+         */
+        INFO,
+        /**
+         * The panning cursor tool.
+         */
+        PAN,
+        /**
+         * The reset map extent cursor tool.
+         */
+        RESET,
+        /**
+         * The zoom display cursor tools.
+         */
+        ZOOM,
+        /**
+         * The map should zoom with the mouse wheel. No button shown for this.
+         */
+        SCROLLWHEEL;
+    }
+
+    private boolean showToolBar;
+    private Set<Tool> toolSet;
+
+    /*
+     * UI elements
+     */
+    private JMapPane mapPane;
+    private MapLayerTable mapLayerTable;
+    private JToolBar toolBar;
+    private MapContent content = new MapContent();
+
+    private boolean showStatusBar;
+    private boolean showLayerTable;
+    private boolean uiSet;
+    /**
+     * Creates new form JMapPanelCG
+     */
+    public JMapPanelCG() {
+        initComponents();
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        pnlTop = new javax.swing.JPanel();
+
+        setLayout(new java.awt.BorderLayout());
+
+        pnlTop.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        pnlTop.setPreferredSize(new java.awt.Dimension(652, 30));
+
+        javax.swing.GroupLayout pnlTopLayout = new javax.swing.GroupLayout(pnlTop);
+        pnlTop.setLayout(pnlTopLayout);
+        pnlTopLayout.setHorizontalGroup(
+            pnlTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 648, Short.MAX_VALUE)
+        );
+        pnlTopLayout.setVerticalGroup(
+            pnlTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 26, Short.MAX_VALUE)
+        );
+
+        add(pnlTop, java.awt.BorderLayout.NORTH);
+    }// </editor-fold>//GEN-END:initComponents
+
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel pnlTop;
+    // End of variables declaration//GEN-END:variables
+}

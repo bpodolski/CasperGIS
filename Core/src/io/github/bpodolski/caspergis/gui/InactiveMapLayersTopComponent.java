@@ -5,11 +5,30 @@
  */
 package io.github.bpodolski.caspergis.gui;
 
+import io.github.bpodolski.caspergis.beans.MapBean;
+import io.github.bpodolski.caspergis.beans.RegistryMapBean;
+import java.beans.IntrospectionException;
+import java.util.Collection;
+import javax.swing.ActionMap;
 import org.netbeans.api.settings.ConvertAsProperties;
+import org.openide.actions.CopyAction;
+import org.openide.actions.CutAction;
+import org.openide.actions.DeleteAction;
+import org.openide.actions.PasteAction;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
+import org.openide.explorer.ExplorerManager;
+import org.openide.explorer.ExplorerUtils;
+import org.openide.nodes.BeanNode;
+import org.openide.nodes.Node;
+import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
+import org.openide.util.LookupEvent;
+import org.openide.util.LookupListener;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.Utilities;
+import org.openide.util.actions.SystemAction;
 
 /**
  * Top component which displays something.
@@ -25,7 +44,7 @@ import org.openide.util.NbBundle.Messages;
 )
 @TopComponent.Registration(mode = "explorer", openAtStartup = true)
 @ActionID(category = "Window", id = "io.github.bpodolski.caspergis.gui.InactiveMapLayersTopComponent")
-@ActionReference(path = "Menu/Window" , position = 323 )
+@ActionReference(path = "Menu/Window", position = 323)
 @TopComponent.OpenActionRegistration(
         displayName = "#CTL_InactiveMapLayersAction",
         preferredID = "InactiveMapLayersTopComponent"
@@ -35,7 +54,12 @@ import org.openide.util.NbBundle.Messages;
     "CTL_InactiveMapLayersTopComponent=InactiveMapLayers Window",
     "HINT_InactiveMapLayersTopComponent=This is a InactiveMapLayers window"
 })
-public final class InactiveMapLayersTopComponent extends TopComponent {
+public final class InactiveMapLayersTopComponent extends TopComponent implements ExplorerManager.Provider,
+        LookupListener {
+
+    private MapBean mapBean = null;
+    private Lookup.Result<RegistryMapBean> result = null;
+    private ExplorerManager mgr = new ExplorerManager();
 
     public InactiveMapLayersTopComponent() {
         initComponents();
@@ -44,6 +68,7 @@ public final class InactiveMapLayersTopComponent extends TopComponent {
         putClientProperty(TopComponent.PROP_CLOSING_DISABLED, Boolean.TRUE);
         putClientProperty(TopComponent.PROP_MAXIMIZATION_DISABLED, Boolean.TRUE);
 
+        initView();
     }
 
     /**
@@ -55,24 +80,41 @@ public final class InactiveMapLayersTopComponent extends TopComponent {
     private void initComponents() {
 
         view = new org.openide.explorer.view.BeanTreeView();
+        pnlTop = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
+        lbl = new javax.swing.JLabel();
 
         setLayout(new java.awt.BorderLayout());
 
         view.setRootVisible(false);
         add(view, java.awt.BorderLayout.CENTER);
+
+        pnlTop.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+
+        org.openide.awt.Mnemonics.setLocalizedText(jButton1, org.openide.util.NbBundle.getMessage(InactiveMapLayersTopComponent.class, "InactiveMapLayersTopComponent.jButton1.text")); // NOI18N
+        pnlTop.add(jButton1);
+
+        org.openide.awt.Mnemonics.setLocalizedText(lbl, org.openide.util.NbBundle.getMessage(InactiveMapLayersTopComponent.class, "InactiveMapLayersTopComponent.lbl.text")); // NOI18N
+        pnlTop.add(lbl);
+
+        add(pnlTop, java.awt.BorderLayout.PAGE_START);
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JLabel lbl;
+    private javax.swing.JPanel pnlTop;
     private org.openide.explorer.view.BeanTreeView view;
     // End of variables declaration//GEN-END:variables
     @Override
     public void componentOpened() {
-        // TODO add custom code on component opening
+         result = Utilities.actionsGlobalContext().lookupResult(RegistryMapBean.class);
+        result.addLookupListener(this);
     }
 
     @Override
     public void componentClosed() {
-        // TODO add custom code on component closing
+        result.removeLookupListener(this);
     }
 
     void writeProperties(java.util.Properties p) {
@@ -85,5 +127,59 @@ public final class InactiveMapLayersTopComponent extends TopComponent {
     void readProperties(java.util.Properties p) {
         String version = p.getProperty("version");
         // TODO read your settings according to their version
+    }
+
+    public void setExplorerManager(ExplorerManager mgr) {
+        this.mgr = mgr;
+
+        ActionMap map = this.getActionMap();
+
+        CutAction cut = SystemAction.get(CutAction.class);
+        getActionMap().put(cut.getActionMapKey(), ExplorerUtils.actionCut(mgr));
+
+        CopyAction copy = SystemAction.get(CopyAction.class);
+        getActionMap().put(copy.getActionMapKey(), ExplorerUtils.actionCopy(mgr));
+
+        PasteAction paste = SystemAction.get(PasteAction.class);
+        getActionMap().put(paste.getActionMapKey(), ExplorerUtils.actionPaste(mgr));
+
+        DeleteAction delete = SystemAction.get(DeleteAction.class);
+        getActionMap().put(delete.getActionMapKey(), ExplorerUtils.actionDelete(mgr, true));
+
+        associateLookup(ExplorerUtils.createLookup(mgr, map));
+    }
+
+    @Override
+    public ExplorerManager getExplorerManager() {
+        return mgr;
+    }
+
+    private void initView() {
+        Node rootNode;
+        try {
+            rootNode = new BeanNode("[..]");
+            rootNode.setName("[..]");
+            mgr.setRootContext(rootNode);
+        } catch (IntrospectionException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+
+    }
+
+    @Override
+    public void resultChanged(LookupEvent ev) {
+        Collection<? extends RegistryMapBean> allRegistryMapBeans = result.allInstances();
+        if (!allRegistryMapBeans.isEmpty()) {
+            RegistryMapBean reg = allRegistryMapBeans.iterator().next();
+            mapBean = reg.getMapBean();
+            lbl.setText(mapBean.getName());
+
+//            initActions();
+            view.addNotify();
+        } else if (mapBean != null) {
+            lbl.setText(mapBean.getName());
+        } else {
+            lbl.setText("[no selection]");
+        }
     }
 }

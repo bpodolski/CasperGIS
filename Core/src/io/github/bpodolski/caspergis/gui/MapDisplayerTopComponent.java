@@ -6,12 +6,24 @@
 package io.github.bpodolski.caspergis.gui;
 
 import io.github.bpodolski.caspergis.beans.MapBean;
+import io.github.bpodolski.caspergis.beans.RegistryMapBean;
 import io.github.bpodolski.caspergis.gui.nodes.InternalMapNode;
 import java.beans.IntrospectionException;
+import javax.swing.ActionMap;
+import org.openide.actions.CopyAction;
+import org.openide.actions.CutAction;
+import org.openide.actions.DeleteAction;
+import org.openide.actions.PasteAction;
 import org.openide.explorer.ExplorerManager;
+import org.openide.explorer.ExplorerUtils;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
+import org.openide.util.actions.SystemAction;
+import org.openide.util.lookup.AbstractLookup;
+import org.openide.util.lookup.InstanceContent;
 import org.openide.util.lookup.Lookups;
+import org.openide.util.lookup.ProxyLookup;
 import org.openide.windows.TopComponent;
 
 /**
@@ -21,7 +33,14 @@ import org.openide.windows.TopComponent;
 public class MapDisplayerTopComponent extends TopComponent implements ExplorerManager.Provider {
 
     private final MapBean mapBean;
+    RegistryMapBean regMapBean = null;
     private final ExplorerManager mgr = new ExplorerManager();
+
+    InstanceContent instanceContent = new InstanceContent();
+
+    Lookup lookupMapBean = null;
+    Lookup lookupAction = null;
+    ProxyLookup proxyLookup;
 
     /**
      * Creates new form MapDisplayerTopComponent
@@ -30,9 +49,19 @@ public class MapDisplayerTopComponent extends TopComponent implements ExplorerMa
         initComponents();
         setName(mapBean.getName());
         setToolTipText(mapBean.getName());
-        associateLookup(Lookups.singleton(mapBean));
+
         this.mapBean = mapBean;
+        
         initView();
+        initActions();
+//        
+        regMapBean = new RegistryMapBean(this.mapBean);
+        
+        lookupMapBean= new AbstractLookup (this.instanceContent);        
+        instanceContent.add(regMapBean);
+        proxyLookup = new ProxyLookup(lookupAction, lookupMapBean);
+        
+        associateLookup(this.proxyLookup);
     }
 
     /**
@@ -49,6 +78,7 @@ public class MapDisplayerTopComponent extends TopComponent implements ExplorerMa
         jScrollPane1 = new javax.swing.JScrollPane();
         txt = new javax.swing.JTextArea();
         testBtn = new javax.swing.JButton();
+        pnlLayers = new javax.swing.JPanel();
 
         view.setRootVisible(false);
 
@@ -59,7 +89,7 @@ public class MapDisplayerTopComponent extends TopComponent implements ExplorerMa
         txt.setRows(5);
         jScrollPane1.setViewportView(txt);
 
-        pnlMap.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+        pnlMap.add(jScrollPane1, java.awt.BorderLayout.PAGE_END);
 
         org.openide.awt.Mnemonics.setLocalizedText(testBtn, org.openide.util.NbBundle.getMessage(MapDisplayerTopComponent.class, "MapDisplayerTopComponent.testBtn.text")); // NOI18N
         testBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -68,27 +98,45 @@ public class MapDisplayerTopComponent extends TopComponent implements ExplorerMa
             }
         });
 
+        pnlLayers.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        javax.swing.GroupLayout pnlLayersLayout = new javax.swing.GroupLayout(pnlLayers);
+        pnlLayers.setLayout(pnlLayersLayout);
+        pnlLayersLayout.setHorizontalGroup(
+            pnlLayersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        pnlLayersLayout.setVerticalGroup(
+            pnlLayersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 255, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(pnlMap, javax.swing.GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE)
+                .addComponent(pnlMap, javax.swing.GroupLayout.PREFERRED_SIZE, 430, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(view, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(view, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(testBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())))
+                        .addContainerGap())
+                    .addComponent(pnlLayers, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pnlMap, javax.swing.GroupLayout.DEFAULT_SIZE, 487, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(testBtn)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(view, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(view, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pnlLayers, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(pnlMap, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -99,6 +147,7 @@ public class MapDisplayerTopComponent extends TopComponent implements ExplorerMa
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JPanel pnlLayers;
     private javax.swing.JPanel pnlMap;
     private javax.swing.JButton testBtn;
     private javax.swing.JTextArea txt;
@@ -140,5 +189,23 @@ public class MapDisplayerTopComponent extends TopComponent implements ExplorerMa
     @Override
     public ExplorerManager getExplorerManager() {
         return mgr;
+    }
+
+    private void initActions() {
+        ActionMap map = this.getActionMap();
+
+//        CutAction cut = SystemAction.get(CutAction.class);
+//        getActionMap().put(cut.getActionMapKey(), ExplorerUtils.actionCut(mgr));
+
+        CopyAction copy = SystemAction.get(CopyAction.class);
+        getActionMap().put(copy.getActionMapKey(), ExplorerUtils.actionCopy(mgr));
+//
+        PasteAction paste = SystemAction.get(PasteAction.class);
+        getActionMap().put(paste.getActionMapKey(), ExplorerUtils.actionPaste(mgr));
+//
+//        DeleteAction delete = SystemAction.get(DeleteAction.class);
+//        getActionMap().put(delete.getActionMapKey(), ExplorerUtils.actionDelete(mgr, true));
+
+        this.lookupAction = ExplorerUtils.createLookup(mgr, map);
     }
 }
