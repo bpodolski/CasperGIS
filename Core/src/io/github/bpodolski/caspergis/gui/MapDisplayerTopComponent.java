@@ -5,14 +5,14 @@
  */
 package io.github.bpodolski.caspergis.gui;
 
+import io.github.bpodolski.caspergis.CgRegistry;
 import io.github.bpodolski.caspergis.beans.MapBean;
-import io.github.bpodolski.caspergis.beans.RegistryMapBean;
+import io.github.bpodolski.caspergis.beans.MapBeanEnv;
+import io.github.bpodolski.caspergis.gui.geotools.JMapPanelCG;
 import io.github.bpodolski.caspergis.gui.nodes.InternalMapNode;
 import java.beans.IntrospectionException;
 import javax.swing.ActionMap;
 import org.openide.actions.CopyAction;
-import org.openide.actions.CutAction;
-import org.openide.actions.DeleteAction;
 import org.openide.actions.PasteAction;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.ExplorerUtils;
@@ -22,7 +22,6 @@ import org.openide.util.Lookup;
 import org.openide.util.actions.SystemAction;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
-import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 import org.openide.windows.TopComponent;
 
@@ -33,7 +32,7 @@ import org.openide.windows.TopComponent;
 public class MapDisplayerTopComponent extends TopComponent implements ExplorerManager.Provider {
 
     private final MapBean mapBean;
-    RegistryMapBean regMapBean = null;
+    MapBeanEnv regMapBean = null;
     private final ExplorerManager mgr = new ExplorerManager();
 
     InstanceContent instanceContent = new InstanceContent();
@@ -41,6 +40,8 @@ public class MapDisplayerTopComponent extends TopComponent implements ExplorerMa
     Lookup lookupMapBean = null;
     Lookup lookupAction = null;
     ProxyLookup proxyLookup;
+    
+    JMapPanelCG mapPanel = new JMapPanelCG();
 
     /**
      * Creates new form MapDisplayerTopComponent
@@ -55,13 +56,18 @@ public class MapDisplayerTopComponent extends TopComponent implements ExplorerMa
         initView();
         initActions();
 //        
-        regMapBean = new RegistryMapBean(this.mapBean);
+        regMapBean = new MapBeanEnv(this.mapBean);
         
         lookupMapBean= new AbstractLookup (this.instanceContent);        
         instanceContent.add(regMapBean);
         proxyLookup = new ProxyLookup(lookupAction, lookupMapBean);
         
         associateLookup(this.proxyLookup);
+        
+        this.pnlMap.add(this.mapPanel, java.awt.BorderLayout.CENTER);
+        
+        CgRegistry.topComponentMap.remove(mapBean);
+        CgRegistry.topComponentMap.put(mapBean, this);
     }
 
     /**

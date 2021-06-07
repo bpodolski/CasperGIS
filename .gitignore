@@ -12,3 +12,6 @@
 /EXT-imagemagick/build/
 /build/
 /Core/build/
+/LIB-Geotools/build/
+/LIB-Hibernate/build/
+/sqlite-jdbc/build/

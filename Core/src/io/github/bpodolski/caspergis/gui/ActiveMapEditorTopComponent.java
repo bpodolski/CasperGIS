@@ -5,13 +5,16 @@
  */
 package io.github.bpodolski.caspergis.gui;
 
+import io.github.bpodolski.caspergis.CgRegistry;
 import io.github.bpodolski.caspergis.beans.MapBean;
-import io.github.bpodolski.caspergis.beans.RegistryMapBean;
+import io.github.bpodolski.caspergis.beans.MapBeanEnv;
+import io.github.bpodolski.caspergis.gui.geotools.JMapPanelCG;
 import io.github.bpodolski.caspergis.gui.nodes.InternalMapNode;
 import java.beans.IntrospectionException;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.ActionMap;
+import org.geotools.map.MapContent;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -55,7 +58,7 @@ public final class ActiveMapEditorTopComponent extends TopComponent implements E
 
     private final ExplorerManager mgr = new ExplorerManager();
     MapBean mapBean = new MapBean(null, "Layers");
-    RegistryMapBean regMapBean = null;
+    MapBeanEnv regMapBean = null;
 
     InstanceContent instanceContent = new InstanceContent();
 
@@ -65,6 +68,8 @@ public final class ActiveMapEditorTopComponent extends TopComponent implements E
 
     LayerListTopComponent layerListTC = null;
 
+    JMapPanelCG mapPanel = new JMapPanelCG();
+
     public ActiveMapEditorTopComponent() {
         initComponents();
         setName(Bundle.CTL_ActiveMapEditorTopComponent());
@@ -72,17 +77,20 @@ public final class ActiveMapEditorTopComponent extends TopComponent implements E
         putClientProperty(TopComponent.PROP_CLOSING_DISABLED, Boolean.TRUE);
         putClientProperty(TopComponent.PROP_DRAGGING_DISABLED, Boolean.TRUE);
 
-        regMapBean = new RegistryMapBean(this.mapBean);
-        
+        regMapBean = new MapBeanEnv(this.mapBean, true);
+
         initView();
         initActions();
 
+        CgRegistry.topComponentMap.remove(mapBean);
+        CgRegistry.topComponentMap.put(mapBean, this);
+
         mgr.addPropertyChangeListener(this);
 
-        lookupMapBean= new AbstractLookup (this.instanceContent);        
+        lookupMapBean = new AbstractLookup(this.instanceContent);
         instanceContent.add(regMapBean);
         proxyLookup = new ProxyLookup(lookupAction, lookupMapBean);
-        
+
         associateLookup(this.proxyLookup);
 
         findLayerListTC();
@@ -90,6 +98,11 @@ public final class ActiveMapEditorTopComponent extends TopComponent implements E
             layerListTC.setExplorerManager(mgr);
         }
 
+// Create a map content and add our shapefile to it
+        MapContent map = new MapContent();
+        map.setTitle("Quickstart");
+
+        this.pnlMap.add(this.mapPanel, java.awt.BorderLayout.CENTER);
 
     }
 
@@ -123,7 +136,7 @@ public final class ActiveMapEditorTopComponent extends TopComponent implements E
         txt.setRows(5);
         jScrollPane1.setViewportView(txt);
 
-        pnlMap.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+        pnlMap.add(jScrollPane1, java.awt.BorderLayout.PAGE_END);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -171,15 +184,12 @@ public final class ActiveMapEditorTopComponent extends TopComponent implements E
     }
 
     void writeProperties(java.util.Properties p) {
-        // better to version settings since initial version as advocated at
-        // http://wiki.apidesign.org/wiki/PropertyFiles
         p.setProperty("version", "1.0");
-        // TODO store your settings
+
     }
 
     void readProperties(java.util.Properties p) {
         String version = p.getProperty("version");
-        // TODO read your settings according to their version
     }
 
     private void initView() {
@@ -189,9 +199,7 @@ public final class ActiveMapEditorTopComponent extends TopComponent implements E
         } catch (IntrospectionException ex) {
             Exceptions.printStackTrace(ex);
         }
-
         mgr.setRootContext(rootNode);
-
     }
 
     @Override
@@ -212,13 +220,12 @@ public final class ActiveMapEditorTopComponent extends TopComponent implements E
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getPropertyName().equals("selectedNodes")) {
-            Node[] selectedNode = (Node[]) evt.getNewValue();
-            for (Node node : selectedNode) {
-
-                io.github.bpodolski.caspergis.utils.CgUtils.io.getOut().println("node: " + node.getDisplayName());
-            }
-        }
+//        if (evt.getPropertyName().equals("selectedNodes")) {
+//            Node[] selectedNode = (Node[]) evt.getNewValue();
+//            for (Node node : selectedNode) {
+//                io.github.bpodolski.caspergis.utils.CgUtils.io.getOut().println("node: " + node.getDisplayName());
+//            }
+//        }
     }
 
     private void findLayerListTC() {

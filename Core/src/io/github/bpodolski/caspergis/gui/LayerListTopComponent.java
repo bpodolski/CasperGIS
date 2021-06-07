@@ -6,7 +6,7 @@
 package io.github.bpodolski.caspergis.gui;
 
 import io.github.bpodolski.caspergis.beans.MapBean;
-import io.github.bpodolski.caspergis.beans.RegistryMapBean;
+import io.github.bpodolski.caspergis.beans.MapBeanEnv;
 import java.beans.IntrospectionException;
 import java.util.Collection;
 import javax.swing.ActionMap;
@@ -58,7 +58,7 @@ public final class LayerListTopComponent extends TopComponent implements Explore
         LookupListener {
 
     private MapBean mapBean = null;
-    private Lookup.Result<RegistryMapBean> result = null;
+    private Lookup.Result<MapBeanEnv> result = null;
     private ExplorerManager mgr = new ExplorerManager();
 
     public LayerListTopComponent() {
@@ -69,8 +69,6 @@ public final class LayerListTopComponent extends TopComponent implements Explore
         putClientProperty(TopComponent.PROP_MAXIMIZATION_DISABLED, Boolean.TRUE);
 
         initView();
-//        initActions();
-
     }
 
     /**
@@ -109,7 +107,7 @@ public final class LayerListTopComponent extends TopComponent implements Explore
     // End of variables declaration//GEN-END:variables
     @Override
     public void componentOpened() {
-        result = Utilities.actionsGlobalContext().lookupResult(RegistryMapBean.class);
+        result = Utilities.actionsGlobalContext().lookupResult(MapBeanEnv.class);
         result.addLookupListener(this);
     }
 
@@ -169,14 +167,14 @@ public final class LayerListTopComponent extends TopComponent implements Explore
 
     @Override
     public void resultChanged(LookupEvent ev) {
-        Collection<? extends RegistryMapBean> allRegistryMapBeans = result.allInstances();
+        Collection<? extends MapBeanEnv> allRegistryMapBeans = result.allInstances();
         if (!allRegistryMapBeans.isEmpty()) {
-            RegistryMapBean reg = allRegistryMapBeans.iterator().next();
-            mapBean = reg.getMapBean();
-            lbl.setText(mapBean.getName());
-
-//            initActions();
-            view.addNotify();
+            MapBeanEnv reg = allRegistryMapBeans.iterator().next();
+            if (reg.isActive()) {
+                mapBean = reg.getMapBean();
+                lbl.setText(mapBean.getName());
+                view.addNotify();
+            }
         } else if (mapBean != null) {
             lbl.setText(mapBean.getName());
         } else {

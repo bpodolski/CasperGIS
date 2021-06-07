@@ -9,11 +9,28 @@ package io.github.bpodolski.caspergis.beans;
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-public class RegistryMapBean {
+public class MapBeanEnv {
     MapBean mapBean;
+    boolean active;
 
-    public RegistryMapBean(MapBean mapBean) {
+    
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public MapBeanEnv(MapBean mapBean, boolean active) {
         this.mapBean = mapBean;
+        this.active = active;
+    }
+    
+    
+
+    public MapBeanEnv(MapBean mapBean) {
+        this(mapBean, false);
     }
 
     public MapBean getMapBean() {

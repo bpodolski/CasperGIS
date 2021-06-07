@@ -5,10 +5,10 @@
  */
 package io.github.bpodolski.caspergis.gui.nodes;
 
+import io.github.bpodolski.caspergis.CgRegistry;
 import io.github.bpodolski.caspergis.beans.MapBean;
 import io.github.bpodolski.caspergis.gui.MapDisplayerTopComponent;
 import java.beans.IntrospectionException;
-import java.util.Set;
 import javax.swing.Action;
 import org.openide.actions.OpenAction;
 import org.openide.cookies.OpenCookie;
@@ -18,7 +18,6 @@ import org.openide.util.actions.SystemAction;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 import org.openide.windows.TopComponent;
-import org.openide.windows.WindowManager;
 
 /**
  *
@@ -35,11 +34,13 @@ public class MapNode extends BeanNode<MapBean> {
         ic.add(new OpenCookie() {
             @Override
             public void open() {
-                TopComponent tc = findTopComponent(mapBean);
+                TopComponent tc = (TopComponent) CgRegistry.topComponentMap.get(mapBean);//findTopComponent(mapBean);
                 if (tc == null) {
                     tc = new MapDisplayerTopComponent(mapBean);
                     tc.open();
-                }
+                } 
+                
+                
                 tc.requestActive();
             }
         });
@@ -53,15 +54,6 @@ public class MapNode extends BeanNode<MapBean> {
         return SystemAction.get(OpenAction.class);
     }
 
-    private TopComponent findTopComponent(MapBean mapBean) {
-        Set<TopComponent> openTopComponents = WindowManager.getDefault().getRegistry().getOpened();
-        for (TopComponent tc : openTopComponents) {
-            if (tc.getLookup().lookup(MapBean.class) == mapBean) {
-                return tc;
-            }
-        }
-        return null;
-    }
 
     @Override
     public Action[] getActions(boolean context) {
