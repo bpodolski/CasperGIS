@@ -5,11 +5,13 @@
  */
 package io.github.bpodolski.caspergis.gui.nodes;
 
+import io.github.bpodolski.caspergis.beans.BeanType;
 import io.github.bpodolski.caspergis.beans.MapBean;
 import io.github.bpodolski.caspergis.beans.MapElementBean;
 import io.github.bpodolski.caspergis.gui.nodes.factories.MapItemsFactory;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.dnd.DnDConstants;
 import java.beans.IntrospectionException;
 import java.io.IOException;
 import javax.swing.Action;
@@ -49,7 +51,7 @@ public class InternalMapNode extends BeanNode<MapBean> {
         this.setDisplayName(bean.getName());
         this.instContent = instContent;
 
-         instContent.add(new Index.Support() {
+        instContent.add(new Index.Support() {
 
             @Override
             public Node[] getNodes() {
@@ -70,7 +72,6 @@ public class InternalMapNode extends BeanNode<MapBean> {
 
     }
 
-
     @Override
     public Action getPreferredAction() {
         return null;
@@ -78,27 +79,67 @@ public class InternalMapNode extends BeanNode<MapBean> {
 
     @Override
     public PasteType getDropType(Transferable t, int arg1, int arg2) {
+        final MapItemNode dropNode = (MapItemNode) NodeTransfer.node(t, DnDConstants.ACTION_COPY_OR_MOVE + NodeTransfer.CLIPBOARD_COPY);//.ACTION_COPY_OR_MOVE + NodeTransfer.CLIPBOARD_CUT);
         if (t.isDataFlavorSupported(MapElementBean.MAPELEMENT_FLAVOR)) {
-            return new PasteType() {
-                @Override
-                public Transferable paste() throws IOException {
-                    try {
-                        MapElementBean meb = (MapElementBean) t.getTransferData(MapElementBean.MAPELEMENT_FLAVOR);
 
-                        factory.add(meb);
-                        final Node node = NodeTransfer.node(t, NodeTransfer.DND_MOVE + NodeTransfer.CLIPBOARD_CUT);
-                        if (node != null) {
-                            node.destroy();
+            MapElementBean bpb = null;
+            try {
+                bpb = (MapElementBean) t.getTransferData(MapElementBean.MAPELEMENT_FLAVOR);
+            } catch (UnsupportedFlavorException | IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+            if (bpb == null) {
+                return null;//
+            }
+            if (bpb.getBeanType().equals(BeanType.MAP_ELEMENT) || bpb.getBeanType().equals(BeanType.PROJECT)) {
+                return null;
+            }
+
+            if ((!this.equals(dropNode.getParentNode())) && (!this.equals(dropNode))) {
+                return new PasteType() {
+                    @Override
+                    public Transferable paste() throws IOException {
+                        try {
+                            MapElementBean bpb = (MapElementBean) t.getTransferData(MapElementBean.MAPELEMENT_FLAVOR);
+
+                            factory.add(bpb);
+
+                            final Node node = NodeTransfer.node(t, NodeTransfer.DND_MOVE + NodeTransfer.CLIPBOARD_CUT);
+                            if (node != null) {
+                                node.destroy();
+                            }
+                        } catch (UnsupportedFlavorException ex) {
+                            Exceptions.printStackTrace(ex);
                         }
-                    } catch (UnsupportedFlavorException ex) {
-                        Exceptions.printStackTrace(ex);
+                        return null;
                     }
-                    return null;
-                }
-            };
+                };
+            }
+            return null;
         } else {
             return null;
         }
+//        if (t.isDataFlavorSupported(MapElementBean.MAPELEMENT_FLAVOR)) {
+//            return new PasteType() {
+//                @Override
+//                public Transferable paste() throws IOException {
+//                    try {
+//                        MapElementBean meb = (MapElementBean) t.getTransferData(MapElementBean.MAPELEMENT_FLAVOR);
+//
+//                        factory.add(meb);
+//                        final Node node = NodeTransfer.node(t, NodeTransfer.DND_MOVE + NodeTransfer.CLIPBOARD_CUT);
+//                        if (node != null) {
+//                            node.destroy();
+//                        }
+//                    } catch (UnsupportedFlavorException ex) {
+//                        Exceptions.printStackTrace(ex);
+//                    }
+//                    return null;
+//                }
+//            };
+//        } else {
+//            return null;
+//        }
 
     }
 }

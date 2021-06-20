@@ -17,30 +17,25 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
-              <Component id="pnlMap" min="-2" pref="430" max="-2" attributes="0"/>
+              <Component id="pnlMap" pref="420" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <Component id="view" min="-2" pref="179" max="-2" attributes="0"/>
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                  </Group>
-                  <Group type="102" attributes="0">
-                      <Component id="testBtn" max="32767" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                  </Group>
-                  <Component id="pnlLayers" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Component id="pnlLayers" alignment="1" max="32767" attributes="0"/>
+                  <Component id="testBtn" alignment="1" max="32767" attributes="0"/>
+                  <Component id="view" alignment="1" pref="179" max="32767" attributes="0"/>
               </Group>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="testBtn" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="view" min="-2" pref="184" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="pnlLayers" max="32767" attributes="0"/>
           </Group>
           <Component id="pnlMap" alignment="0" max="32767" attributes="0"/>
@@ -49,9 +44,6 @@
   </Layout>
   <SubComponents>
     <Component class="org.openide.explorer.view.BeanTreeView" name="view">
-      <Properties>
-        <Property name="rootVisible" type="boolean" value="false"/>
-      </Properties>
     </Component>
     <Container class="javax.swing.JPanel" name="pnlMap">
       <Properties>
@@ -108,7 +100,7 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="175" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">

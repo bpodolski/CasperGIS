@@ -31,18 +31,15 @@ public class MapNode extends BeanNode<MapBean> {
 
     public MapNode(MapBean mapBean, InstanceContent ic) throws IntrospectionException {
         super(mapBean, Children.LEAF, new AbstractLookup(ic));
-        ic.add(new OpenCookie() {
-            @Override
-            public void open() {
-                TopComponent tc = (TopComponent) CgRegistry.topComponentMap.get(mapBean);//findTopComponent(mapBean);
-                if (tc == null) {
-                    tc = new MapDisplayerTopComponent(mapBean);
-                    tc.open();
-                } 
-                
-                
-                tc.requestActive();
+        ic.add((OpenCookie) () -> {
+            TopComponent tc = (TopComponent) CgRegistry.topComponentMap.get(mapBean);//findTopComponent(mapBean);
+            if (tc == null) {
+                tc = new MapDisplayerTopComponent(mapBean);
+                tc.open();
             }
+            
+            
+            tc.requestActive();
         });
         setDisplayName(mapBean.getDisplayName());
         setIconBaseWithExtension("io/github/bpodolski/caspergis/res/map.png");

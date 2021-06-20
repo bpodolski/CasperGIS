@@ -20,6 +20,7 @@ import org.openide.nodes.BeanNode;
 import org.openide.nodes.Index;
 import org.openide.nodes.Node;
 import org.openide.util.actions.SystemAction;
+import org.openide.util.datatransfer.ExTransferable;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 import org.openide.util.lookup.Lookups;
@@ -46,7 +47,7 @@ public class MapItemNode extends BeanNode<MapElementBean> {
         this.factory = factory;
         this.setDisplayName(bean.getName());
         this.instContent = instContent;
-        
+
         instContent.add(new Index.Support() {
 
             @Override
@@ -111,4 +112,29 @@ public class MapItemNode extends BeanNode<MapElementBean> {
         return bean;
     }
 
+    @Override
+    public Transferable clipboardCut() throws IOException {
+        Transferable deflt = super.clipboardCut();
+        ExTransferable added = ExTransferable.create(deflt);
+        added.put(new ExTransferable.Single(MapElementBean.MAPELEMENT_FLAVOR) {
+            @Override
+            protected MapElementBean getData() {
+                return getLookup().lookup(MapElementBean.class);
+            }
+        });
+        return added;
+    }
+
+    @Override
+    public Transferable clipboardCopy() throws IOException {
+        Transferable deflt = super.clipboardCut();
+        ExTransferable added = ExTransferable.create(deflt);
+        added.put(new ExTransferable.Single(MapElementBean.MAPELEMENT_FLAVOR) {
+            @Override
+            protected MapElementBean getData() {
+                return getLookup().lookup(MapElementBean.class);
+            }
+        });
+        return added;
+    }
 }
