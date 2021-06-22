@@ -18,11 +18,6 @@
  */
 package io.github.bpodolski.caspergis.beans;
 
-import io.github.bpodolski.caspergis.utils.LayerFileFilter;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,11 +25,11 @@ import java.util.List;
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-public class MapElementBean implements Transferable {
+public class MapElementBean {
 
     private List<MapElementBean> mapElementBeans;
-    public static final DataFlavor MAPELEMENT_FLAVOR = new DataFlavor(MapElementBean.class, "MapElementBean");
-    public static final LayerFileFilter LAYER_FILEFILTER = new LayerFileFilter();
+    
+    
 
     private BeanType beanType = BeanType.MAP_ELEMENT;
     private String name = "Map Element";
@@ -69,32 +64,11 @@ public class MapElementBean implements Transferable {
         this.displayName = displayName;
     }
 
-    @Override
-    public DataFlavor[] getTransferDataFlavors() {
-        return new DataFlavor[]{MAPELEMENT_FLAVOR};
-    }
-
-    @Override
-    public boolean isDataFlavorSupported(DataFlavor flavor) {
-        return flavor == MAPELEMENT_FLAVOR;
-    }
-
-    @Override
-    public Object getTransferData(DataFlavor flavor)
-            throws UnsupportedFlavorException, IOException {
-        if (flavor == MAPELEMENT_FLAVOR) {
-            return this;
-        } else {
-            throw new UnsupportedFlavorException(flavor);
-        }
-    }
-
     public List<MapElementBean> getMapElementBeans() {
         if (mapElementBeans == null) {
             mapElementBeans = new ArrayList<>();
         }
         return mapElementBeans;
     }
-
 
 }

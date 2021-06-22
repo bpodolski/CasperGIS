@@ -84,7 +84,8 @@ public class MapDisplayerTopComponent extends TopComponent implements ExplorerMa
         jScrollPane1 = new javax.swing.JScrollPane();
         txt = new javax.swing.JTextArea();
         testBtn = new javax.swing.JButton();
-        pnlLayers = new javax.swing.JPanel();
+
+        view.setRootVisible(false);
 
         pnlMap.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         pnlMap.setLayout(new java.awt.BorderLayout());
@@ -102,19 +103,6 @@ public class MapDisplayerTopComponent extends TopComponent implements ExplorerMa
             }
         });
 
-        pnlLayers.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-
-        javax.swing.GroupLayout pnlLayersLayout = new javax.swing.GroupLayout(pnlLayers);
-        pnlLayers.setLayout(pnlLayersLayout);
-        pnlLayersLayout.setHorizontalGroup(
-            pnlLayersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 175, Short.MAX_VALUE)
-        );
-        pnlLayersLayout.setVerticalGroup(
-            pnlLayersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 255, Short.MAX_VALUE)
-        );
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -123,7 +111,6 @@ public class MapDisplayerTopComponent extends TopComponent implements ExplorerMa
                 .addComponent(pnlMap, javax.swing.GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(pnlLayers, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(testBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(view, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE))
                 .addContainerGap())
@@ -134,10 +121,8 @@ public class MapDisplayerTopComponent extends TopComponent implements ExplorerMa
                 .addContainerGap()
                 .addComponent(testBtn)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(view, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnlLayers, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(pnlMap, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(view, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(pnlMap, javax.swing.GroupLayout.DEFAULT_SIZE, 486, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -148,7 +133,6 @@ public class MapDisplayerTopComponent extends TopComponent implements ExplorerMa
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JPanel pnlLayers;
     private javax.swing.JPanel pnlMap;
     private javax.swing.JButton testBtn;
     private javax.swing.JTextArea txt;

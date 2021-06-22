@@ -6,15 +6,22 @@
 package io.github.bpodolski.caspergis.gui.nodes;
 
 import io.github.bpodolski.caspergis.beans.BeanType;
+import io.github.bpodolski.caspergis.beans.LayerBean;
 import io.github.bpodolski.caspergis.beans.MapBean;
 import io.github.bpodolski.caspergis.beans.MapElementBean;
+import io.github.bpodolski.caspergis.beans.MapElementFlavor;
 import io.github.bpodolski.caspergis.gui.nodes.factories.MapItemsFactory;
+import io.github.bpodolski.caspergis.utils.LayerFileFilter;
+import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.DnDConstants;
 import java.beans.IntrospectionException;
+import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import javax.swing.Action;
+import org.openide.actions.PasteAction;
 import org.openide.nodes.BeanNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Index;
@@ -78,68 +85,63 @@ public class InternalMapNode extends BeanNode<MapBean> {
     }
 
     @Override
-    public PasteType getDropType(Transferable t, int arg1, int arg2) {
-        final MapItemNode dropNode = (MapItemNode) NodeTransfer.node(t, DnDConstants.ACTION_COPY_OR_MOVE + NodeTransfer.CLIPBOARD_COPY);//.ACTION_COPY_OR_MOVE + NodeTransfer.CLIPBOARD_CUT);
-        if (t.isDataFlavorSupported(MapElementBean.MAPELEMENT_FLAVOR)) {
+    public Action[] getActions(boolean context) {
+        return new Action[]{
+            PasteAction.get(PasteAction.class),};
+    }
+ 
 
-            MapElementBean bpb = null;
-            try {
-                bpb = (MapElementBean) t.getTransferData(MapElementBean.MAPELEMENT_FLAVOR);
-            } catch (UnsupportedFlavorException | IOException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-            if (bpb == null) {
-                return null;//
-            }
-            if (bpb.getBeanType().equals(BeanType.MAP_ELEMENT) || bpb.getBeanType().equals(BeanType.PROJECT)) {
-                return null;
-            }
-
-            if ((!this.equals(dropNode.getParentNode())) && (!this.equals(dropNode))) {
-                return new PasteType() {
-                    @Override
-                    public Transferable paste() throws IOException {
-                        try {
-                            MapElementBean bpb = (MapElementBean) t.getTransferData(MapElementBean.MAPELEMENT_FLAVOR);
-
-                            factory.add(bpb);
-
-                            final Node node = NodeTransfer.node(t, NodeTransfer.DND_MOVE + NodeTransfer.CLIPBOARD_CUT);
-                            if (node != null) {
-                                node.destroy();
-                            }
-                        } catch (UnsupportedFlavorException ex) {
-                            Exceptions.printStackTrace(ex);
-                        }
-                        return null;
-                    }
-                };
-            }
-            return null;
-        } else {
-            return null;
+    @Override
+    protected void createPasteTypes(Transferable t, List<PasteType> s) {
+        super.createPasteTypes(t, s);
+        PasteType p = getDropType(t, 0, 0);
+        if (p != null) {
+            s.add(p);
         }
-//        if (t.isDataFlavorSupported(MapElementBean.MAPELEMENT_FLAVOR)) {
-//            return new PasteType() {
-//                @Override
-//                public Transferable paste() throws IOException {
-//                    try {
-//                        MapElementBean meb = (MapElementBean) t.getTransferData(MapElementBean.MAPELEMENT_FLAVOR);
-//
-//                        factory.add(meb);
-//                        final Node node = NodeTransfer.node(t, NodeTransfer.DND_MOVE + NodeTransfer.CLIPBOARD_CUT);
+    }
+    
+     @Override
+    public PasteType getDropType(final Transferable t, int arg1, int arg2) {
+        if (t.isDataFlavorSupported(MapElementFlavor.MAPELEMENT_FLAVOR)) {
+            return new PasteType() {
+                @Override
+                public Transferable paste() throws IOException {
+                    try {
+                        factory.add((MapElementBean) t.getTransferData(MapElementFlavor.MAPELEMENT_FLAVOR));
+                        final Node node = NodeTransfer.node(t, NodeTransfer.DND_MOVE + NodeTransfer.CLIPBOARD_CUT);
 //                        if (node != null) {
 //                            node.destroy();
 //                        }
-//                    } catch (UnsupportedFlavorException ex) {
-//                        Exceptions.printStackTrace(ex);
-//                    }
-//                    return null;
-//                }
-//            };
-//        } else {
-//            return null;
-//        }
+                    } catch (UnsupportedFlavorException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                    return null;
+                }
+            };
+        } else if (t.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
+            return new PasteType() {
+                @Override
+                public Transferable paste() throws IOException {
+                    try {
+                        List fileList = (List) t.getTransferData(DataFlavor.javaFileListFlavor);
+                        for (Object f : fileList) {
+                            File file = (File) f;
 
+                            if (LayerFileFilter.LAYER_FILEFILTER.accept(file)) {
+                                LayerBean lb = new LayerBean(file.getName());
+
+                                factory.add(lb);
+                            }
+                        }
+                    } catch (UnsupportedFlavorException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                    return null;
+                }
+            };
+
+        }else {
+            return null;
+        }
     }
 }

@@ -8,26 +8,18 @@ package io.github.bpodolski.caspergis.gui.nodes.factories;
 import io.github.bpodolski.caspergis.beans.BeanType;
 import io.github.bpodolski.caspergis.beans.MapBean;
 import io.github.bpodolski.caspergis.beans.MapElementBean;
-import io.github.bpodolski.caspergis.gui.nodes.MapItemModel;
 import io.github.bpodolski.caspergis.gui.nodes.MapItemNode;
 import io.github.bpodolski.caspergis.services.MapItemsGetter;
 import java.beans.IntrospectionException;
-import java.beans.PropertyChangeEvent;
 import java.util.Arrays;
 import java.util.List;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import org.openide.nodes.BeanNode;
 import org.openide.nodes.ChildFactory;
+import org.openide.nodes.Children;
 import org.openide.nodes.Node;
-import org.openide.nodes.NodeEvent;
-import org.openide.nodes.NodeListener;
-import org.openide.nodes.NodeMemberEvent;
-import org.openide.nodes.NodeReorderEvent;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
-import org.openide.util.LookupEvent;
-import org.openide.util.LookupListener;
+import org.openide.util.lookup.Lookups;
 
 /**
  *
@@ -52,14 +44,13 @@ public class MapItemsFactory extends ChildFactory.Detachable<MapElementBean> {
     }
 
     @Override
-    protected Node createNodeForKey(MapElementBean key) {
+    protected Node createNodeForKey(MapElementBean bean) {
         BeanNode node = null;
-        if (key.getBeanType() == BeanType.LAYER) {
+        if (bean.getBeanType() == BeanType.LAYER) {
             try {
-//                node = new MapItemNode((MapElementBean) key, Children.LEAF, Lookups.singleton(bean), this);
+                node = new MapItemNode((MapElementBean) bean, Children.LEAF, Lookups.singleton(bean), this);
                 
-                node = new MapItemNode((MapElementBean) key, this);//new MapItemsFactory(key));
-            } catch (IntrospectionException ex) {
+           } catch (IntrospectionException ex) {
                 Exceptions.printStackTrace(ex);
             }
         }

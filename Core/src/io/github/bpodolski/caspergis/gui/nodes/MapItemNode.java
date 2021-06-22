@@ -6,6 +6,7 @@
 package io.github.bpodolski.caspergis.gui.nodes;
 
 import io.github.bpodolski.caspergis.beans.MapElementBean;
+import io.github.bpodolski.caspergis.beans.MapElementFlavor;
 import io.github.bpodolski.caspergis.gui.nodes.factories.MapItemsFactory;
 import java.awt.datatransfer.Transferable;
 import java.beans.IntrospectionException;
@@ -17,8 +18,10 @@ import org.openide.actions.DeleteAction;
 import org.openide.actions.MoveDownAction;
 import org.openide.actions.MoveUpAction;
 import org.openide.nodes.BeanNode;
+import org.openide.nodes.Children;
 import org.openide.nodes.Index;
 import org.openide.nodes.Node;
+import org.openide.util.Lookup;
 import org.openide.util.actions.SystemAction;
 import org.openide.util.datatransfer.ExTransferable;
 import org.openide.util.lookup.AbstractLookup;
@@ -34,41 +37,46 @@ public class MapItemNode extends BeanNode<MapElementBean> {
 
     private MapItemsFactory factory;
     private MapElementBean bean;
-    private InstanceContent instContent;
+//    private InstanceContent instContent;
 
-    public MapItemNode(MapElementBean bean, final MapItemsFactory factory) throws IntrospectionException {
-        this(bean, factory, new InstanceContent());
-    }
-
-    public MapItemNode(MapElementBean bean, final MapItemsFactory factory, InstanceContent instContent) throws IntrospectionException {
-        super(bean, null, new ProxyLookup(Lookups.singleton(bean), new AbstractLookup(instContent)));
-        //        Children.create(factory, true)
+    public MapItemNode(MapElementBean bean, Children children, Lookup lookup, MapItemsFactory mapItemsFactory) throws IntrospectionException {
+        super(bean, children, lookup);
+        this.factory = mapItemsFactory;
         this.bean = bean;
-        this.factory = factory;
-        this.setDisplayName(bean.getName());
-        this.instContent = instContent;
-
-        instContent.add(new Index.Support() {
-
-            @Override
-            public Node[] getNodes() {
-                return getChildren().getNodes();
-            }
-
-            @Override
-            public int getNodesCount() {
-                return getNodes().length;
-            }
-
-            @Override
-            public void reorder(int[] perm) {
-                factory.reorder(perm);
-
-            }
-        });
-
     }
 
+//    public MapItemNode(MapElementBean bean, final MapItemsFactory factory) throws IntrospectionException {
+//        this(bean, factory, new InstanceContent());
+//    }
+//
+//    public MapItemNode(MapElementBean bean, final MapItemsFactory factory, InstanceContent instContent) throws IntrospectionException {
+//        super(bean, null, new ProxyLookup(Lookups.singleton(bean), new AbstractLookup(instContent)));
+//
+//        this.bean = bean;
+//        this.factory = factory;
+//        this.setDisplayName(bean.getName());
+//        this.instContent = instContent;
+//
+//        instContent.add(new Index.Support() {
+//
+//            @Override
+//            public Node[] getNodes() {
+//                return getChildren().getNodes();
+//            }
+//
+//            @Override
+//            public int getNodesCount() {
+//                return getNodes().length;
+//            }
+//
+//            @Override
+//            public void reorder(int[] perm) {
+//                factory.reorder(perm);
+//
+//            }
+//        });
+//
+//    }
     @Override
     public Action getPreferredAction() {
         return null;
@@ -102,21 +110,16 @@ public class MapItemNode extends BeanNode<MapElementBean> {
 
     @Override
     public void destroy() throws IOException {
-        factory.removeChild(bean);
-        fireNodeDestroyed();
-    }
-
-    //add Drag support
-    @Override
-    public Transferable drag() throws IOException {
-        return bean;
+//        factory.removeChild(bean);
+//        fireNodeDestroyed();
+        factory.removeChild(getLookup().lookup(MapElementBean.class));
     }
 
     @Override
     public Transferable clipboardCut() throws IOException {
         Transferable deflt = super.clipboardCut();
         ExTransferable added = ExTransferable.create(deflt);
-        added.put(new ExTransferable.Single(MapElementBean.MAPELEMENT_FLAVOR) {
+        added.put(new ExTransferable.Single(MapElementFlavor.MAPELEMENT_FLAVOR) {
             @Override
             protected MapElementBean getData() {
                 return getLookup().lookup(MapElementBean.class);
@@ -129,7 +132,7 @@ public class MapItemNode extends BeanNode<MapElementBean> {
     public Transferable clipboardCopy() throws IOException {
         Transferable deflt = super.clipboardCut();
         ExTransferable added = ExTransferable.create(deflt);
-        added.put(new ExTransferable.Single(MapElementBean.MAPELEMENT_FLAVOR) {
+        added.put(new ExTransferable.Single(MapElementFlavor.MAPELEMENT_FLAVOR) {
             @Override
             protected MapElementBean getData() {
                 return getLookup().lookup(MapElementBean.class);

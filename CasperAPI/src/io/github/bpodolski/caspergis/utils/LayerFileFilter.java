@@ -14,55 +14,57 @@ import java.io.FileFilter;
  */
 public class LayerFileFilter implements FileFilter {
 
-        private String sFileExt = "shp";
-        private boolean isDir = false;
-        private boolean isDirOnly = false;
+    public static final LayerFileFilter LAYER_FILEFILTER = new LayerFileFilter();
 
-        public void setIsDir(boolean isDir) {
-            this.isDir = isDir;
-        }
+    private String sFileExt = "shp";
+    private boolean isDir = false;
+    private boolean isDirOnly = false;
 
-        public void setIsDirOnly(boolean isDirOnly) {
-            this.isDirOnly = isDirOnly;
-        }
+    public void setIsDir(boolean isDir) {
+        this.isDir = isDir;
+    }
 
-        public LayerFileFilter() {
-            this.sFileExt = "shp";
-            this.isDir = false;
-        }
+    public void setIsDirOnly(boolean isDirOnly) {
+        this.isDirOnly = isDirOnly;
+    }
 
-        public LayerFileFilter(String sFileExt) {
-            this.sFileExt = sFileExt;
-            this.isDir = false;
-        }
+    public LayerFileFilter() {
+        this.sFileExt = "shp";
+        this.isDir = false;
+    }
 
-        public String getsFileExt() {
-            return sFileExt;
-        }
+    public LayerFileFilter(String sFileExt) {
+        this.sFileExt = sFileExt;
+        this.isDir = false;
+    }
 
-        public void setsFileExt(String sFileExt) {
-            this.sFileExt = sFileExt;
-        }
+    public String getsFileExt() {
+        return sFileExt;
+    }
 
-        @Override
-        public boolean accept(File file) {
-            boolean isOk = false;
+    public void setsFileExt(String sFileExt) {
+        this.sFileExt = sFileExt;
+    }
 
-            if (file.exists()) {
-                if (this.isDir) {
-                    if (this.isDirOnly) {
-                        isOk = file.isDirectory();
-                    } else {
-                        isOk = true;
-                    }
+    @Override
+    public boolean accept(File file) {
+        boolean isOk = false;
 
-                } else if (file.isFile()) {
-                    if (file.getAbsolutePath().toUpperCase().endsWith(sFileExt.toUpperCase())) {
-                        isOk = true;
-                    }
+        if (file.exists()) {
+            if (this.isDir) {
+                if (this.isDirOnly) {
+                    isOk = file.isDirectory();
+                } else {
+                    isOk = true;
+                }
+
+            } else if (file.isFile()) {
+                if (file.getAbsolutePath().toUpperCase().endsWith(sFileExt.toUpperCase())) {
+                    isOk = true;
                 }
             }
-
-            return isOk;
         }
+
+        return isOk;
     }
+}

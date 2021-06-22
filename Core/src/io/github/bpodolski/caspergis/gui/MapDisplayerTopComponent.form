@@ -20,7 +20,6 @@
               <Component id="pnlMap" pref="420" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Component id="pnlLayers" alignment="1" max="32767" attributes="0"/>
                   <Component id="testBtn" alignment="1" max="32767" attributes="0"/>
                   <Component id="view" alignment="1" pref="179" max="32767" attributes="0"/>
               </Group>
@@ -33,17 +32,18 @@
           <Group type="102" attributes="0">
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="testBtn" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Component id="view" min="-2" pref="184" max="-2" attributes="0"/>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Component id="pnlLayers" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="view" max="32767" attributes="0"/>
           </Group>
-          <Component id="pnlMap" alignment="0" max="32767" attributes="0"/>
+          <Component id="pnlMap" alignment="0" pref="486" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
     <Component class="org.openide.explorer.view.BeanTreeView" name="view">
+      <Properties>
+        <Property name="rootVisible" type="boolean" value="false"/>
+      </Properties>
     </Component>
     <Container class="javax.swing.JPanel" name="pnlMap">
       <Properties>
@@ -88,27 +88,5 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="testBtnActionPerformed"/>
       </Events>
     </Component>
-    <Container class="javax.swing.JPanel" name="pnlLayers">
-      <Properties>
-        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-          <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
-            <EtchetBorder/>
-          </Border>
-        </Property>
-      </Properties>
-
-      <Layout>
-        <DimensionLayout dim="0">
-          <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="175" max="32767" attributes="0"/>
-          </Group>
-        </DimensionLayout>
-        <DimensionLayout dim="1">
-          <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="255" max="32767" attributes="0"/>
-          </Group>
-        </DimensionLayout>
-      </Layout>
-    </Container>
   </SubComponents>
 </Form>

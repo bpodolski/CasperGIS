@@ -16,6 +16,10 @@ import java.beans.PropertyChangeListener;
 import javax.swing.ActionMap;
 import org.geotools.map.MapContent;
 import org.netbeans.api.settings.ConvertAsProperties;
+import org.openide.actions.CopyAction;
+import org.openide.actions.CutAction;
+import org.openide.actions.DeleteAction;
+import org.openide.actions.PasteAction;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.explorer.ExplorerManager;
@@ -25,6 +29,7 @@ import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.actions.SystemAction;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 import org.openide.util.lookup.ProxyLookup;
@@ -210,10 +215,18 @@ public final class ActiveMapEditorTopComponent extends TopComponent implements E
     private void initActions() {
         ActionMap map = this.getActionMap();
 
-        map.put("delete", ExplorerUtils.actionDelete(mgr, true));
-        map.put("cut", ExplorerUtils.actionCut(mgr));
-        map.put("copy", ExplorerUtils.actionCopy(mgr));
-        map.put("paste", ExplorerUtils.actionPaste(mgr));
+        CutAction cut = SystemAction.get(CutAction.class);
+        map.put(cut.getActionMapKey(), ExplorerUtils.actionCut(mgr));
+
+        CopyAction copy = SystemAction.get(CopyAction.class);
+        map.put(copy.getActionMapKey(), ExplorerUtils.actionCopy(mgr));
+
+        PasteAction paste = SystemAction.get(PasteAction.class);
+        map.put(paste.getActionMapKey(), ExplorerUtils.actionPaste(mgr));
+
+        DeleteAction delete = SystemAction.get(DeleteAction.class);
+        map.put(delete.getActionMapKey(), ExplorerUtils.actionDelete(mgr, true));
+
 
         this.lookupAction = ExplorerUtils.createLookup(mgr, map);
     }
