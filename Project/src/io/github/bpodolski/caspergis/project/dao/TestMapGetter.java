@@ -17,17 +17,24 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
 @ServiceProvider(service = MapGetter.class)
-public class TestMapGetter extends MapGetter{
+public class TestMapGetter extends MapGetter {
 
     @Override
     public List<MapBean> getMapList(ProjectBean projectBean) {
         ArrayList<MapBean> mapList = new <MapBean>ArrayList();
-            for (int i = 1; i < 4; i++) {
-                mapList.add(new MapBean(null, i + ".TestMap"));
+        for (int i = 1; i < 4; i++) {
+            MapBean mapBean;
+            if (projectBean.isActive() && i == 1) {
+                mapBean = new MapBean(null, i + ".TestActiveMap");
+                mapBean.setActive(true);
+            } else {
+                mapBean = new MapBean(null, i + ".TestMap");
             }
-            
-            projectBean.setListMapBean(mapList);
-            return mapList;
+            mapList.add(mapBean);
+        }
+
+        projectBean.setListMapBean(mapList);
+        return mapList;
     }
-    
+
 }

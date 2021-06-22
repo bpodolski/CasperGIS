@@ -17,6 +17,7 @@ public class ProjectBean {
     String path;
     ArrayList<MapBean> listMapBean;
     ArrayList<PrintoutBean> listPrintOutBean;
+    boolean active = false;
 
     public ProjectBean(String name) {
         this.name = name;
@@ -53,6 +54,14 @@ public class ProjectBean {
 
     public void setListPrintOutBean(ArrayList<PrintoutBean> listPrintOutBean) {
         this.listPrintOutBean = listPrintOutBean;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
     
 }

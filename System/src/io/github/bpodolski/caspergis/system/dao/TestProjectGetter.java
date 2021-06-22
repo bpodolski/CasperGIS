@@ -21,6 +21,7 @@ public class TestProjectGetter extends ProjectGetter{
      @Override
         public ProjectBean getSystemProject() {
             ProjectBean systemProject = new ProjectBean("SystemTestProject");
+            systemProject.setActive(true);
             return systemProject;
         }
 

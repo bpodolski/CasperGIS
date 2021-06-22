@@ -5,7 +5,6 @@
  */
 package io.github.bpodolski.caspergis.gui.nodes;
 
-import io.github.bpodolski.caspergis.beans.BeanType;
 import io.github.bpodolski.caspergis.beans.LayerBean;
 import io.github.bpodolski.caspergis.beans.MapBean;
 import io.github.bpodolski.caspergis.beans.MapElementBean;
@@ -15,7 +14,6 @@ import io.github.bpodolski.caspergis.utils.LayerFileFilter;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
-import java.awt.dnd.DnDConstants;
 import java.beans.IntrospectionException;
 import java.io.File;
 import java.io.IOException;

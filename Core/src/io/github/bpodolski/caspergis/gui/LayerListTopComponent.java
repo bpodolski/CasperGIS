@@ -5,8 +5,8 @@
  */
 package io.github.bpodolski.caspergis.gui;
 
+import io.github.bpodolski.caspergis.CgRegistry;
 import io.github.bpodolski.caspergis.beans.MapBean;
-import io.github.bpodolski.caspergis.beans.MapBeanEnv;
 import java.beans.IntrospectionException;
 import java.util.Collection;
 import javax.swing.ActionMap;
@@ -29,6 +29,7 @@ import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.Utilities;
 import org.openide.util.actions.SystemAction;
+import org.openide.util.lookup.ProxyLookup;
 
 /**
  * Top component which displays something.
@@ -58,8 +59,13 @@ public final class LayerListTopComponent extends TopComponent implements Explore
         LookupListener {
 
     private MapBean mapBean = null;
-    private Lookup.Result<MapBeanEnv> result = null;
+    private Lookup.Result<MapBean> result = null;
     private ExplorerManager mgr = new ExplorerManager();
+
+
+    Lookup lookupMapBean = null;
+    Lookup lookupAction = null;
+    ProxyLookup proxyLookup;
 
     public LayerListTopComponent() {
         initComponents();
@@ -69,6 +75,9 @@ public final class LayerListTopComponent extends TopComponent implements Explore
         putClientProperty(TopComponent.PROP_MAXIMIZATION_DISABLED, Boolean.TRUE);
 
         initView();
+        initActions();
+
+        associateLookup(this.lookupAction);
     }
 
     /**
@@ -107,7 +116,7 @@ public final class LayerListTopComponent extends TopComponent implements Explore
     // End of variables declaration//GEN-END:variables
     @Override
     public void componentOpened() {
-        result = Utilities.actionsGlobalContext().lookupResult(MapBeanEnv.class);
+        result = Utilities.actionsGlobalContext().lookupResult(MapBean.class);
         result.addLookupListener(this);
     }
 
@@ -130,22 +139,7 @@ public final class LayerListTopComponent extends TopComponent implements Explore
 
     public void setExplorerManager(ExplorerManager mgr) {
         this.mgr = mgr;
-
-        ActionMap map = this.getActionMap();
-
-        CutAction cut = SystemAction.get(CutAction.class);
-        getActionMap().put(cut.getActionMapKey(), ExplorerUtils.actionCut(mgr));
-
-        CopyAction copy = SystemAction.get(CopyAction.class);
-        getActionMap().put(copy.getActionMapKey(), ExplorerUtils.actionCopy(mgr));
-
-        PasteAction paste = SystemAction.get(PasteAction.class);
-        getActionMap().put(paste.getActionMapKey(), ExplorerUtils.actionPaste(mgr));
-
-        DeleteAction delete = SystemAction.get(DeleteAction.class);
-        getActionMap().put(delete.getActionMapKey(), ExplorerUtils.actionDelete(mgr, true));
-
-        associateLookup(ExplorerUtils.createLookup(mgr, map));
+        initActions();
     }
 
     @Override
@@ -167,19 +161,47 @@ public final class LayerListTopComponent extends TopComponent implements Explore
 
     @Override
     public void resultChanged(LookupEvent ev) {
-        Collection<? extends MapBeanEnv> allRegistryMapBeans = result.allInstances();
+         Collection<? extends MapBean> allRegistryMapBeans = result.allInstances();
         if (!allRegistryMapBeans.isEmpty()) {
-            MapBeanEnv reg = allRegistryMapBeans.iterator().next();
-            if (reg.isActive()) {
-                mapBean = reg.getMapBean();
-                lbl.setText(mapBean.getName());
-                view.addNotify();
+            MapBean reg = allRegistryMapBeans.iterator().next();
+            if (reg != mapBean) {
+                if (reg.isActive()) {
+                    mapBean = reg;
+                    lbl.setText(mapBean.getName());
+
+                    if (CgRegistry.explorerManagerMap.get(mapBean) != null) {
+                        this.setExplorerManager((ExplorerManager) CgRegistry.explorerManagerMap.get(mapBean));
+                    }
+
+                    view.addNotify();
+                } else {
+                    lbl.setText("[no selection]");
+                }
             }
         } else if (mapBean != null) {
             lbl.setText(mapBean.getName());
         } else {
             lbl.setText("[no selection]");
         }
+    }
+
+    private void initActions() {
+
+        ActionMap map = this.getActionMap();
+
+        CutAction cut = SystemAction.get(CutAction.class);
+        getActionMap().put(cut.getActionMapKey(), ExplorerUtils.actionCut(mgr));
+
+        CopyAction copy = SystemAction.get(CopyAction.class);
+        getActionMap().put(copy.getActionMapKey(), ExplorerUtils.actionCopy(mgr));
+
+        PasteAction paste = SystemAction.get(PasteAction.class);
+        getActionMap().put(paste.getActionMapKey(), ExplorerUtils.actionPaste(mgr));
+
+        DeleteAction delete = SystemAction.get(DeleteAction.class);
+        getActionMap().put(delete.getActionMapKey(), ExplorerUtils.actionDelete(mgr, true));
+
+        this.lookupAction = ExplorerUtils.createLookup(mgr, map);
     }
 
 }

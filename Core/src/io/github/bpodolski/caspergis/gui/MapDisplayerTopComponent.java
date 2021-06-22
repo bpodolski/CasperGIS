@@ -7,12 +7,13 @@ package io.github.bpodolski.caspergis.gui;
 
 import io.github.bpodolski.caspergis.CgRegistry;
 import io.github.bpodolski.caspergis.beans.MapBean;
-import io.github.bpodolski.caspergis.beans.MapBeanEnv;
 import io.github.bpodolski.caspergis.gui.geotools.JMapPanelCG;
 import io.github.bpodolski.caspergis.gui.nodes.InternalMapNode;
 import java.beans.IntrospectionException;
 import javax.swing.ActionMap;
 import org.openide.actions.CopyAction;
+import org.openide.actions.CutAction;
+import org.openide.actions.DeleteAction;
 import org.openide.actions.PasteAction;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.ExplorerUtils;
@@ -32,15 +33,14 @@ import org.openide.windows.TopComponent;
 public class MapDisplayerTopComponent extends TopComponent implements ExplorerManager.Provider {
 
     private final MapBean mapBean;
-    MapBeanEnv regMapBean = null;
-    private final ExplorerManager mgr = new ExplorerManager();
+    private ExplorerManager mgr = new ExplorerManager();
 
     InstanceContent instanceContent = new InstanceContent();
 
     Lookup lookupMapBean = null;
     Lookup lookupAction = null;
     ProxyLookup proxyLookup;
-    
+
     JMapPanelCG mapPanel = new JMapPanelCG();
 
     /**
@@ -48,26 +48,26 @@ public class MapDisplayerTopComponent extends TopComponent implements ExplorerMa
      */
     public MapDisplayerTopComponent(MapBean mapBean) {
         initComponents();
-        setName(mapBean.getName());
-        setToolTipText(mapBean.getName());
 
         this.mapBean = mapBean;
-        
+
         initView();
         initActions();
-//        
-        regMapBean = new MapBeanEnv(this.mapBean);
-        
-        lookupMapBean= new AbstractLookup (this.instanceContent);        
-        instanceContent.add(regMapBean);
+
+        lookupMapBean = new AbstractLookup(this.instanceContent);
+        instanceContent.add(mapBean);
         proxyLookup = new ProxyLookup(lookupAction, lookupMapBean);
-        
         associateLookup(this.proxyLookup);
-        
+
         this.pnlMap.add(this.mapPanel, java.awt.BorderLayout.CENTER);
-        
-        CgRegistry.topComponentMap.remove(mapBean);
-        CgRegistry.topComponentMap.put(mapBean, this);
+
+        if (CgRegistry.explorerManagerMap.get(mapBean) != null) {
+            this.mgr = (ExplorerManager) CgRegistry.explorerManagerMap.get(mapBean);
+        } else {
+            CgRegistry.explorerManagerMap.put(mapBean, this.mgr);
+        }
+//        CgRegistry.topComponentMap.remove(mapBean);
+//        CgRegistry.topComponentMap.put(mapBean, this);
     }
 
     /**
@@ -140,12 +140,12 @@ public class MapDisplayerTopComponent extends TopComponent implements ExplorerMa
     // End of variables declaration//GEN-END:variables
 @Override
     public void componentOpened() {
-        // TODO add custom code on component opening
+
     }
 
     @Override
     public void componentClosed() {
-        // TODO add custom code on component closing
+
     }
 
     void writeProperties(java.util.Properties p) {
@@ -179,18 +179,24 @@ public class MapDisplayerTopComponent extends TopComponent implements ExplorerMa
     private void initActions() {
         ActionMap map = this.getActionMap();
 
-//        CutAction cut = SystemAction.get(CutAction.class);
-//        getActionMap().put(cut.getActionMapKey(), ExplorerUtils.actionCut(mgr));
-
         CopyAction copy = SystemAction.get(CopyAction.class);
         getActionMap().put(copy.getActionMapKey(), ExplorerUtils.actionCopy(mgr));
-//
-        PasteAction paste = SystemAction.get(PasteAction.class);
-        getActionMap().put(paste.getActionMapKey(), ExplorerUtils.actionPaste(mgr));
-//
-//        DeleteAction delete = SystemAction.get(DeleteAction.class);
-//        getActionMap().put(delete.getActionMapKey(), ExplorerUtils.actionDelete(mgr, true));
 
+        if (this.mapBean.isActive()) {
+            CutAction cut = SystemAction.get(CutAction.class);
+            getActionMap().put(cut.getActionMapKey(), ExplorerUtils.actionCut(mgr));
+
+            PasteAction paste = SystemAction.get(PasteAction.class);
+            getActionMap().put(paste.getActionMapKey(), ExplorerUtils.actionPaste(mgr));
+
+            DeleteAction delete = SystemAction.get(DeleteAction.class);
+            getActionMap().put(delete.getActionMapKey(), ExplorerUtils.actionDelete(mgr, true));
+        }
         this.lookupAction = ExplorerUtils.createLookup(mgr, map);
+    }
+
+    @Override
+    public String getName() {
+        return this.mapBean.getName();
     }
 }

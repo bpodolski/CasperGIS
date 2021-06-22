@@ -16,6 +16,6 @@ public class ModuleInfo {
     package io.github.bpodolski.caspergis.system.datamodel:
         classes of SystemDB DataModel 
     package io.github.bpodolski.caspergis.system.dao:
-        slasses for data access to SystemDB DataModel 
+        classes for data access to SystemDB DataModel 
     */
 }

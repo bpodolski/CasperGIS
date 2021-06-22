@@ -7,6 +7,7 @@ package io.github.bpodolski.caspergis;
 
 import io.github.bpodolski.caspergis.beans.MapBean;
 import java.util.HashMap;
+import org.openide.explorer.ExplorerManager;
 import org.openide.windows.TopComponent;
 
 
@@ -15,5 +16,6 @@ import org.openide.windows.TopComponent;
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
 public class CgRegistry {
-    public static final HashMap topComponentMap = new HashMap<MapBean, TopComponent>();
+//    public static final HashMap topComponentMap = new HashMap<MapBean, TopComponent>();
+    public static final HashMap explorerManagerMap = new HashMap<MapBean, ExplorerManager>();
 }

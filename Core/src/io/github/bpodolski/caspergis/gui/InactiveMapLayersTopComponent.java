@@ -7,7 +7,6 @@ package io.github.bpodolski.caspergis.gui;
 
 import io.github.bpodolski.caspergis.CgRegistry;
 import io.github.bpodolski.caspergis.beans.MapBean;
-import io.github.bpodolski.caspergis.beans.MapBeanEnv;
 import java.beans.IntrospectionException;
 import java.util.Collection;
 import javax.swing.ActionMap;
@@ -60,9 +59,8 @@ public final class InactiveMapLayersTopComponent extends TopComponent implements
         LookupListener {
 
     private MapBean mapBean = null;
-    private Lookup.Result<MapBeanEnv> result = null;
+    private Lookup.Result<MapBean> result = null;
     private ExplorerManager mgr = new ExplorerManager();
-    private ExplorerManager.Provider tc = null;
 
     Lookup lookupMapBean = null;
     Lookup lookupAction = null;
@@ -77,9 +75,9 @@ public final class InactiveMapLayersTopComponent extends TopComponent implements
 
         initView();
         initActions();
-        
+
         associateLookup(this.lookupAction);
-        
+
     }
 
     /**
@@ -119,7 +117,7 @@ public final class InactiveMapLayersTopComponent extends TopComponent implements
     // End of variables declaration//GEN-END:variables
     @Override
     public void componentOpened() {
-        result = Utilities.actionsGlobalContext().lookupResult(MapBeanEnv.class);
+        result = Utilities.actionsGlobalContext().lookupResult(MapBean.class);
         result.addLookupListener(this);
     }
 
@@ -164,18 +162,16 @@ public final class InactiveMapLayersTopComponent extends TopComponent implements
 
     @Override
     public void resultChanged(LookupEvent ev) {
-        Collection<? extends MapBeanEnv> allRegistryMapBeans = result.allInstances();
+        Collection<? extends MapBean> allRegistryMapBeans = result.allInstances();
         if (!allRegistryMapBeans.isEmpty()) {
-            MapBeanEnv reg = allRegistryMapBeans.iterator().next();
-            if (reg.getMapBean() != mapBean) {
+            MapBean reg = allRegistryMapBeans.iterator().next();
+            if (reg != mapBean) {
                 if (!reg.isActive()) {
-                    mapBean = reg.getMapBean();
+                    mapBean = reg;
                     lbl.setText(mapBean.getName());
 
-                    ExplorerManager.Provider tcTmp = (ExplorerManager.Provider) CgRegistry.topComponentMap.get(mapBean);
-                    if (tcTmp != null) {
-                        tc = tcTmp;
-                        this.setExplorerManager(tcTmp.getExplorerManager());
+                    if (CgRegistry.explorerManagerMap.get(mapBean) != null) {
+                        this.setExplorerManager((ExplorerManager) CgRegistry.explorerManagerMap.get(mapBean));
                     }
 
                     view.addNotify();
@@ -191,8 +187,8 @@ public final class InactiveMapLayersTopComponent extends TopComponent implements
     }
 
     private void initActions() {
-       
-                ActionMap map = this.getActionMap();
+
+        ActionMap map = this.getActionMap();
 
         CutAction cut = SystemAction.get(CutAction.class);
         getActionMap().put(cut.getActionMapKey(), ExplorerUtils.actionCut(mgr));

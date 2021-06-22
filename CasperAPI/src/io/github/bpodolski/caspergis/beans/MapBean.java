@@ -28,6 +28,7 @@ import java.util.ArrayList;
 public class MapBean  extends ProjectElementBean{
 
     private ArrayList<MapElementBean> mapElementList = new ArrayList();
+    boolean active = false;
 
     public MapBean(ArrayList<MapElementBean> mapElementList) {
        this(mapElementList, "Layers");
@@ -46,6 +47,14 @@ public class MapBean  extends ProjectElementBean{
 
     public void setMapElementList(ArrayList<MapElementBean> mapElementList) {
         this.mapElementList = mapElementList;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
     
   
