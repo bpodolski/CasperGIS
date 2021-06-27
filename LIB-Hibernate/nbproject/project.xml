@@ -67,6 +67,7 @@
                 <package>com.sun.xml.txw2</package>
                 <package>com.sun.xml.txw2.annotation</package>
                 <package>com.sun.xml.txw2.output</package>
+                <package>io.github.bpodolski.caspergis.lib.hibernate</package>
                 <package>javassist</package>
                 <package>javassist.bytecode</package>
                 <package>javassist.bytecode.analysis</package>

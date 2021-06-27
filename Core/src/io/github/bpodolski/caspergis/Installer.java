@@ -14,9 +14,11 @@ import org.openide.windows.WindowManager;
 
 public class Installer extends ModuleInstall {
 
+    public static CgRegistry cgRegistry = new CgRegistry();
+    
     @Override
     public void validate() {
-
+       
         //test - first run of CasperGIS app
         if (NbPreferences.forModule(CasperInfo.class).get("FIRST_RUN", "").equals("")) {
             CasperInfo.nbPreferences();
@@ -46,7 +48,6 @@ public class Installer extends ModuleInstall {
             @Override
             public void run() {
                 openStartPage();
-
             }
 
             private void openStartPage() {
@@ -62,6 +63,7 @@ public class Installer extends ModuleInstall {
                 }
 
             }
+
         });
     }
 
@@ -71,4 +73,5 @@ public class Installer extends ModuleInstall {
         fUserWorkspace.mkdir();
         fUserWorkspaceTmp.mkdir();
     }
+
 }

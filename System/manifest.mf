@@ -1,6 +1,7 @@
 Manifest-Version: 1.0
 AutoUpdate-Show-In-Client: true
 OpenIDE-Module: io.github.bpodolski.caspergis.system
+OpenIDE-Module-Install: io/github/bpodolski/caspergis/system/Installer.class
 OpenIDE-Module-Localizing-Bundle: io/github/bpodolski/caspergis/system/Bundle.properties
 OpenIDE-Module-Specification-Version: 1.0
 

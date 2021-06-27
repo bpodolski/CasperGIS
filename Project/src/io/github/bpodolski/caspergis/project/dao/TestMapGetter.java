@@ -26,7 +26,8 @@ public class TestMapGetter extends MapGetter {
             MapBean mapBean;
             if (projectBean.isActive() && i == 1) {
                 mapBean = new MapBean(null, i + ".TestActiveMap");
-                mapBean.setActive(true);
+                mapBean.setActive(true); 
+                
             } else {
                 mapBean = new MapBean(null, i + ".TestMap");
             }

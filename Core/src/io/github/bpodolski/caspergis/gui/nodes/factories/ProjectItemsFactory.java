@@ -5,6 +5,8 @@
  */
 package io.github.bpodolski.caspergis.gui.nodes.factories;
 
+import io.github.bpodolski.caspergis.CgRegistry;
+import io.github.bpodolski.caspergis.Installer;
 import io.github.bpodolski.caspergis.api.CasperInfo;
 import io.github.bpodolski.caspergis.beans.BeanType;
 import io.github.bpodolski.caspergis.beans.MapBean;
@@ -16,6 +18,7 @@ import io.github.bpodolski.caspergis.gui.nodes.PrintoutNode;
 import io.github.bpodolski.caspergis.services.MapGetter;
 import io.github.bpodolski.caspergis.services.PrintoutGetter;
 import java.beans.IntrospectionException;
+import java.beans.PropertyVetoException;
 import java.util.ArrayList;
 import java.util.List;
 import org.openide.nodes.BeanNode;
@@ -44,7 +47,6 @@ public class ProjectItemsFactory extends ChildFactory<ProjectElementBean> {
         projectElementList.addAll(mapGetterService.getMapList(projectBean));
 //        projectElementList.addAll(printoutGetterService.getPrintoutList(projectBean));
 
-
     }
 
     @Override
@@ -59,15 +61,23 @@ public class ProjectItemsFactory extends ChildFactory<ProjectElementBean> {
 
         try {
             if (key.getBeanType() == BeanType.MAP) {
-                CasperInfo.io.getOut().println("ProjectItemsFactory; createNodeForKey = BeanType.MAP");
-                node = new MapNode((MapBean) key);
+CasperInfo.io.getOut().println("ProjectItemsFactory; createNodeForKey = BeanType.MAP");                
+                MapBean mb = (MapBean) key;
+                node = new MapNode(mb);
+                if (mb.isActive()) {
+                    CgRegistry cgr = Installer.cgRegistry;
+                    cgr.setActiveMapBean(mb);
+                    cgr.setActiveMapNode((MapNode) node);
+                }
+
+                
             }
             if (key.getBeanType() == BeanType.PRINTOUT) {
-                CasperInfo.io.getOut().println("ProjectItemsFactory; createNodeForKey = BeanType.PRINTOUT" );
+                CasperInfo.io.getOut().println("ProjectItemsFactory; createNodeForKey = BeanType.PRINTOUT");
                 node = new PrintoutNode((PrintoutBean) key);
             }
 
-        } catch (IntrospectionException ex) {
+        } catch (IntrospectionException | PropertyVetoException ex) {
             Exceptions.printStackTrace(ex);
         }
         return node;

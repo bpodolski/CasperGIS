@@ -31,16 +31,16 @@ import org.openide.windows.TopComponent;
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
 public class MapDisplayerTopComponent extends TopComponent implements ExplorerManager.Provider {
-
+    
     private final MapBean mapBean;
     private ExplorerManager mgr = new ExplorerManager();
-
+    
     InstanceContent instanceContent = new InstanceContent();
-
+    
     Lookup lookupMapBean = null;
     Lookup lookupAction = null;
     ProxyLookup proxyLookup;
-
+    
     JMapPanelCG mapPanel = new JMapPanelCG();
 
     /**
@@ -48,26 +48,26 @@ public class MapDisplayerTopComponent extends TopComponent implements ExplorerMa
      */
     public MapDisplayerTopComponent(MapBean mapBean) {
         initComponents();
-
+        
         this.mapBean = mapBean;
-
+        
         initView();
         initActions();
-
+        
         lookupMapBean = new AbstractLookup(this.instanceContent);
         instanceContent.add(mapBean);
         proxyLookup = new ProxyLookup(lookupAction, lookupMapBean);
         associateLookup(this.proxyLookup);
-
+        
         this.pnlMap.add(this.mapPanel, java.awt.BorderLayout.CENTER);
-
+        
         if (CgRegistry.explorerManagerMap.get(mapBean) != null) {
             this.mgr = (ExplorerManager) CgRegistry.explorerManagerMap.get(mapBean);
         } else {
             CgRegistry.explorerManagerMap.put(mapBean, this.mgr);
         }
-//        CgRegistry.topComponentMap.remove(mapBean);
-//        CgRegistry.topComponentMap.put(mapBean, this);
+        setTopComponentProps();
+        
     }
 
     /**
@@ -127,7 +127,8 @@ public class MapDisplayerTopComponent extends TopComponent implements ExplorerMa
     }// </editor-fold>//GEN-END:initComponents
 
     private void testBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_testBtnActionPerformed
-
+        mapBean.setActive(false);
+        this.setTopComponentProps();
     }//GEN-LAST:event_testBtnActionPerformed
 
 
@@ -140,26 +141,26 @@ public class MapDisplayerTopComponent extends TopComponent implements ExplorerMa
     // End of variables declaration//GEN-END:variables
 @Override
     public void componentOpened() {
-
+        
     }
-
+    
     @Override
     public void componentClosed() {
-
+        
     }
-
+    
     void writeProperties(java.util.Properties p) {
         // better to version settings since initial version as advocated at
         // http://wiki.apidesign.org/wiki/PropertyFiles
         p.setProperty("version", "1.0");
         // TODO store your settings
     }
-
+    
     void readProperties(java.util.Properties p) {
         String version = p.getProperty("version");
         // TODO read your settings according to their version
     }
-
+    
     private void initView() {
         Node rootNode = null;
         try {
@@ -167,36 +168,52 @@ public class MapDisplayerTopComponent extends TopComponent implements ExplorerMa
         } catch (IntrospectionException ex) {
             Exceptions.printStackTrace(ex);
         }
-
+        
         mgr.setRootContext(rootNode);
     }
-
+    
     @Override
     public ExplorerManager getExplorerManager() {
         return mgr;
     }
-
+    
     private void initActions() {
         ActionMap map = this.getActionMap();
-
+        
         CopyAction copy = SystemAction.get(CopyAction.class);
         getActionMap().put(copy.getActionMapKey(), ExplorerUtils.actionCopy(mgr));
-
+        
         if (this.mapBean.isActive()) {
             CutAction cut = SystemAction.get(CutAction.class);
             getActionMap().put(cut.getActionMapKey(), ExplorerUtils.actionCut(mgr));
-
+            
             PasteAction paste = SystemAction.get(PasteAction.class);
             getActionMap().put(paste.getActionMapKey(), ExplorerUtils.actionPaste(mgr));
-
+            
             DeleteAction delete = SystemAction.get(DeleteAction.class);
             getActionMap().put(delete.getActionMapKey(), ExplorerUtils.actionDelete(mgr, true));
         }
         this.lookupAction = ExplorerUtils.createLookup(mgr, map);
     }
-
+    
     @Override
     public String getName() {
         return this.mapBean.getName();
+    }
+    
+    private void setTopComponentProps() {
+        if (mapBean.isActive()) {
+            putClientProperty(TopComponent.PROP_CLOSING_DISABLED, Boolean.TRUE);
+            putClientProperty(TopComponent.PROP_DRAGGING_DISABLED, Boolean.TRUE);
+            putClientProperty(TopComponent.PROP_SLIDING_DISABLED, Boolean.TRUE);
+            putClientProperty(TopComponent.PROP_UNDOCKING_DISABLED, Boolean.TRUE);
+            
+        } else {
+            putClientProperty(TopComponent.PROP_CLOSING_DISABLED, Boolean.FALSE);
+            putClientProperty(TopComponent.PROP_DRAGGING_DISABLED, Boolean.FALSE);
+            putClientProperty(TopComponent.PROP_SLIDING_DISABLED, Boolean.FALSE);
+            putClientProperty(TopComponent.PROP_UNDOCKING_DISABLED, Boolean.FALSE);
+            
+        }
     }
 }

@@ -78,6 +78,8 @@ public final class LayerListTopComponent extends TopComponent implements Explore
         initActions();
 
         associateLookup(this.lookupAction);
+        
+        
     }
 
     /**

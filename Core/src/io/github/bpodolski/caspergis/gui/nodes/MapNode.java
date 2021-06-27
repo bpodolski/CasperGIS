@@ -26,6 +26,8 @@ import org.openide.windows.WindowManager;
  */
 public class MapNode extends BeanNode<MapBean> {
 
+    MapBean mapBean;
+
     public MapNode(MapBean mapBean) throws IntrospectionException {
         this(mapBean, new InstanceContent());
     }
@@ -38,13 +40,26 @@ public class MapNode extends BeanNode<MapBean> {
                 tc = new MapDisplayerTopComponent(mapBean);
                 tc.open();
             }
-            
-            
+
             tc.requestActive();
         });
-        setDisplayName(mapBean.getDisplayName());
+
+        this.mapBean = mapBean;
         setIconBaseWithExtension("io/github/bpodolski/caspergis/res/map.png");
 
+    }
+
+    @Override
+    public String getHtmlDisplayName() {
+        if (mapBean != null) {
+            if (mapBean.isActive()) {
+
+                return "<b>" + mapBean.getName() + "</b>";
+            } else {
+                return mapBean.getName();
+            }
+        }
+        return super.getDisplayName(); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -52,12 +67,11 @@ public class MapNode extends BeanNode<MapBean> {
         return SystemAction.get(OpenAction.class);
     }
 
-
     @Override
     public Action[] getActions(boolean context) {
         return new Action[]{SystemAction.get(OpenAction.class)};
     }
-    
+
     private TopComponent findTopComponent(MapBean mapBean) {
         Set<TopComponent> openTopComponents = WindowManager.getDefault().getRegistry().getOpened();
         for (TopComponent tc : openTopComponents) {

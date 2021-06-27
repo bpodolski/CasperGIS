@@ -5,9 +5,14 @@
  */
 package io.github.bpodolski.caspergis.gui;
 
+import io.github.bpodolski.caspergis.CgRegistry;
+import io.github.bpodolski.caspergis.Installer;
+import io.github.bpodolski.caspergis.gui.nodes.MapNode;
 import io.github.bpodolski.caspergis.gui.nodes.factories.SystemFactory;
 import java.awt.BorderLayout;
 import java.beans.IntrospectionException;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.actions.CopyAction;
@@ -21,6 +26,7 @@ import org.openide.explorer.ExplorerUtils;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
+import org.openide.util.Exceptions;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.actions.SystemAction;
@@ -52,7 +58,7 @@ import org.openide.util.actions.SystemAction;
 public final class ProjectListTopComponent extends TopComponent implements ExplorerManager.Provider {
 
     private final ExplorerManager mgr = new ExplorerManager();
-
+    CgRegistry cgr = Installer.cgRegistry;
 
     public ProjectListTopComponent() throws IntrospectionException, PropertyVetoException {
         initComponents();
@@ -99,12 +105,12 @@ public final class ProjectListTopComponent extends TopComponent implements Explo
     // End of variables declaration//GEN-END:variables
     @Override
     public void componentOpened() {
-        // TODO add custom code on component opening
+
     }
 
     @Override
     public void componentClosed() {
-        // TODO add custom code on component closing
+
     }
 
     void writeProperties(java.util.Properties p) {
@@ -141,13 +147,35 @@ public final class ProjectListTopComponent extends TopComponent implements Explo
     public void initView() throws IntrospectionException, PropertyVetoException {
 
         this.add(view, BorderLayout.CENTER);
-        
+
         Children sysChildren = Children.create(new SystemFactory(), true);
         Node rootNode = new AbstractNode(sysChildren);
         rootNode.setDisplayName("System");
         mgr.setRootContext(rootNode);
         rootNode.setPreferred(false);
 
+        expandTreeNode(rootNode);
+
+        if (Installer.cgRegistry.getActiveMapNode() != null) {
+            MapNode mn = Installer.cgRegistry.getActiveMapNode();
+            mgr.setSelectedNodes(new Node[]{mn});
+//            Installer.cgRegistry.getActiveMapNode().getPreferredAction().actionPerformed(null);
+            MapDisplayerTopComponent tc = new MapDisplayerTopComponent(Installer.cgRegistry.getActiveMapBean());
+            tc.open();
+        }
 
     }
+
+    private void expandTreeNode(final Node node) {
+        view.expandNode(node);
+
+        Children children = node.getChildren();
+        if (null != children) {
+            int nodeCount = children.getNodesCount();
+            for (int nI = 0; nI < nodeCount; nI++) {
+                expandTreeNode(children.getNodeAt(nI));
+            }
+        }
+    }
+
 }

@@ -19,15 +19,9 @@ import org.openide.actions.MoveDownAction;
 import org.openide.actions.MoveUpAction;
 import org.openide.nodes.BeanNode;
 import org.openide.nodes.Children;
-import org.openide.nodes.Index;
-import org.openide.nodes.Node;
 import org.openide.util.Lookup;
 import org.openide.util.actions.SystemAction;
 import org.openide.util.datatransfer.ExTransferable;
-import org.openide.util.lookup.AbstractLookup;
-import org.openide.util.lookup.InstanceContent;
-import org.openide.util.lookup.Lookups;
-import org.openide.util.lookup.ProxyLookup;
 
 /**
  *
@@ -45,38 +39,6 @@ public class MapItemNode extends BeanNode<MapElementBean> {
         this.bean = bean;
     }
 
-//    public MapItemNode(MapElementBean bean, final MapItemsFactory factory) throws IntrospectionException {
-//        this(bean, factory, new InstanceContent());
-//    }
-//
-//    public MapItemNode(MapElementBean bean, final MapItemsFactory factory, InstanceContent instContent) throws IntrospectionException {
-//        super(bean, null, new ProxyLookup(Lookups.singleton(bean), new AbstractLookup(instContent)));
-//
-//        this.bean = bean;
-//        this.factory = factory;
-//        this.setDisplayName(bean.getName());
-//        this.instContent = instContent;
-//
-//        instContent.add(new Index.Support() {
-//
-//            @Override
-//            public Node[] getNodes() {
-//                return getChildren().getNodes();
-//            }
-//
-//            @Override
-//            public int getNodesCount() {
-//                return getNodes().length;
-//            }
-//
-//            @Override
-//            public void reorder(int[] perm) {
-//                factory.reorder(perm);
-//
-//            }
-//        });
-//
-//    }
     @Override
     public Action getPreferredAction() {
         return null;
