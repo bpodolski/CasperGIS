@@ -9,7 +9,6 @@ package io.github.bpodolski.caspergis.system.dao;
 import io.github.bpodolski.caspergis.api.CasperInfo;
 import io.github.bpodolski.caspergis.system.datamodel.CgProject;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import org.hibernate.Session;
@@ -18,8 +17,6 @@ import org.hibernate.Transaction;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
-import org.netbeans.api.io.IOProvider;
-import org.netbeans.api.io.InputOutput;
 import org.openide.util.NbPreferences;
 
 
@@ -30,14 +27,11 @@ import org.openide.util.NbPreferences;
  */
 public class JpaSystemDbDAO {
 
-    private SessionFactory sessionFactory;
-//    private Session session;
-
-    InputOutput io = IOProvider.getDefault().getIO("Output", false);
+    private final SessionFactory sessionFactory;
 
     public JpaSystemDbDAO() {
         String DB_SYSTEM_PATH = NbPreferences.forModule(CasperInfo.class).get(CasperInfo.DB_SYSTEM_PATH,"");
-        
+
         File f = new File(DB_SYSTEM_PATH);
         boolean create = !f.exists();
         
@@ -45,8 +39,8 @@ public class JpaSystemDbDAO {
         Properties properties = new Properties();
 
         properties.put("hibernate.connection.driver_class", "org.sqlite.JDBC");
-        properties.put("hibernate.connection.url", "jdbc:sqlite:" + CasperInfo.DB_SYSTEM_PATH);
-        properties.put("hibernate.dialect", "pl.com.caspergis.hibernate.SQLiteDialect");
+        properties.put("hibernate.connection.url", "jdbc:sqlite:" + f.getPath());
+        properties.put("hibernate.dialect", "io.github.bpodolski.caspergis.lib.hibernate.SQLiteDialect");
 
         properties.put("hibernate.connection.charSet", "UTF-8");
 

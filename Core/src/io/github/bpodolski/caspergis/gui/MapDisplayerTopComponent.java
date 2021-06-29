@@ -202,18 +202,22 @@ public class MapDisplayerTopComponent extends TopComponent implements ExplorerMa
     }
     
     private void setTopComponentProps() {
-        if (mapBean.isActive()) {
-            putClientProperty(TopComponent.PROP_CLOSING_DISABLED, Boolean.TRUE);
-            putClientProperty(TopComponent.PROP_DRAGGING_DISABLED, Boolean.TRUE);
-            putClientProperty(TopComponent.PROP_SLIDING_DISABLED, Boolean.TRUE);
-            putClientProperty(TopComponent.PROP_UNDOCKING_DISABLED, Boolean.TRUE);
-            
-        } else {
-            putClientProperty(TopComponent.PROP_CLOSING_DISABLED, Boolean.FALSE);
+                    putClientProperty(TopComponent.PROP_CLOSING_DISABLED, Boolean.FALSE);
             putClientProperty(TopComponent.PROP_DRAGGING_DISABLED, Boolean.FALSE);
             putClientProperty(TopComponent.PROP_SLIDING_DISABLED, Boolean.FALSE);
             putClientProperty(TopComponent.PROP_UNDOCKING_DISABLED, Boolean.FALSE);
+//        if (mapBean.isActive()) {
+//            putClientProperty(TopComponent.PROP_CLOSING_DISABLED, Boolean.TRUE);
+//            putClientProperty(TopComponent.PROP_DRAGGING_DISABLED, Boolean.TRUE);
+//            putClientProperty(TopComponent.PROP_SLIDING_DISABLED, Boolean.TRUE);
+//            putClientProperty(TopComponent.PROP_UNDOCKING_DISABLED, Boolean.TRUE);
+//            
+//        } else {
+//            putClientProperty(TopComponent.PROP_CLOSING_DISABLED, Boolean.FALSE);
+//            putClientProperty(TopComponent.PROP_DRAGGING_DISABLED, Boolean.FALSE);
+//            putClientProperty(TopComponent.PROP_SLIDING_DISABLED, Boolean.FALSE);
+//            putClientProperty(TopComponent.PROP_UNDOCKING_DISABLED, Boolean.FALSE);
             
-        }
+//        }
     }
 }
