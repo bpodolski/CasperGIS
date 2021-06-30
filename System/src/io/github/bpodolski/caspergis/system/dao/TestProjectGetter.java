@@ -5,12 +5,14 @@
  */
 package io.github.bpodolski.caspergis.system.dao;
 
+import io.github.bpodolski.caspergis.api.CasperInfo;
 import io.github.bpodolski.caspergis.beans.ProjectBean;
 import io.github.bpodolski.caspergis.services.ProjectGetter;
 import io.github.bpodolski.caspergis.system.datamodel.CgProject;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import org.openide.util.NbPreferences;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -24,6 +26,7 @@ public class TestProjectGetter extends ProjectGetter {
     public ProjectBean getSystemProject() {
         ProjectBean systemProject = new ProjectBean("SystemTestProject");
         systemProject.setActive(true);
+        systemProject.setPath(NbPreferences.forModule(CasperInfo.class).get(CasperInfo.DB_DEFAULT_PROJECT_PATH, ""));
         return systemProject;
     }
 

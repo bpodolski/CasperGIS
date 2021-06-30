@@ -45,7 +45,6 @@ public class ProjectItemsFactory extends ChildFactory<ProjectElementBean> {
         this.printoutGetterService = Lookup.getDefault().lookup(PrintoutGetter.class);
 
         projectElementList.addAll(mapGetterService.getMapList(projectBean));
-//        projectElementList.addAll(printoutGetterService.getPrintoutList(projectBean));
 
     }
 
@@ -61,7 +60,7 @@ public class ProjectItemsFactory extends ChildFactory<ProjectElementBean> {
 
         try {
             if (key.getBeanType() == BeanType.MAP) {
-CasperInfo.io.getOut().println("ProjectItemsFactory; createNodeForKey = BeanType.MAP");                
+                CasperInfo.io.getOut().println("ProjectItemsFactory; createNodeForKey = BeanType.MAP");
                 MapBean mb = (MapBean) key;
                 node = new MapNode(mb);
                 if (mb.isActive()) {
@@ -70,7 +69,6 @@ CasperInfo.io.getOut().println("ProjectItemsFactory; createNodeForKey = BeanType
                     cgr.setActiveMapNode((MapNode) node);
                 }
 
-                
             }
             if (key.getBeanType() == BeanType.PRINTOUT) {
                 CasperInfo.io.getOut().println("ProjectItemsFactory; createNodeForKey = BeanType.PRINTOUT");

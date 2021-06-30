@@ -5,6 +5,7 @@
  */
 package io.github.bpodolski.caspergis.project.dao;
 
+import io.github.bpodolski.caspergis.api.CasperInfo;
 import io.github.bpodolski.caspergis.project.datamodel.*;
 import java.io.File;
 import java.util.List;
@@ -15,6 +16,8 @@ import org.hibernate.Transaction;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
+import org.netbeans.api.io.IOProvider;
+import org.netbeans.api.io.InputOutput;
 
 /**
  *
@@ -26,14 +29,16 @@ public class JpaProjectDbDAO {
     private CgProjectInfo cgProjectInfo;
 
     public JpaProjectDbDAO(String path) {
-
+        System.out.println(path);
         File f = new File(path);
-    
+
+
         Configuration configuration = new Configuration();
         Properties properties = new Properties();
 
         properties.put("hibernate.connection.driver_class", "org.sqlite.JDBC");
         properties.put("hibernate.connection.url", "jdbc:sqlite:" + f.getPath());
+
         properties.put("hibernate.dialect", "io.github.bpodolski.caspergis.lib.hibernate.SQLiteDialect");
         properties.put("hibernate.connection.charSet", "UTF-8");
 

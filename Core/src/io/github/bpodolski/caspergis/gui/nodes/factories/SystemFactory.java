@@ -5,6 +5,7 @@
  */
 package io.github.bpodolski.caspergis.gui.nodes.factories;
 
+import io.github.bpodolski.caspergis.api.CasperInfo;
 import io.github.bpodolski.caspergis.beans.ProjectBean;
 import io.github.bpodolski.caspergis.gui.nodes.ProjectNode;
 import io.github.bpodolski.caspergis.services.ProjectGetter;
@@ -30,6 +31,7 @@ public class SystemFactory extends ChildFactory<ProjectBean> {
         ProjectGetter projectService = Lookup.getDefault().lookup(ProjectGetter.class);
 
         systemProjectBean = projectService.getSystemProject();
+        
         listP.add(systemProjectBean);
 
         listP.addAll(projectService.getProjectList());
