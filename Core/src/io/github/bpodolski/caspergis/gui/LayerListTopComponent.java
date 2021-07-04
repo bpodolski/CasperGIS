@@ -6,10 +6,17 @@
 package io.github.bpodolski.caspergis.gui;
 
 import io.github.bpodolski.caspergis.CgRegistry;
+import io.github.bpodolski.caspergis.beans.LayerBean;
 import io.github.bpodolski.caspergis.beans.MapBean;
+import io.github.bpodolski.caspergis.gui.nodes.InternalMapNode;
 import java.beans.IntrospectionException;
+import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
+import java.util.UUID;
 import javax.swing.ActionMap;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.actions.CopyAction;
 import org.openide.actions.CutAction;
@@ -62,7 +69,6 @@ public final class LayerListTopComponent extends TopComponent implements Explore
     private Lookup.Result<MapBean> result = null;
     private ExplorerManager mgr = new ExplorerManager();
 
-
     Lookup lookupMapBean = null;
     Lookup lookupAction = null;
     ProxyLookup proxyLookup;
@@ -78,8 +84,7 @@ public final class LayerListTopComponent extends TopComponent implements Explore
         initActions();
 
         associateLookup(this.lookupAction);
-        
-        
+
     }
 
     /**
@@ -91,26 +96,63 @@ public final class LayerListTopComponent extends TopComponent implements Explore
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        view = new org.openide.explorer.view.BeanTreeView();
         pnl = new javax.swing.JPanel();
+        btnAddLayer = new javax.swing.JButton();
         lbl = new javax.swing.JLabel();
+        view = new org.openide.explorer.view.BeanTreeView();
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(LayerListTopComponent.class, "LayerListTopComponent.jLabel1.text")); // NOI18N
 
         setLayout(new java.awt.BorderLayout());
-        add(view, java.awt.BorderLayout.CENTER);
 
         pnl.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         pnl.setPreferredSize(new java.awt.Dimension(10, 26));
-        pnl.setLayout(new java.awt.CardLayout());
+        pnl.setLayout(new javax.swing.BoxLayout(pnl, javax.swing.BoxLayout.LINE_AXIS));
+
+        btnAddLayer.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(btnAddLayer, org.openide.util.NbBundle.getMessage(LayerListTopComponent.class, "LayerListTopComponent.btnAddLayer.text")); // NOI18N
+        btnAddLayer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddLayerActionPerformed(evt);
+            }
+        });
+        pnl.add(btnAddLayer);
 
         org.openide.awt.Mnemonics.setLocalizedText(lbl, org.openide.util.NbBundle.getMessage(LayerListTopComponent.class, "LayerListTopComponent.lbl.text")); // NOI18N
-        pnl.add(lbl, "card2");
+        pnl.add(lbl);
 
-        add(pnl, java.awt.BorderLayout.SOUTH);
+        add(pnl, java.awt.BorderLayout.NORTH);
+        add(view, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnAddLayerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddLayerActionPerformed
+        InternalMapNode mn = (InternalMapNode) mgr.getRootContext();
+
+        var chooser = new JFileChooser();
+        chooser.setCurrentDirectory(new File("."));
+        chooser.setFileFilter(new FileNameExtensionFilter("SHP files", "shp", "shp"));
+        chooser.setAcceptAllFileFilterUsed(false);
+        chooser.setMultiSelectionEnabled(true);
+        int result = chooser.showOpenDialog(this);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            var files = chooser.getSelectedFiles();
+            for (int i = 0; i < files.length; i++) {
+                var f = files[i];
+                var lb = new LayerBean(f.getName());
+                try {
+                    lb.setConnectionStr(f.getCanonicalPath());
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+                mn.getFactory().add(lb);
+            }
+        }
+
+
+    }//GEN-LAST:event_btnAddLayerActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAddLayer;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel lbl;
     private javax.swing.JPanel pnl;
@@ -163,7 +205,7 @@ public final class LayerListTopComponent extends TopComponent implements Explore
 
     @Override
     public void resultChanged(LookupEvent ev) {
-         Collection<? extends MapBean> allRegistryMapBeans = result.allInstances();
+        Collection<? extends MapBean> allRegistryMapBeans = result.allInstances();
         if (!allRegistryMapBeans.isEmpty()) {
             MapBean reg = allRegistryMapBeans.iterator().next();
             if (reg != mapBean) {

@@ -5,7 +5,6 @@
  */
 package io.github.bpodolski.caspergis.project.dao;
 
-import io.github.bpodolski.caspergis.api.CasperInfo;
 import io.github.bpodolski.caspergis.project.datamodel.*;
 import java.io.File;
 import java.util.List;
@@ -16,8 +15,6 @@ import org.hibernate.Transaction;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
-import org.netbeans.api.io.IOProvider;
-import org.netbeans.api.io.InputOutput;
 
 /**
  *

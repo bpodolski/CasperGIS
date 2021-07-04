@@ -127,7 +127,7 @@ public class MapDisplayerTopComponent extends TopComponent implements ExplorerMa
     }// </editor-fold>//GEN-END:initComponents
 
     private void testBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_testBtnActionPerformed
-        mapBean.setActive(false);
+        mapBean.setActive(!mapBean.isActive());
         this.setTopComponentProps();
     }//GEN-LAST:event_testBtnActionPerformed
 
@@ -202,7 +202,7 @@ public class MapDisplayerTopComponent extends TopComponent implements ExplorerMa
     }
     
     private void setTopComponentProps() {
-                    putClientProperty(TopComponent.PROP_CLOSING_DISABLED, Boolean.FALSE);
+            putClientProperty(TopComponent.PROP_CLOSING_DISABLED, Boolean.FALSE);
             putClientProperty(TopComponent.PROP_DRAGGING_DISABLED, Boolean.FALSE);
             putClientProperty(TopComponent.PROP_SLIDING_DISABLED, Boolean.FALSE);
             putClientProperty(TopComponent.PROP_UNDOCKING_DISABLED, Boolean.FALSE);

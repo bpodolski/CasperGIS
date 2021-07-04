@@ -30,6 +30,7 @@ public class TestMapGetter extends MapGetter {
         while (itr.hasNext()) {
             CgMap cgMap = itr.next();
             MapBean mb = new MapBean(null, cgMap.getName());
+            mb.setActive(cgMap.isDefault_map());
             mapList.add(mb);
         }
         return mapList;

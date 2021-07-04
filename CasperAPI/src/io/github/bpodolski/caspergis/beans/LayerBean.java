@@ -30,9 +30,16 @@ public class LayerBean extends MapElementBean {
 
     private int transparency = 0;
     private boolean visible = true;
+    private String connectionStr;
 
-//    Style style;
-//    Layer layer;
+    public String getConnectionStr() {
+        return connectionStr;
+    }
+
+    public void setConnectionStr(String connectionStr) {
+        this.connectionStr = connectionStr;
+    }
+
     public LayerBean(String name) {
         this(null, name);
 
