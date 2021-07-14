@@ -3,10 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package io.github.bpodolski.caspergis.project.dao;
+package io.github.bpodolski.caspergis.project.services;
 
 import io.github.bpodolski.caspergis.beans.MapBean;
 import io.github.bpodolski.caspergis.beans.ProjectBean;
+import io.github.bpodolski.caspergis.project.CgRegistry;
+import io.github.bpodolski.caspergis.project.dao.ProjectDAO;
 import io.github.bpodolski.caspergis.project.datamodel.CgMap;
 import io.github.bpodolski.caspergis.services.MapGetter;
 import java.util.ArrayList;
@@ -25,11 +27,17 @@ public class TestMapGetter extends MapGetter {
     public List<MapBean> getMapList(ProjectBean projectBean) {
         ArrayList<MapBean> mapList = new <MapBean>ArrayList();
 
-        JpaProjectDbDAO projectDbDAO = new JpaProjectDbDAO(projectBean.getPath());
-        Iterator<CgMap> itr = projectDbDAO.getCgMaps().iterator();
+        ProjectDAO projectDAO = new ProjectDAO(projectBean.getPath(), false);
+        CgRegistry.cgProjectDaoMap.put(projectBean, projectDAO);
+        
+        Iterator<CgMap> itr = projectDAO.getCgMaps().iterator();
         while (itr.hasNext()) {
             CgMap cgMap = itr.next();
             MapBean mb = new MapBean(null, cgMap.getName());
+            
+            CgRegistry.cgMapMap.put(mb, cgMap);
+            CgRegistry.cgMapDaoMap.put(mb, projectDAO);
+            
             mb.setActive(cgMap.isDefault_map());
             mapList.add(mb);
         }

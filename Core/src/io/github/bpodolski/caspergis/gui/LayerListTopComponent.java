@@ -13,7 +13,6 @@ import java.beans.IntrospectionException;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.UUID;
 import javax.swing.ActionMap;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -66,6 +65,7 @@ public final class LayerListTopComponent extends TopComponent implements Explore
         LookupListener {
 
     private MapBean mapBean = null;
+    private MapBean mapBeanX = new MapBean(null, "[..]");
     private Lookup.Result<MapBean> result = null;
     private ExplorerManager mgr = new ExplorerManager();
 
@@ -79,6 +79,9 @@ public final class LayerListTopComponent extends TopComponent implements Explore
         setToolTipText(Bundle.HINT_LayerListTopComponent());
         putClientProperty(TopComponent.PROP_CLOSING_DISABLED, Boolean.TRUE);
         putClientProperty(TopComponent.PROP_MAXIMIZATION_DISABLED, Boolean.TRUE);
+
+        mapBean = mapBeanX;
+        CgRegistry.explorerManagerMap.put(mapBeanX, mgr);
 
         initView();
         initActions();
@@ -220,6 +223,17 @@ public final class LayerListTopComponent extends TopComponent implements Explore
                     view.addNotify();
                 } else {
                     lbl.setText("[no selection]");
+                }
+            } else {
+                if (!reg.isActive()) {
+                    mapBean = mapBeanX;
+                    mgr = new ExplorerManager();
+                    lbl.setText("[no selection]");
+                    
+                    this.setExplorerManager((ExplorerManager) CgRegistry.explorerManagerMap.get(mapBean));
+                    initView();
+                    view.addNotify();
+
                 }
             }
         } else if (mapBean != null) {

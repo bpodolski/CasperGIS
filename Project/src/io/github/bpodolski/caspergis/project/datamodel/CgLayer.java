@@ -8,13 +8,18 @@ package io.github.bpodolski.caspergis.project.datamodel;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
@@ -32,8 +37,9 @@ public class CgLayer implements Serializable {
     @Column(name = "ID_LAYER")
     int id;
 
-    @Column(name = "ID_MAP")
-    int map_id;
+    @ManyToOne(fetch = FetchType.LAZY) // Defaults to EAGER
+    @JoinColumn(name = "ID_MAP", nullable = false)
+    CgMap cgMap;
 
     @Column(name = "ID_GROUP")
     int group_id;
@@ -56,11 +62,16 @@ public class CgLayer implements Serializable {
     @Column(name = "TRANSPARENT")
     int transparent;
 
+    @Column(name = "POSITION")
+    int position;
+
     @ElementCollection
     @CollectionTable(name = "CG_LAYER_PROP")
     @LazyCollection(LazyCollectionOption.FALSE)
-//    protected Set<BpMapProperty> mapProperties = new LinkedHashSet<BpMapProperty>();
-    private List<CgLayerProperties> layerProperties;
+    private List<CgLayerProperties> layerProperties = new ArrayList<>();
+    
+    @OneToOne(mappedBy = "cgLayer", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.LAZY)
+    protected CgLayerStyle cgLayerStyle;
 
     public CgLayer() {
     }
@@ -73,13 +84,15 @@ public class CgLayer implements Serializable {
         this.id = id;
     }
 
-    public int getMap_id() {
-        return map_id;
+    public CgMap getCgMap() {
+        return cgMap;
     }
 
-    public void setMap_id(int map_id) {
-        this.map_id = map_id;
+    public void setCgMap(CgMap cgMap) {
+        this.cgMap = cgMap;
     }
+
+
 
     public int getGroup_id() {
         return group_id;
@@ -157,5 +170,23 @@ public class CgLayer implements Serializable {
         }
         layerProperties.add(prop);
     }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public CgLayerStyle getCgLayerStyle() {
+        return cgLayerStyle;
+    }
+
+    public void setCgLayerStyle(CgLayerStyle cgLayerStyle) {
+        this.cgLayerStyle = cgLayerStyle;
+    }
+
+
 
 }

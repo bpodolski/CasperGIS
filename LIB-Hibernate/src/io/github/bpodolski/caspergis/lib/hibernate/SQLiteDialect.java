@@ -125,17 +125,31 @@ public class SQLiteDialect extends Dialect {
     return "select last_insert_rowid()";
   }
 
-  @Override
+    /**
+     *
+     * @return
+     */
+    @Override
   public boolean supportsLimit() {
     return true;
   }
 
-  @Override
+    /**
+     *
+     * @return
+     */
+    @Override
   public boolean bindLimitParametersInReverseOrder() {
     return true;
   }
 
-  @Override
+    /**
+     *
+     * @param query
+     * @param hasOffset
+     * @return
+     */
+    @Override
   protected String getLimitString(String query, boolean hasOffset) {
     return new StringBuffer(query.length()+20).
       append(query).

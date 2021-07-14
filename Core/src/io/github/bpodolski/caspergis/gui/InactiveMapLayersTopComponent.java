@@ -59,6 +59,7 @@ public final class InactiveMapLayersTopComponent extends TopComponent implements
         LookupListener {
 
     private MapBean mapBean = null;
+    private MapBean mapBeanX = new MapBean(null, "[..]");
     private Lookup.Result<MapBean> result = null;
     private ExplorerManager mgr = new ExplorerManager();
 
@@ -73,6 +74,10 @@ public final class InactiveMapLayersTopComponent extends TopComponent implements
         putClientProperty(TopComponent.PROP_CLOSING_DISABLED, Boolean.TRUE);
         putClientProperty(TopComponent.PROP_MAXIMIZATION_DISABLED, Boolean.TRUE);
 
+        mapBean = mapBeanX;
+        CgRegistry.explorerManagerMap.put(mapBeanX, mgr);
+        
+        
         initView();
         initActions();
 
@@ -90,7 +95,6 @@ public final class InactiveMapLayersTopComponent extends TopComponent implements
 
         view = new org.openide.explorer.view.BeanTreeView();
         pnlTop = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
         lbl = new javax.swing.JLabel();
 
         setLayout(new java.awt.BorderLayout());
@@ -100,9 +104,6 @@ public final class InactiveMapLayersTopComponent extends TopComponent implements
 
         pnlTop.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
-        org.openide.awt.Mnemonics.setLocalizedText(jButton1, org.openide.util.NbBundle.getMessage(InactiveMapLayersTopComponent.class, "InactiveMapLayersTopComponent.jButton1.text")); // NOI18N
-        pnlTop.add(jButton1);
-
         org.openide.awt.Mnemonics.setLocalizedText(lbl, org.openide.util.NbBundle.getMessage(InactiveMapLayersTopComponent.class, "InactiveMapLayersTopComponent.lbl.text")); // NOI18N
         pnlTop.add(lbl);
 
@@ -110,7 +111,6 @@ public final class InactiveMapLayersTopComponent extends TopComponent implements
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel lbl;
     private javax.swing.JPanel pnlTop;
     private org.openide.explorer.view.BeanTreeView view;
@@ -173,10 +173,18 @@ public final class InactiveMapLayersTopComponent extends TopComponent implements
                     if (CgRegistry.explorerManagerMap.get(mapBean) != null) {
                         this.setExplorerManager((ExplorerManager) CgRegistry.explorerManagerMap.get(mapBean));
                     }
-
                     view.addNotify();
                 } else {
                     lbl.setText("[no selection]");
+                }
+            } else {
+                if (reg.isActive()) {
+                    mapBean = mapBeanX;
+                    mgr = new ExplorerManager();
+                    lbl.setText("[no selection]");
+                    view.addNotify();
+                    
+                    this.setExplorerManager((ExplorerManager) CgRegistry.explorerManagerMap.get(mapBean));
                 }
             }
         } else if (mapBean != null) {

@@ -8,17 +8,13 @@ package io.github.bpodolski.caspergis.project.datamodel;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -34,6 +30,9 @@ public class CgProjectInfo implements Serializable {
     @GeneratedValue
     @Column(name = "id_project")
     int id;
+
+    @Column(name = "POSITION")
+    int position;
 
     @Column
     String name;
@@ -58,7 +57,6 @@ public class CgProjectInfo implements Serializable {
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<CgProjectProperties> projectProperties;
 //    protected Set<BpMapProperty> mapProperties = new LinkedHashSet<BpMapProperty>();
-    
 
     public CgProjectInfo() {
     }
@@ -137,6 +135,14 @@ public class CgProjectInfo implements Serializable {
             projectProperties = new ArrayList<CgProjectProperties>();
         }
         projectProperties.add(prop);
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
     }
 
 }

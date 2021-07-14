@@ -11,6 +11,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 /**
@@ -18,23 +20,28 @@ import javax.persistence.Table;
  * @author bpodolski
  */
 @Entity
-@Table(name = "CG_STYLE")
-public class CgStyle  implements Serializable {
+@Table(name = "CG_LAYER_STYLE")
+public class CgLayerStyle implements Serializable {
+
     @Id
-    @GeneratedValue//(strategy = GenerationType.AUTO)
+    @GeneratedValue
     @Column(name = "ID_STYLE")
     int id;
-    
+
+    @OneToOne(optional = false) // Create FK constraint on PK column
+    @PrimaryKeyJoinColumn
+    protected CgLayer cgLayer;
+
     @Column(name = "NAME")
     String name;
-    
+
     @Column(name = "DESCRIPTION")
     String description;
-    
-    @Lob
+
+    @Column(name = "SLD", columnDefinition = "longvarchar")
     String SLD;
 
-    public CgStyle() {
+    public CgLayerStyle() {
     }
 
     public int getId() {
@@ -68,5 +75,13 @@ public class CgStyle  implements Serializable {
     public void setSLD(String SLD) {
         this.SLD = SLD;
     }
-    
+
+    public CgLayer getCgLayer() {
+        return cgLayer;
+    }
+
+    public void setCgLayer(CgLayer cgLayer) {
+        this.cgLayer = cgLayer;
+    }
+
 }

@@ -7,6 +7,7 @@ package io.github.bpodolski.caspergis;
 
 import io.github.bpodolski.caspergis.beans.MapBean;
 import io.github.bpodolski.caspergis.gui.nodes.MapNode;
+import io.github.bpodolski.caspergis.project.datamodel.CgMap;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.beans.PropertyVetoException;
@@ -21,8 +22,6 @@ import org.openide.explorer.ExplorerManager;
  */
 public class CgRegistry {
     public static final HashMap explorerManagerMap = new HashMap<MapBean, ExplorerManager>();
-//    public MapBean activeMapBean = null;
-//    public MapNode activeMapNode = null;
     
     private MapBean activeMapBean;
 
