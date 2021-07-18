@@ -8,7 +8,7 @@ package io.github.bpodolski.caspergis.project.services;
 import io.github.bpodolski.caspergis.beans.LayerBean;
 import io.github.bpodolski.caspergis.beans.MapBean;
 import io.github.bpodolski.caspergis.beans.MapElementBean;
-import io.github.bpodolski.caspergis.project.CgRegistry;
+import io.github.bpodolski.caspergis.project.CgRegistryProject;
 import io.github.bpodolski.caspergis.project.dao.ProjectDAO;
 import io.github.bpodolski.caspergis.project.datamodel.CgLayer;
 import io.github.bpodolski.caspergis.project.datamodel.CgMap;
@@ -28,12 +28,12 @@ public class TestMapItemsGetter extends MapItemsGetter {
     @Override
     public List<MapElementBean> getMapItems(MapBean mapBean) {
         ArrayList<MapElementBean> mapItemsList = new <MapElementBean>ArrayList();
-        CgMap cgMap = (CgMap) CgRegistry.cgMapMap.get(mapBean);
+        CgMap cgMap = (CgMap) CgRegistryProject.cgMapMap.get(mapBean);
         if (cgMap == null) {
             return mapItemsList;
         }
 
-        ProjectDAO dao = (ProjectDAO) CgRegistry.cgMapDaoMap.get(mapBean);
+        ProjectDAO dao = (ProjectDAO) CgRegistryProject.cgMapDaoMap.get(mapBean);
                 
         Iterator<CgLayer> itr = dao.getLayers(cgMap).iterator();//cgMap.getLayers().iterator();
         
@@ -41,7 +41,7 @@ public class TestMapItemsGetter extends MapItemsGetter {
             CgLayer cgl = itr.next();
             LayerBean lb = new LayerBean(null, cgl.getName());
             
-            CgRegistry.cgLayerMap.put(lb, cgl);
+            CgRegistryProject.cgLayerMap.put(lb, cgl);
             mapItemsList.add(lb);
         }
 

@@ -8,12 +8,10 @@ package io.github.bpodolski.caspergis.project.services;
 import io.github.bpodolski.caspergis.beans.MapBean;
 import io.github.bpodolski.caspergis.beans.PrintoutBean;
 import io.github.bpodolski.caspergis.beans.ProjectBean;
-import io.github.bpodolski.caspergis.project.CgRegistryProject;
+import static io.github.bpodolski.caspergis.project.CgRegistryProject.cgProjectDaoMap;
 import io.github.bpodolski.caspergis.project.dao.ProjectDAO;
-import io.github.bpodolski.caspergis.project.datamodel.CgMap;
 import io.github.bpodolski.caspergis.services.ProjectInfoService;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.io.File;
 import java.util.List;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -22,41 +20,38 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
 @ServiceProvider(service = ProjectInfoService.class)
-public class TestMapGetter extends ProjectInfoService {
-
-    @Override
-    public List<MapBean> getMapList(ProjectBean projectBean) {
-        ArrayList<MapBean> mapList = new <MapBean>ArrayList();
-
-        ProjectDAO projectDAO = new ProjectDAO(projectBean.getPath(), false);
-        CgRegistryProject.cgProjectDaoMap.put(projectBean, projectDAO);
-        
-        Iterator<CgMap> itr = projectDAO.getCgMaps().iterator();
-        while (itr.hasNext()) {
-            CgMap cgMap = itr.next();
-            MapBean mb = new MapBean(null, cgMap.getName());
-            
-            CgRegistryProject.cgMapMap.put(mb, cgMap);
-            CgRegistryProject.cgMapDaoMap.put(mb, projectDAO);
-            
-            mb.setActive(cgMap.isDefault_map());
-            mapList.add(mb);
-        }
-        return mapList;
-    }
-
-    @Override
-    public List<PrintoutBean> gePrintoutList(ProjectBean projectBean) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+public class CgProjectInfoService extends ProjectInfoService {
 
     @Override
     public boolean setupProjectInfo(ProjectBean projectBean) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+        File fProject = new File(projectBean.getPath());
+        if (!fProject.exists()) return false;
+        
+        ProjectDAO dao = (ProjectDAO) cgProjectDaoMap.get(projectBean);
+        if (dao != null) {
+            String sName = dao.getProjectInfo().getName();
+            if (sName.equals("")) sName = fProject.getName();
+            projectBean.setName(sName);
+            
+        } else {
+
+        }
+        return true;
     }
 
     @Override
     public void updateProjectInfo(ProjectBean projectBean) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<MapBean> getMapList(ProjectBean projectBean) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<PrintoutBean> gePrintoutList(ProjectBean projectBean) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

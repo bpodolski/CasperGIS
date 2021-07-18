@@ -13,11 +13,14 @@ import java.util.ArrayList;
  */
 public class ProjectBean {
 
+    
     String name;
     String path;
     ArrayList<MapBean> listMapBean;
     ArrayList<PrintoutBean> listPrintOutBean;
     boolean active = false;
+    boolean hidden = false;
+    int position = 0;
 
     public ProjectBean(String name) {
         this.name = name;
@@ -62,6 +65,22 @@ public class ProjectBean {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public boolean isHidden() {
+        return hidden;
+    }
+
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
     }
     
 }

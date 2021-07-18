@@ -17,7 +17,7 @@ import java.util.HashMap;
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-public class CgRegistry {
+public class CgRegistryProject {
 
     public static final HashMap cgProjectDaoMap = new HashMap<ProjectBean, ProjectDAO>();
     public static final HashMap cgMapDaoMap = new HashMap<MapBean, ProjectDAO>();

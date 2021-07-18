@@ -101,7 +101,6 @@ public final class LayerListTopComponent extends TopComponent implements Explore
         jLabel1 = new javax.swing.JLabel();
         pnl = new javax.swing.JPanel();
         btnAddLayer = new javax.swing.JButton();
-        lbl = new javax.swing.JLabel();
         view = new org.openide.explorer.view.BeanTreeView();
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(LayerListTopComponent.class, "LayerListTopComponent.jLabel1.text")); // NOI18N
@@ -120,9 +119,6 @@ public final class LayerListTopComponent extends TopComponent implements Explore
             }
         });
         pnl.add(btnAddLayer);
-
-        org.openide.awt.Mnemonics.setLocalizedText(lbl, org.openide.util.NbBundle.getMessage(LayerListTopComponent.class, "LayerListTopComponent.lbl.text")); // NOI18N
-        pnl.add(lbl);
 
         add(pnl, java.awt.BorderLayout.NORTH);
         add(view, java.awt.BorderLayout.CENTER);
@@ -157,7 +153,6 @@ public final class LayerListTopComponent extends TopComponent implements Explore
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddLayer;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel lbl;
     private javax.swing.JPanel pnl;
     private org.openide.explorer.view.BeanTreeView view;
     // End of variables declaration//GEN-END:variables
@@ -197,8 +192,8 @@ public final class LayerListTopComponent extends TopComponent implements Explore
     private void initView() {
         Node rootNode;
         try {
-            rootNode = new BeanNode("[..]");
-            rootNode.setName("[..]");
+            rootNode = new BeanNode("[No active map]");
+            rootNode.setName("[No active map]");
             mgr.setRootContext(rootNode);
         } catch (IntrospectionException ex) {
             Exceptions.printStackTrace(ex);
@@ -214,33 +209,24 @@ public final class LayerListTopComponent extends TopComponent implements Explore
             if (reg != mapBean) {
                 if (reg.isActive()) {
                     mapBean = reg;
-                    lbl.setText(mapBean.getName());
-
                     if (CgRegistry.explorerManagerMap.get(mapBean) != null) {
                         this.setExplorerManager((ExplorerManager) CgRegistry.explorerManagerMap.get(mapBean));
                     }
 
                     view.addNotify();
-                } else {
-                    lbl.setText("[no selection]");
                 }
             } else {
                 if (!reg.isActive()) {
                     mapBean = mapBeanX;
                     mgr = new ExplorerManager();
-                    lbl.setText("[no selection]");
-                    
+                  
                     this.setExplorerManager((ExplorerManager) CgRegistry.explorerManagerMap.get(mapBean));
                     initView();
                     view.addNotify();
 
                 }
             }
-        } else if (mapBean != null) {
-            lbl.setText(mapBean.getName());
-        } else {
-            lbl.setText("[no selection]");
-        }
+        } 
     }
 
     private void initActions() {

@@ -15,7 +15,7 @@ import io.github.bpodolski.caspergis.beans.ProjectBean;
 import io.github.bpodolski.caspergis.beans.ProjectElementBean;
 import io.github.bpodolski.caspergis.gui.nodes.MapNode;
 import io.github.bpodolski.caspergis.gui.nodes.PrintoutNode;
-import io.github.bpodolski.caspergis.services.MapGetter;
+import io.github.bpodolski.caspergis.services.ProjectInfoService;
 import io.github.bpodolski.caspergis.services.PrintoutGetter;
 import java.beans.IntrospectionException;
 import java.beans.PropertyVetoException;
@@ -34,14 +34,14 @@ import org.openide.util.Lookup;
 public class ProjectItemsFactory extends ChildFactory<ProjectElementBean> {
 
     private final ProjectBean projectBean;
-    private final MapGetter mapGetterService;
+    private final ProjectInfoService mapGetterService;
     private final PrintoutGetter printoutGetterService;
 
     private final List<ProjectElementBean> projectElementList = new ArrayList<>();
 
     public ProjectItemsFactory(ProjectBean projectBean) {
         this.projectBean = projectBean;
-        this.mapGetterService = Lookup.getDefault().lookup(MapGetter.class);
+        this.mapGetterService = Lookup.getDefault().lookup(ProjectInfoService.class);
         this.printoutGetterService = Lookup.getDefault().lookup(PrintoutGetter.class);
 
         projectElementList.addAll(mapGetterService.getMapList(projectBean));
@@ -60,7 +60,6 @@ public class ProjectItemsFactory extends ChildFactory<ProjectElementBean> {
 
         try {
             if (key.getBeanType() == BeanType.MAP) {
-                CasperInfo.io.getOut().println("ProjectItemsFactory; createNodeForKey = BeanType.MAP");
                 MapBean mb = (MapBean) key;
                 node = new MapNode(mb);
                 if (mb.isActive()) {
@@ -71,7 +70,7 @@ public class ProjectItemsFactory extends ChildFactory<ProjectElementBean> {
 
             }
             if (key.getBeanType() == BeanType.PRINTOUT) {
-                CasperInfo.io.getOut().println("ProjectItemsFactory; createNodeForKey = BeanType.PRINTOUT");
+
                 node = new PrintoutNode((PrintoutBean) key);
             }
 

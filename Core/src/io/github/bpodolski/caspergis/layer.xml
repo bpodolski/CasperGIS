@@ -44,6 +44,9 @@
         <file name="Templates_hidden"/>
     </folder>
     <file name="QuickSearch_hidden"/>
+    <folder name="Toolbars">
+        <file name="Memory_hidden"/>
+    </folder>
     <folder name="Windows2">
         <file name="WindowManager.wswmgr" url="gui/modes/WindowManager.wswmgr"/>
         

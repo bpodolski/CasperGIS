@@ -60,10 +60,6 @@ public class JpaSystemDbDAO {
 
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
         this.sessionFactory = configuration.buildSessionFactory(serviceRegistry);
-
-//        if (create) {
-//            InitDb();
-//        }
     }
 
     public List<CgProject> getProjects() {
@@ -76,25 +72,12 @@ public class JpaSystemDbDAO {
     }
 
     public void dispose() {
-
         sessionFactory.close();
     }
 
     public SessionFactory getSessionFactory() {
         return sessionFactory;
     }
-
-//    private void InitDb() {
-//        ArrayList list = (ArrayList) getProjects();
-//        if (list.isEmpty()) {
-//            CgProject project = new CgProject();
-//            project.setName("Projekt podstawowy");
-//            project.setPath(CasperInfo.DB_DEFAULT_PROJECT_PATH);
-//
-//            saveProject(project);
-//        }
-//
-//    }
 
     public void saveProject(CgProject project) {
         Session session = this.sessionFactory.openSession();
@@ -110,6 +93,21 @@ public class JpaSystemDbDAO {
             e.printStackTrace();
         }
         session.close();
-
+    }
+    
+    public void deleteProject(CgProject project) {
+        Session session = this.sessionFactory.openSession();
+        Transaction transaction = null;
+        try {
+            transaction = session.beginTransaction();
+            session.delete(project);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        session.close();
     }
 }

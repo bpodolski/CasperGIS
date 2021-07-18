@@ -7,7 +7,8 @@ package io.github.bpodolski.caspergis.system.dao;
 
 import io.github.bpodolski.caspergis.api.CasperInfo;
 import io.github.bpodolski.caspergis.beans.ProjectBean;
-import io.github.bpodolski.caspergis.services.ProjectGetter;
+import io.github.bpodolski.caspergis.services.ProjectListService;
+import io.github.bpodolski.caspergis.system.CgRegistrySystem;
 import io.github.bpodolski.caspergis.system.datamodel.CgProject;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -19,8 +20,10 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-@ServiceProvider(service = ProjectGetter.class)
-public class TestProjectGetter extends ProjectGetter {
+@ServiceProvider(service = ProjectListService.class)
+public class CgProjectListService extends ProjectListService {
+
+    JpaSystemDbDAO dao = new JpaSystemDbDAO();
 
     @Override
     public ProjectBean getSystemProject() {
@@ -33,17 +36,40 @@ public class TestProjectGetter extends ProjectGetter {
     @Override
     public List<ProjectBean> getProjectList() {
         ArrayList<ProjectBean> projectList = new ArrayList<ProjectBean>();
-
-        JpaSystemDbDAO dao = new JpaSystemDbDAO();
         Iterator<CgProject> itr = dao.getProjects().iterator();
         while (itr.hasNext()) {
             CgProject cgProject = itr.next();
             ProjectBean projectBean = new ProjectBean(cgProject.getName());
             projectBean.setPath(cgProject.getPath());
             projectList.add(projectBean);
+
+            CgRegistrySystem.projectMap.put(projectBean, itr);
+
         }
 
         return projectList;
+    }
+
+    @Override
+    public void delete(ProjectBean projectBean) {
+        CgProject project = (CgProject) CgRegistrySystem.projectMap.get(projectBean);
+        dao.deleteProject(project);
+    }
+
+    @Override
+    public void update(ProjectBean projectBean) {
+        CgProject project = (CgProject) CgRegistrySystem.projectMap.get(projectBean);
+        dao.saveProject(project);
+    }
+
+    @Override
+    public void add(ProjectBean projectBean) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void close(ProjectBean projectBean) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }
