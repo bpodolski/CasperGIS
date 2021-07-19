@@ -113,6 +113,8 @@ public class ProjectDAO {
 
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
         this.sessionFactory = configuration.buildSessionFactory(serviceRegistry);
+        
+        setProjectInfo();
     }
 
     public ProjectDAO(String path, boolean create) {

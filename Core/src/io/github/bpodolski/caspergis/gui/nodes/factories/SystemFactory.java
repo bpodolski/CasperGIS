@@ -7,6 +7,7 @@ package io.github.bpodolski.caspergis.gui.nodes.factories;
 
 import io.github.bpodolski.caspergis.beans.ProjectBean;
 import io.github.bpodolski.caspergis.gui.nodes.ProjectNode;
+import io.github.bpodolski.caspergis.services.ProjectInfoService;
 import io.github.bpodolski.caspergis.services.ProjectListService;
 import java.beans.IntrospectionException;
 import java.util.ArrayList;
@@ -27,11 +28,11 @@ public class SystemFactory extends ChildFactory<ProjectBean> {
         List<ProjectBean> listP = new ArrayList<>();
         ProjectBean systemProjectBean = null;
 
-        ProjectListService projectService = Lookup.getDefault().lookup(ProjectListService.class);
+        ProjectInfoService projectService = Lookup.getDefault().lookup(ProjectInfoService.class);
 
-        systemProjectBean = projectService.getSystemProject();
-        
-        listP.add(systemProjectBean);
+//        systemProjectBean = projectService.getSystemProject();
+//        
+//        listP.add(systemProjectBean);
 
         listP.addAll(projectService.getProjectList());
 

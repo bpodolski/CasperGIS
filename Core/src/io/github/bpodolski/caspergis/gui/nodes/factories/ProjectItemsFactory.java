@@ -34,17 +34,17 @@ import org.openide.util.Lookup;
 public class ProjectItemsFactory extends ChildFactory<ProjectElementBean> {
 
     private final ProjectBean projectBean;
-    private final ProjectInfoService mapGetterService;
-    private final PrintoutGetter printoutGetterService;
+    private final ProjectInfoService projectInfoService;
+//    private final PrintoutGetter printoutGetterService;
 
     private final List<ProjectElementBean> projectElementList = new ArrayList<>();
 
     public ProjectItemsFactory(ProjectBean projectBean) {
         this.projectBean = projectBean;
-        this.mapGetterService = Lookup.getDefault().lookup(ProjectInfoService.class);
-        this.printoutGetterService = Lookup.getDefault().lookup(PrintoutGetter.class);
+        this.projectInfoService = Lookup.getDefault().lookup(ProjectInfoService.class);
+//        this.printoutGetterService = Lookup.getDefault().lookup(PrintoutGetter.class);
 
-        projectElementList.addAll(mapGetterService.getMapList(projectBean));
+        projectElementList.addAll(projectInfoService.getMapList(projectBean));
 
     }
 

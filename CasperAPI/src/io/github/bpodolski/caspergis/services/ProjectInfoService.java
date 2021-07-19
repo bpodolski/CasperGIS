@@ -13,7 +13,7 @@ import java.util.List;
 import org.openide.util.Lookup;
 
 /**
- * Abstract class - The base for the service that provides the list of maps in
+ * Abstract class - The base for the service that provides managment of project
  * project
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
