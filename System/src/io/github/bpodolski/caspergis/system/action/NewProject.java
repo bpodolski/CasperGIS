@@ -15,18 +15,18 @@ import org.openide.util.NbBundle.Messages;
 
 @ActionID(
         category = "Project",
-        id = "io.github.bpodolski.caspergis.system.action.AddProject"
+        id = "io.github.bpodolski.caspergis.system.action.NewProject"
 )
 @ActionRegistration(
-        iconBase = "io/github/bpodolski/caspergis/system/action/project16.png",
+        iconBase = "io/github/bpodolski/caspergis/system/action/project_new.png",
         displayName = "#CTL_AddProject"
 )
 @ActionReferences({
-    @ActionReference(path = "Menu/Project", position = 0),
-    @ActionReference(path = "Toolbars/Project", position = 0)
+    @ActionReference(path = "Menu/Project", position = 20),
+    @ActionReference(path = "Toolbars/Project", position = 20)
 })
 @Messages("CTL_AddProject=New Project")
-public final class AddProject implements ActionListener {
+public final class NewProject implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {

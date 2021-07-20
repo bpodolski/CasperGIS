@@ -30,10 +30,6 @@ public class SystemFactory extends ChildFactory<ProjectBean> {
 
         ProjectInfoService projectService = Lookup.getDefault().lookup(ProjectInfoService.class);
 
-//        systemProjectBean = projectService.getSystemProject();
-//        
-//        listP.add(systemProjectBean);
-
         listP.addAll(projectService.getProjectList());
 
         toPopulate.addAll(listP);
