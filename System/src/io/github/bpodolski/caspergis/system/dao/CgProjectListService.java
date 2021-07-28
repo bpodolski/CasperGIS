@@ -20,7 +20,7 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-@ServiceProvider(service = ProjectListService.class)
+@ServiceProvider(service = ProjectListService.class, path = "system")
 public class CgProjectListService extends ProjectListService {
 
     JpaSystemDbDAO dao = new JpaSystemDbDAO();
@@ -64,7 +64,14 @@ public class CgProjectListService extends ProjectListService {
 
     @Override
     public void add(ProjectBean projectBean) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        
+        CgProject project = new CgProject();
+        project.setName(projectBean.getName());
+        project.setPath(projectBean.getPath());
+        
+        dao.saveProject(project);
+        CgRegistrySystem.projectMap.put(projectBean, project);
     }
 
     @Override

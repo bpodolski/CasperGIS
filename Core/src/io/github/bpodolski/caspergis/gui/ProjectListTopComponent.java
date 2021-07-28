@@ -7,12 +7,10 @@ package io.github.bpodolski.caspergis.gui;
 
 import io.github.bpodolski.caspergis.CgRegistry;
 import io.github.bpodolski.caspergis.Installer;
+import io.github.bpodolski.caspergis.beans.ProjectBean;
 import io.github.bpodolski.caspergis.gui.nodes.MapNode;
-import io.github.bpodolski.caspergis.gui.nodes.factories.SystemFactory;
 import java.awt.BorderLayout;
 import java.beans.IntrospectionException;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.actions.CopyAction;
@@ -26,7 +24,6 @@ import org.openide.explorer.ExplorerUtils;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
-import org.openide.util.Exceptions;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.actions.SystemAction;
@@ -84,20 +81,38 @@ public final class ProjectListTopComponent extends TopComponent implements Explo
         nodeRenderer1 = new org.openide.explorer.view.NodeRenderer();
         listView1 = new org.openide.explorer.view.ListView();
         pnl = new javax.swing.JPanel();
+        btnAddProject = new javax.swing.JButton();
         view = new org.openide.explorer.view.BeanTreeView();
 
         setLayout(new java.awt.BorderLayout());
 
         pnl.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-        pnl.setPreferredSize(new java.awt.Dimension(10, 26));
+        pnl.setMinimumSize(new java.awt.Dimension(49, 35));
+        pnl.setPreferredSize(new java.awt.Dimension(10, 32));
+        pnl.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 3, 3));
+
+        org.openide.awt.Mnemonics.setLocalizedText(btnAddProject, org.openide.util.NbBundle.getMessage(ProjectListTopComponent.class, "ProjectListTopComponent.btnAddProject.text")); // NOI18N
+        btnAddProject.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddProjectActionPerformed(evt);
+            }
+        });
+        pnl.add(btnAddProject);
+
         add(pnl, java.awt.BorderLayout.SOUTH);
 
         view.setRootVisible(false);
         add(view, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnAddProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddProjectActionPerformed
+        ProjectBean bean = new ProjectBean("DD");
+        CgRegistry.systemFactory.add(bean);
+    }//GEN-LAST:event_btnAddProjectActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private org.openide.explorer.view.BeanTreeView beanTreeView1;
+    private javax.swing.JButton btnAddProject;
     private org.openide.explorer.view.ListView listView1;
     private org.openide.explorer.view.NodeRenderer nodeRenderer1;
     private javax.swing.JPanel pnl;
@@ -148,7 +163,8 @@ public final class ProjectListTopComponent extends TopComponent implements Explo
 
         this.add(view, BorderLayout.CENTER);
 
-        Children sysChildren = Children.create(new SystemFactory(), true);
+        
+        Children sysChildren = Children.create(CgRegistry.systemFactory, true);
         Node rootNode = new AbstractNode(sysChildren);
         rootNode.setDisplayName("System");
         mgr.setRootContext(rootNode);

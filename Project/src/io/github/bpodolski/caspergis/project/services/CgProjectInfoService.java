@@ -12,14 +12,14 @@ import io.github.bpodolski.caspergis.project.CgRegistryProject;
 import static io.github.bpodolski.caspergis.project.CgRegistryProject.cgProjectDaoMap;
 import io.github.bpodolski.caspergis.project.dao.ProjectDAO;
 import io.github.bpodolski.caspergis.project.datamodel.CgMap;
+import io.github.bpodolski.caspergis.project.datamodel.CgProjectInfo;
 import io.github.bpodolski.caspergis.services.ProjectInfoService;
 import io.github.bpodolski.caspergis.services.ProjectListService;
-import io.github.bpodolski.caspergis.utils.CgUtils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import org.openide.util.Lookup;
+import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -34,10 +34,8 @@ public class CgProjectInfoService extends ProjectInfoService {
 
         File fProject = new File(projectBean.getPath());
         if (!fProject.exists()) {
-            return false;
+            ProjectDAO.createDb(projectBean.getPath());
         }
-
-        CgUtils.io.getOut().println("CgProjectInfoService.setupProjectInfo - projectBean.path: " + fProject.getPath());
 
         ProjectDAO dao = (ProjectDAO) cgProjectDaoMap.get(projectBean);
         if (dao == null) {
@@ -45,11 +43,11 @@ public class CgProjectInfoService extends ProjectInfoService {
             cgProjectDaoMap.put(projectBean, dao);
         }
 
-        String sName = dao.getProjectInfo().getName();
-        if (sName.equals("")) {
-            sName = fProject.getName().replace(".cgpr", "");
-        }
-        projectBean.setName(sName);
+        CgProjectInfo pi = dao.getProjectInfo();
+        pi.setName(projectBean.getName());
+        pi.setPath(projectBean.getPath());
+        dao.saveProjectInfo(pi);
+
         return true;
     }
 
@@ -89,7 +87,8 @@ public class CgProjectInfoService extends ProjectInfoService {
     @Override
     public List<ProjectBean> getProjectList() {
         List<ProjectBean> listP = new ArrayList<>();
-        ProjectListService projectService = Lookup.getDefault().lookup(ProjectListService.class);
+//        ProjectListService projectService = Lookup.getDefault().lookup(ProjectListService.class);//Lookups.forPath("system").lookupAll( ProjectListService.class);//
+        ProjectListService projectService = Lookups.forPath("system").lookupAll(ProjectListService.class).iterator().next();
 
         //add temp project at first
         listP.add(projectService.getSystemProject());

@@ -7,7 +7,6 @@ package io.github.bpodolski.caspergis.gui.nodes.factories;
 
 import io.github.bpodolski.caspergis.CgRegistry;
 import io.github.bpodolski.caspergis.Installer;
-import io.github.bpodolski.caspergis.api.CasperInfo;
 import io.github.bpodolski.caspergis.beans.BeanType;
 import io.github.bpodolski.caspergis.beans.MapBean;
 import io.github.bpodolski.caspergis.beans.PrintoutBean;
@@ -16,9 +15,9 @@ import io.github.bpodolski.caspergis.beans.ProjectElementBean;
 import io.github.bpodolski.caspergis.gui.nodes.MapNode;
 import io.github.bpodolski.caspergis.gui.nodes.PrintoutNode;
 import io.github.bpodolski.caspergis.services.ProjectInfoService;
-import io.github.bpodolski.caspergis.services.PrintoutGetter;
 import java.beans.IntrospectionException;
 import java.beans.PropertyVetoException;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import org.openide.nodes.BeanNode;
@@ -41,10 +40,13 @@ public class ProjectItemsFactory extends ChildFactory<ProjectElementBean> {
 
     public ProjectItemsFactory(ProjectBean projectBean) {
         this.projectBean = projectBean;
+        File f = new File(projectBean.getPath());
+
         this.projectInfoService = Lookup.getDefault().lookup(ProjectInfoService.class);
 //        this.printoutGetterService = Lookup.getDefault().lookup(PrintoutGetter.class);
-
-        projectElementList.addAll(projectInfoService.getMapList(projectBean));
+        if (f.exists()) {
+            projectElementList.addAll(projectInfoService.getMapList(projectBean));
+        }
 
     }
 
