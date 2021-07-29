@@ -24,7 +24,7 @@ import java.util.ArrayList;
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-public class GroupBean extends MapElementBean {
+public class GroupBean extends ElementMapBean {
 
     private int transparency = 0;
     private boolean visible = true;

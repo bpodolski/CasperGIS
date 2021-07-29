@@ -7,7 +7,7 @@ package io.github.bpodolski.caspergis.gui.nodes.factories;
 
 import io.github.bpodolski.caspergis.beans.BeanType;
 import io.github.bpodolski.caspergis.beans.MapBean;
-import io.github.bpodolski.caspergis.beans.MapElementBean;
+import io.github.bpodolski.caspergis.beans.ElementMapBean;
 import io.github.bpodolski.caspergis.gui.nodes.MapItemNode;
 import io.github.bpodolski.caspergis.services.MapItemsGetter;
 import java.beans.IntrospectionException;
@@ -25,11 +25,11 @@ import org.openide.util.lookup.Lookups;
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-public class MapItemsFactory extends ChildFactory.Detachable<MapElementBean> {
+public class MapItemsFactory extends ChildFactory.Detachable<ElementMapBean> {
 
     private final MapBean mapBean; //when paren is map
     private final MapItemsGetter mapItemsGetterService;
-    private List<MapElementBean> mapItemsList;
+    private List<ElementMapBean> mapItemsList;
 
     public MapItemsFactory(MapBean mapBean) {
         this.mapBean = mapBean;
@@ -38,17 +38,17 @@ public class MapItemsFactory extends ChildFactory.Detachable<MapElementBean> {
     }
 
     @Override
-    protected boolean createKeys(List<MapElementBean> list) {
+    protected boolean createKeys(List<ElementMapBean> list) {
         list.addAll(mapItemsList);
         return true;
     }
 
     @Override
-    protected Node createNodeForKey(MapElementBean bean) {
+    protected Node createNodeForKey(ElementMapBean bean) {
         BeanNode node = null;
         if (bean.getBeanType() == BeanType.LAYER) {
             try {
-                node = new MapItemNode((MapElementBean) bean, Children.LEAF, Lookups.singleton(bean), this);
+                node = new MapItemNode((ElementMapBean) bean, Children.LEAF, Lookups.singleton(bean), this);
                 
            } catch (IntrospectionException ex) {
                 Exceptions.printStackTrace(ex);
@@ -57,12 +57,12 @@ public class MapItemsFactory extends ChildFactory.Detachable<MapElementBean> {
         return node;
     }
 
-    public void add(MapElementBean bean) {
+    public void add(ElementMapBean bean) {
         mapItemsList.add(bean);
         refresh(true);
     }
 
-    public void add(int index, MapElementBean bean) {
+    public void add(int index, ElementMapBean bean) {
         mapItemsList.add(index, bean);
         refresh(true);
     }
@@ -77,7 +77,7 @@ public class MapItemsFactory extends ChildFactory.Detachable<MapElementBean> {
         refresh(true);
     }
 
-    public void removeChild(MapElementBean bean) {
+    public void removeChild(ElementMapBean bean) {
         mapItemsList.remove(bean);
         refresh(true);
     }
@@ -92,10 +92,10 @@ public class MapItemsFactory extends ChildFactory.Detachable<MapElementBean> {
     }
 
     public void reorder(int[] perm) {
-        MapElementBean[] reordered = new MapElementBean[this.mapItemsList.size()];
+        ElementMapBean[] reordered = new ElementMapBean[this.mapItemsList.size()];
         for (int i = 0; i < perm.length; i++) {
             int j = perm[i];
-            MapElementBean c = (MapElementBean) this.mapItemsList.get(i);
+            ElementMapBean c = (ElementMapBean) this.mapItemsList.get(i);
             reordered[j] = c;
         }
         this.mapItemsList.clear();

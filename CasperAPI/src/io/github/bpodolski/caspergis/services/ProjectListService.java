@@ -77,7 +77,7 @@ public abstract class ProjectListService {
 
         @Override
         public ProjectBean getSystemProject() {
-            ProjectBean systemProject = new ProjectBean("SystemTestProject - DefImpl");
+            ProjectBean systemProject = new ProjectBean();
             return systemProject;
         }
 
@@ -85,7 +85,9 @@ public abstract class ProjectListService {
         public List<ProjectBean> getProjectList() {
             ArrayList<ProjectBean> projectList = new <ProjectBean>ArrayList();
             for (int i = 1; i < 4; i++) {
-                projectList.add(new ProjectBean(i + ".TestProject - DefImpl"));
+                ProjectBean pb = new ProjectBean();
+                pb.setName(i + ".TestProject - DefImpl");
+                projectList.add(pb);
             }
             return projectList;
         }

@@ -27,8 +27,8 @@ public class CgProjectListService extends ProjectListService {
 
     @Override
     public ProjectBean getSystemProject() {
-        ProjectBean systemProject = new ProjectBean("SystemTestProject");
-        systemProject.setActive(true);
+        ProjectBean systemProject = new ProjectBean();
+        systemProject.setName("SystemTestProject");
         systemProject.setPath(NbPreferences.forModule(CasperInfo.class).get(CasperInfo.DB_DEFAULT_PROJECT_PATH, ""));
         return systemProject;
     }
@@ -39,7 +39,9 @@ public class CgProjectListService extends ProjectListService {
         Iterator<CgProject> itr = dao.getProjects().iterator();
         while (itr.hasNext()) {
             CgProject cgProject = itr.next();
-            ProjectBean projectBean = new ProjectBean(cgProject.getName());
+            ProjectBean projectBean = new ProjectBean();
+
+            projectBean.setName(cgProject.getName());
             projectBean.setPath(cgProject.getPath());
             projectList.add(projectBean);
 
@@ -64,12 +66,11 @@ public class CgProjectListService extends ProjectListService {
 
     @Override
     public void add(ProjectBean projectBean) {
-        
-        
+
         CgProject project = new CgProject();
         project.setName(projectBean.getName());
         project.setPath(projectBean.getPath());
-        
+
         dao.saveProject(project);
         CgRegistrySystem.projectMap.put(projectBean, project);
     }

@@ -16,10 +16,10 @@ import java.util.List;
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-public class PrintoutElementBean  implements Transferable {
+public class ElementPrintoutBean  implements Transferable {
 
-    private List<PrintoutElementBean> printoutElementBeans;
-    public static final DataFlavor PRINTOUTELEMENT_FLAVOR = new DataFlavor(MapElementBean.class, "MapElementBean");
+    private List<ElementPrintoutBean> printoutElementBeans;
+    public static final DataFlavor PRINTOUTELEMENT_FLAVOR = new DataFlavor(ElementMapBean.class, "MapElementBean");
 
     private BeanType beanType = BeanType.PRINTOUT_ELEMENT;
     private String name = "Printout Element";
@@ -52,32 +52,32 @@ public class PrintoutElementBean  implements Transferable {
 
     @Override
     public DataFlavor[] getTransferDataFlavors() {
-        return new DataFlavor[]{PrintoutElementBean.PRINTOUTELEMENT_FLAVOR};
+        return new DataFlavor[]{ElementPrintoutBean.PRINTOUTELEMENT_FLAVOR};
     }
 
     @Override
     public boolean isDataFlavorSupported(DataFlavor flavor) {
-        return flavor == PrintoutElementBean.PRINTOUTELEMENT_FLAVOR;
+        return flavor == ElementPrintoutBean.PRINTOUTELEMENT_FLAVOR;
     }
 
     @Override
     public Object getTransferData(DataFlavor flavor)
             throws UnsupportedFlavorException, IOException {
-        if (flavor == PrintoutElementBean.PRINTOUTELEMENT_FLAVOR) {
+        if (flavor == ElementPrintoutBean.PRINTOUTELEMENT_FLAVOR) {
             return this;
         } else {
             throw new UnsupportedFlavorException(flavor);
         }
     }
 
-    public List<PrintoutElementBean> getPrintoutElementBeans() {
+    public List<ElementPrintoutBean> getPrintoutElementBeans() {
         if (printoutElementBeans == null) {
-            printoutElementBeans = new ArrayList<PrintoutElementBean>();
+            printoutElementBeans = new ArrayList<ElementPrintoutBean>();
         }
         return printoutElementBeans;
     }
 
-    public void setPrintoutElementBeans(List<PrintoutElementBean> printoutElementBeans) {
+    public void setPrintoutElementBeans(List<ElementPrintoutBean> printoutElementBeans) {
         this.printoutElementBeans = printoutElementBeans;
     }
 

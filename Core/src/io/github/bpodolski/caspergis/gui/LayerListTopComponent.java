@@ -101,6 +101,7 @@ public final class LayerListTopComponent extends TopComponent implements Explore
         jLabel1 = new javax.swing.JLabel();
         pnl = new javax.swing.JPanel();
         btnAddLayer = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
         view = new org.openide.explorer.view.BeanTreeView();
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(LayerListTopComponent.class, "LayerListTopComponent.jLabel1.text")); // NOI18N
@@ -119,6 +120,9 @@ public final class LayerListTopComponent extends TopComponent implements Explore
             }
         });
         pnl.add(btnAddLayer);
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(LayerListTopComponent.class, "LayerListTopComponent.jLabel2.text")); // NOI18N
+        pnl.add(jLabel2);
 
         add(pnl, java.awt.BorderLayout.NORTH);
         add(view, java.awt.BorderLayout.CENTER);
@@ -153,6 +157,7 @@ public final class LayerListTopComponent extends TopComponent implements Explore
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddLayer;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel pnl;
     private org.openide.explorer.view.BeanTreeView view;
     // End of variables declaration//GEN-END:variables

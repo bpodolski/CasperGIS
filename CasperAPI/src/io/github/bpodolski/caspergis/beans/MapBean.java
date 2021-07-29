@@ -25,27 +25,27 @@ import java.util.ArrayList;
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-public class MapBean  extends ProjectElementBean{
+public class MapBean  extends ElementProjectBean{
 
-    private ArrayList<MapElementBean> mapElementList = new ArrayList();
+    private ArrayList<ElementMapBean> mapElementList = new ArrayList();
     boolean active = false;
 
-    public MapBean(ArrayList<MapElementBean> mapElementList) {
+    public MapBean(ArrayList<ElementMapBean> mapElementList) {
        this(mapElementList, "Layers");
     }
     
-    public MapBean(ArrayList<MapElementBean> mapElementList, String name) {
+    public MapBean(ArrayList<ElementMapBean> mapElementList, String name) {
         this.setName(name);
         this.setDisplayName(name);
         this.mapElementList = mapElementList;
         this.setBeanType(BeanType.MAP);
     }
 
-    public ArrayList<MapElementBean> getMapElementList() {
+    public ArrayList<ElementMapBean> getMapElementList() {
         return mapElementList;
     }
 
-    public void setMapElementList(ArrayList<MapElementBean> mapElementList) {
+    public void setMapElementList(ArrayList<ElementMapBean> mapElementList) {
         this.mapElementList = mapElementList;
     }
 

@@ -3,36 +3,56 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package io.github.bpodolski.caspergis.beans;;
+package io.github.bpodolski.caspergis.beans;
 
-import java.util.ArrayList;
+;
+
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import org.netbeans.api.settings.ConvertAsJavaBean;
 
 /**
  *
  * @author bpodolski
  */
+
+
+@ConvertAsJavaBean()
 public class ProjectBean {
 
-    
-    String name;
+    //name of project
+    String name = "CasperGIS Progect";
+    //path to file of project
     String path;
-    ArrayList<MapBean> listMapBean;
-    ArrayList<PrintoutBean> listPrintOutBean;
-    boolean active = false;
+    //tooltip for node, for SystemTmpProject - "System temporary project", for other blank or path 
+    String description;
+    //false - project visible on project list
     boolean hidden = false;
+    //position in project list, used by comparator, (calculate by position in parent node children list)
     int position = 0;
 
-    public ProjectBean(String name) {
-        this.name = name;
+    private final PropertyChangeSupport propertyChangeSupport;
+
+    public ProjectBean() {
+        propertyChangeSupport = new PropertyChangeSupport(this);
     }
 
-    
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener(listener);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener(listener);
+    }
+
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
+        String oldValue = this.name;
         this.name = name;
+        propertyChangeSupport.firePropertyChange("name", oldValue, name);
     }
 
     public String getPath() {
@@ -40,39 +60,19 @@ public class ProjectBean {
     }
 
     public void setPath(String path) {
+        String oldValue = this.path;
         this.path = path;
+        propertyChangeSupport.firePropertyChange("path", oldValue, path);
     }
 
-    public ArrayList<MapBean> getListMapBean() {
-        return listMapBean;
+    public String getDescription() {
+        return description;
     }
 
-    public void setListMapBean(ArrayList<MapBean> listMapBean) {
-        this.listMapBean = listMapBean;
-    }
-
-    public ArrayList<PrintoutBean> getListPrintOutBean() {
-        return listPrintOutBean;
-    }
-
-    public void setListPrintOutBean(ArrayList<PrintoutBean> listPrintOutBean) {
-        this.listPrintOutBean = listPrintOutBean;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    public int getPosition() {
-        return position;
-    }
-
-    public void setPosition(int position) {
-        this.position = position;
+    public void setDescription(String description) {
+        String oldValue = this.description;
+        this.description = description;
+        propertyChangeSupport.firePropertyChange("description", oldValue, description);
     }
 
     public boolean isHidden() {
@@ -80,7 +80,19 @@ public class ProjectBean {
     }
 
     public void setHidden(boolean hidden) {
+        boolean oldValue = this.hidden;
         this.hidden = hidden;
+        propertyChangeSupport.firePropertyChange("hidden", oldValue, hidden);
     }
-    
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        int oldValue = this.position;
+        this.position = position;
+        propertyChangeSupport.firePropertyChange("position", oldValue, position);
+    }
+
 }

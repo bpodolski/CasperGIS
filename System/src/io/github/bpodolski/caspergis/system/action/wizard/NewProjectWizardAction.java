@@ -66,18 +66,19 @@ public final class NewProjectWizardAction implements ActionListener {
             String sProjectTitle = (String) wiz.getProperty("ProjectTitle");
             String sProjectAuthor = (String) wiz.getProperty("ProjectAuthor");
             String sProjectDescription = (String) wiz.getProperty("ProjectDescription");
-            
+
 //            DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(sProjectTitle + " " + sProjectFile));
-            
-            ProjectBean projectBean = new ProjectBean(sProjectTitle);
+            ProjectBean projectBean = new ProjectBean();
+//            
+            projectBean.setName(sProjectTitle);
             projectBean.setPath(sProjectFile);
-            
+
             ProjectInfoService projectInfoService = Lookup.getDefault().lookup(ProjectInfoService.class);
             ProjectListService projectListService = Lookup.getDefault().lookup(ProjectListService.class);
-            
+
             projectListService.add(projectBean);
             projectInfoService.setupProjectInfo(projectBean);
-            
+
             ProjectListService projectService = Lookups.forPath("core").lookupAll(ProjectListService.class).iterator().next();
             projectService.add(projectBean);
         }

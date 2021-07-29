@@ -6,7 +6,7 @@
 package io.github.bpodolski.caspergis.services;
 
 import io.github.bpodolski.caspergis.beans.MapBean;
-import io.github.bpodolski.caspergis.beans.MapElementBean;
+import io.github.bpodolski.caspergis.beans.ElementMapBean;
 import io.github.bpodolski.caspergis.beans.PrintoutBean;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +23,7 @@ public abstract class MapItemsGetter {
      * @param mapBean
      * @return
      */
-    public abstract List<MapElementBean> getMapItems(MapBean mapBean);
+    public abstract List<ElementMapBean> getMapItems(MapBean mapBean);
 
     /**
      * Get default getter when other are unavaible
@@ -39,10 +39,10 @@ public abstract class MapItemsGetter {
     private static class DefaultMapItemsGetter extends MapItemsGetter {
 
         @Override
-        public List<MapElementBean> getMapItems(MapBean mapBean) {
-            ArrayList<MapElementBean> mapItemsList = new <PrintoutBean>ArrayList();
+        public List<ElementMapBean> getMapItems(MapBean mapBean) {
+            ArrayList<ElementMapBean> mapItemsList = new <PrintoutBean>ArrayList();
             for (int i = 1; i < 10; i++) {
-                mapItemsList.add(new MapElementBean(null, i + ".TestLayer - DefImpl"));
+                mapItemsList.add(new ElementMapBean(null, i + ".TestLayer - DefImpl"));
             }
             return mapItemsList;
         }

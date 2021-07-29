@@ -7,7 +7,7 @@ package io.github.bpodolski.caspergis.project.services;
 
 import io.github.bpodolski.caspergis.beans.LayerBean;
 import io.github.bpodolski.caspergis.beans.MapBean;
-import io.github.bpodolski.caspergis.beans.MapElementBean;
+import io.github.bpodolski.caspergis.beans.ElementMapBean;
 import io.github.bpodolski.caspergis.project.CgRegistryProject;
 import io.github.bpodolski.caspergis.project.dao.ProjectDAO;
 import io.github.bpodolski.caspergis.project.datamodel.CgLayer;
@@ -26,8 +26,8 @@ import org.openide.util.lookup.ServiceProvider;
 public class TestMapItemsGetter extends MapItemsGetter {
 
     @Override
-    public List<MapElementBean> getMapItems(MapBean mapBean) {
-        ArrayList<MapElementBean> mapItemsList = new <MapElementBean>ArrayList();
+    public List<ElementMapBean> getMapItems(MapBean mapBean) {
+        ArrayList<ElementMapBean> mapItemsList = new <ElementMapBean>ArrayList();
         CgMap cgMap = (CgMap) CgRegistryProject.cgMapMap.get(mapBean);
         if (cgMap == null) {
             return mapItemsList;

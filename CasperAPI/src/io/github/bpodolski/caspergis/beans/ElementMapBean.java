@@ -25,9 +25,9 @@ import java.util.List;
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-public class MapElementBean {
+public class ElementMapBean {
 
-    private List<MapElementBean> mapElementBeans;
+    private List<ElementMapBean> mapElementBeans;
     
     
 
@@ -35,7 +35,7 @@ public class MapElementBean {
     private String name = "Map Element";
     private String displayName = "Map Element";
 
-    public MapElementBean(List<MapElementBean> mapElementBeans, String name) {
+    public ElementMapBean(List<ElementMapBean> mapElementBeans, String name) {
         this.mapElementBeans = mapElementBeans;
         this.name = name;
     }
@@ -64,7 +64,7 @@ public class MapElementBean {
         this.displayName = displayName;
     }
 
-    public List<MapElementBean> getMapElementBeans() {
+    public List<ElementMapBean> getMapElementBeans() {
         if (mapElementBeans == null) {
             mapElementBeans = new ArrayList<>();
         }

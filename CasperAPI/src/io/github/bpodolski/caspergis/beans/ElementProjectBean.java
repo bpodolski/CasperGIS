@@ -16,20 +16,20 @@ import java.util.List;
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-public class ProjectElementBean implements Transferable {
+public class ElementProjectBean implements Transferable {
 
-    private List<ProjectElementBean> projectElementBeans;
-    public static final DataFlavor PROJECTELEMENT_FLAVOR = new DataFlavor(ProjectElementBean.class, "ProjectElementBean");
+    private List<ElementProjectBean> projectElementBeans;
+    public static final DataFlavor PROJECTELEMENT_FLAVOR = new DataFlavor(ElementProjectBean.class, "ProjectElementBean");
 
     private BeanType beanType = BeanType.PROJECT_ELEMENT;
     private String name = "Project Element";
     private String displayName = "Project Element";
 
-    public List<ProjectElementBean> getProjectElementBeans() {
+    public List<ElementProjectBean> getProjectElementBeans() {
         return projectElementBeans;
     }
 
-    public void setProjectElementBeans(List<ProjectElementBean> projectElementBeans) {
+    public void setProjectElementBeans(List<ElementProjectBean> projectElementBeans) {
         this.projectElementBeans = projectElementBeans;
     }
 

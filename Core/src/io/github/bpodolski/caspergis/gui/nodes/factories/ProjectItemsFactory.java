@@ -11,7 +11,7 @@ import io.github.bpodolski.caspergis.beans.BeanType;
 import io.github.bpodolski.caspergis.beans.MapBean;
 import io.github.bpodolski.caspergis.beans.PrintoutBean;
 import io.github.bpodolski.caspergis.beans.ProjectBean;
-import io.github.bpodolski.caspergis.beans.ProjectElementBean;
+import io.github.bpodolski.caspergis.beans.ElementProjectBean;
 import io.github.bpodolski.caspergis.gui.nodes.MapNode;
 import io.github.bpodolski.caspergis.gui.nodes.PrintoutNode;
 import io.github.bpodolski.caspergis.services.ProjectInfoService;
@@ -30,13 +30,13 @@ import org.openide.util.Lookup;
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-public class ProjectItemsFactory extends ChildFactory<ProjectElementBean> {
+public class ProjectItemsFactory extends ChildFactory<ElementProjectBean> {
 
     private final ProjectBean projectBean;
     private final ProjectInfoService projectInfoService;
 //    private final PrintoutGetter printoutGetterService;
 
-    private final List<ProjectElementBean> projectElementList = new ArrayList<>();
+    private final List<ElementProjectBean> projectElementList = new ArrayList<>();
 
     public ProjectItemsFactory(ProjectBean projectBean) {
         this.projectBean = projectBean;
@@ -51,13 +51,13 @@ public class ProjectItemsFactory extends ChildFactory<ProjectElementBean> {
     }
 
     @Override
-    protected boolean createKeys(List<ProjectElementBean> list) {
+    protected boolean createKeys(List<ElementProjectBean> list) {
         list.addAll(this.projectElementList);
         return true;
     }
 
     @Override
-    protected Node createNodeForKey(ProjectElementBean key) {
+    protected Node createNodeForKey(ElementProjectBean key) {
         BeanNode node = null;
 
         try {

@@ -11,10 +11,10 @@ import java.awt.datatransfer.DataFlavor;
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-public class MapElementFlavor  extends DataFlavor {
-    public static final DataFlavor MAPELEMENT_FLAVOR = new MapElementFlavor();
+public class ElementMapFlavor  extends DataFlavor {
+    public static final DataFlavor MAPELEMENT_FLAVOR = new ElementMapFlavor();
 
-    public MapElementFlavor() {
-        super(MapElementBean.class, "MapElementBean");
+    public ElementMapFlavor() {
+        super(ElementMapBean.class, "MapElementBean");
     }
 }

@@ -106,7 +106,7 @@ public final class ProjectListTopComponent extends TopComponent implements Explo
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAddProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddProjectActionPerformed
-        ProjectBean bean = new ProjectBean("DD");
+        ProjectBean bean = new ProjectBean();
         CgRegistry.systemFactory.add(bean);
     }//GEN-LAST:event_btnAddProjectActionPerformed
 
