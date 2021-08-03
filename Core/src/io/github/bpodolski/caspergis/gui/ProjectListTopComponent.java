@@ -174,7 +174,6 @@ public final class ProjectListTopComponent extends TopComponent implements Explo
 
         this.add(view, BorderLayout.CENTER);
 
-//        ServiceProjectManager projectListService = Lookup.getDefault().lookup(ServiceProjectManager.class);
         Collection<? extends ServiceProjectManager> srvList = Lookups.forPath("System").lookupAll(ServiceProjectManager.class);
         ServiceProjectManager projectListService = srvList.iterator().next();
 
@@ -182,6 +181,8 @@ public final class ProjectListTopComponent extends TopComponent implements Explo
         projectList.add(projectListService.getSystemProject());
         projectList.addAll(projectListService.getProjectList());
         ModelProjectList model = new ModelProjectList(projectList);
+        CgRegistry.modelProjectList = model;
+        
 
         Node rootNode = new ProjectsRootNode(model);
         rootNode.setDisplayName("System");

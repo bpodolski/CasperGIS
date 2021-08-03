@@ -12,6 +12,7 @@ import io.github.bpodolski.caspergis.gui.nodes.MapNode;
 import io.github.bpodolski.caspergis.gui.nodes.factories.MapItemsFactory;
 import io.github.bpodolski.caspergis.gui.nodes.factories.ProjectItemsFactory;
 import io.github.bpodolski.caspergis.gui.nodes.factories.SystemFactory;
+import io.github.bpodolski.caspergis.model.ModelProjectList;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.beans.PropertyVetoException;
@@ -27,7 +28,8 @@ import org.openide.explorer.ExplorerManager;
 public class CgRegistry {
     public static final HashMap explorerManagerMap = new HashMap<MapBean, ExplorerManager>();
     
-//    public static final SystemFactory systemFactory = new SystemFactory();
+    public static ModelProjectList modelProjectList;
+    
     public static final HashMap mapItemsFactoryMap = new HashMap<ElementMapBean, MapItemsFactory>();
     public static final HashMap projectItemsFactoryMap = new HashMap<ProjectBean, ProjectItemsFactory>();
     

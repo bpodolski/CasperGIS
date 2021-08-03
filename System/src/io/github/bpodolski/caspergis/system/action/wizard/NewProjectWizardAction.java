@@ -74,6 +74,8 @@ public final class NewProjectWizardAction implements ActionListener {
 
             ServiceProjectManager projectService = Lookups.forPath("System").lookupAll(ServiceProjectManager.class).iterator().next();
             projectService.add(projectBean);
+            ServiceProjectManager projectService2 = Lookups.forPath("Core").lookupAll(ServiceProjectManager.class).iterator().next();
+            projectService2.add(projectBean);
 
 
         }

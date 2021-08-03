@@ -8,8 +8,6 @@ package io.github.bpodolski.caspergis.gui.nodes.factories;
 import io.github.bpodolski.caspergis.beans.ProjectBean;
 import io.github.bpodolski.caspergis.model.ModelProjectList;
 import io.github.bpodolski.caspergis.gui.nodes.ProjectNode;
-import io.github.bpodolski.caspergis.services.ProjectInfoService;
-import io.github.bpodolski.caspergis.services.ServiceProjectManager;
 import java.beans.IntrospectionException;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +16,6 @@ import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import org.openide.util.Lookup;
 
 /**
  *
