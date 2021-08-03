@@ -20,10 +20,15 @@ import org.openide.util.lookup.Lookups;
 public class ProjectNode extends BeanNode<ProjectBean> {
 
     public ProjectNode(ProjectBean bean) throws IntrospectionException {
-        super(bean, Children.LEAF, Lookups.singleton(bean));
-//        super(bean, Children.create(new ProjectItemsFactory(bean), true), Lookups.singleton(bean));
+//        super(bean, Children.LEAF, Lookups.singleton(bean));
+        super(bean, Children.create(new ProjectItemsFactory(bean), true), Lookups.singleton(bean));
         setIconBaseWithExtension("io/github/bpodolski/caspergis/res/project.png");
-        setShortDescription(bean.getPath());
+
+    }
+
+    @Override
+    public String getShortDescription() {        
+        return super.getBean().getDescription();
     }
 
     @Override

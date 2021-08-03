@@ -7,7 +7,7 @@ package io.github.bpodolski.caspergis.system.action.wizard;
 
 import io.github.bpodolski.caspergis.beans.ProjectBean;
 import io.github.bpodolski.caspergis.services.ProjectInfoService;
-import io.github.bpodolski.caspergis.services.ProjectListService;
+import io.github.bpodolski.caspergis.services.ServiceProjectManager;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -67,20 +67,15 @@ public final class NewProjectWizardAction implements ActionListener {
             String sProjectAuthor = (String) wiz.getProperty("ProjectAuthor");
             String sProjectDescription = (String) wiz.getProperty("ProjectDescription");
 
-//            DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(sProjectTitle + " " + sProjectFile));
             ProjectBean projectBean = new ProjectBean();
 //            
             projectBean.setName(sProjectTitle);
             projectBean.setPath(sProjectFile);
 
-            ProjectInfoService projectInfoService = Lookup.getDefault().lookup(ProjectInfoService.class);
-            ProjectListService projectListService = Lookup.getDefault().lookup(ProjectListService.class);
-
-            projectListService.add(projectBean);
-            projectInfoService.setupProjectInfo(projectBean);
-
-            ProjectListService projectService = Lookups.forPath("core").lookupAll(ProjectListService.class).iterator().next();
+            ServiceProjectManager projectService = Lookups.forPath("System").lookupAll(ServiceProjectManager.class).iterator().next();
             projectService.add(projectBean);
+
+
         }
     }
 

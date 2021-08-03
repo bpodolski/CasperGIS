@@ -7,23 +7,25 @@ package io.github.bpodolski.caspergis.system.dao;
 
 import io.github.bpodolski.caspergis.api.CasperInfo;
 import io.github.bpodolski.caspergis.beans.ProjectBean;
-import io.github.bpodolski.caspergis.services.ProjectListService;
+import io.github.bpodolski.caspergis.services.ServiceProjectManager;
 import io.github.bpodolski.caspergis.system.CgRegistrySystem;
 import io.github.bpodolski.caspergis.system.datamodel.CgProject;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import org.openide.util.NbPreferences;
+import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-@ServiceProvider(service = ProjectListService.class, path = "system")
-public class CgProjectListService extends ProjectListService {
+@ServiceProvider(service = ServiceProjectManager.class, path = "System")
+public class CgProjectListService extends ServiceProjectManager {
 
-    JpaSystemDbDAO dao = new JpaSystemDbDAO();
+    JpaSystemDbDAO daoSystem = new JpaSystemDbDAO();
 
     @Override
     public ProjectBean getSystemProject() {
@@ -36,7 +38,7 @@ public class CgProjectListService extends ProjectListService {
     @Override
     public List<ProjectBean> getProjectList() {
         ArrayList<ProjectBean> projectList = new ArrayList<ProjectBean>();
-        Iterator<CgProject> itr = dao.getProjects().iterator();
+        Iterator<CgProject> itr = daoSystem.getProjects().iterator();
         while (itr.hasNext()) {
             CgProject cgProject = itr.next();
             ProjectBean projectBean = new ProjectBean();
@@ -55,13 +57,13 @@ public class CgProjectListService extends ProjectListService {
     @Override
     public void delete(ProjectBean projectBean) {
         CgProject project = (CgProject) CgRegistrySystem.projectMap.get(projectBean);
-        dao.deleteProject(project);
+        daoSystem.deleteProject(project);
     }
 
     @Override
     public void update(ProjectBean projectBean) {
         CgProject project = (CgProject) CgRegistrySystem.projectMap.get(projectBean);
-        dao.saveProject(project);
+        daoSystem.saveProject(project);
     }
 
     @Override
@@ -71,13 +73,23 @@ public class CgProjectListService extends ProjectListService {
         project.setName(projectBean.getName());
         project.setPath(projectBean.getPath());
 
-        dao.saveProject(project);
+        daoSystem.saveProject(project);
         CgRegistrySystem.projectMap.put(projectBean, project);
+
+        Collection<? extends ServiceProjectManager> srvList = Lookups.forPath("Project").lookupAll(ServiceProjectManager.class);
+        ServiceProjectManager projectListService = srvList.iterator().next();
+        projectListService.add(projectBean);
+        
     }
 
     @Override
     public void close(ProjectBean projectBean) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String getServiceName() {
+        return "CgProjectListService";
     }
 
 }

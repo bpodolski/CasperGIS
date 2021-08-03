@@ -5,9 +5,8 @@
  */
 package io.github.bpodolski.caspergis.gui.nodes.services;
 
-import io.github.bpodolski.caspergis.CgRegistry;
 import io.github.bpodolski.caspergis.beans.ProjectBean;
-import io.github.bpodolski.caspergis.services.ProjectListService;
+import io.github.bpodolski.caspergis.services.ServiceProjectManager;
 import java.util.List;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -15,8 +14,8 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-@ServiceProvider(service = ProjectListService.class, path = "core")
-public class SystemFactoryService extends ProjectListService  {
+@ServiceProvider(service = ServiceProjectManager.class)
+public class SystemFactoryService extends ServiceProjectManager  {
 
     @Override
     public ProjectBean getSystemProject() {
@@ -30,12 +29,12 @@ public class SystemFactoryService extends ProjectListService  {
 
     @Override
     public void delete(ProjectBean projectBean) {
-        CgRegistry.systemFactory.removeChild(projectBean);
+//        CgRegistry.systemFactory.removeChild(projectBean);
     }
 
     @Override
     public void close(ProjectBean projectBean) {
-        CgRegistry.systemFactory.removeChild(projectBean);
+//        CgRegistry.systemFactory.removeChild(projectBean);
     }
 
     @Override
@@ -45,7 +44,12 @@ public class SystemFactoryService extends ProjectListService  {
 
     @Override
     public void add(ProjectBean projectBean) {
-        CgRegistry.systemFactory.add(projectBean);
+//        CgRegistry.systemFactory.add(projectBean);
+    }
+
+    @Override
+    public String getServiceName() {
+        return "SystemFactoryService";
     }
     
 }

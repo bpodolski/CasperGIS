@@ -10,7 +10,7 @@ package io.github.bpodolski.caspergis.system.action;
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
 import io.github.bpodolski.caspergis.beans.ProjectBean;
-import io.github.bpodolski.caspergis.services.ProjectListService;
+import io.github.bpodolski.caspergis.services.ServiceProjectManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import org.openide.awt.ActionID;
@@ -43,7 +43,7 @@ public class CloseProject implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        ProjectListService projectService = Lookups.forPath("core").lookupAll(ProjectListService.class).iterator().next();
+        ServiceProjectManager projectService = Lookups.forPath("core").lookupAll(ServiceProjectManager.class).iterator().next();
         projectService.close(context);
     }
 }

@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package io.github.bpodolski.caspergis.beans;
+package io.github.bpodolski.caspergis.model;
 
+import io.github.bpodolski.caspergis.beans.ProjectBean;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -15,12 +16,16 @@ import org.openide.util.ChangeSupport;
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-public class ProjectList {
+public class ModelProjectList {
     
     private final List<ProjectBean> projectBeans;
     private final ChangeSupport cs = new ChangeSupport(this);
     
-    public ProjectList(List<ProjectBean> ProjectBeans) {
+//     public ModelProjectList() {
+////        this.projectBeans = new ArrayList<>(ProjectBeans);
+//    }
+     
+    public ModelProjectList(List<ProjectBean> ProjectBeans) {
         this.projectBeans = new ArrayList<>(ProjectBeans);
     }
 

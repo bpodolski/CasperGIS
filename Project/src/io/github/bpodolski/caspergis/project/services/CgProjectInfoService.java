@@ -14,7 +14,7 @@ import io.github.bpodolski.caspergis.project.dao.ProjectDAO;
 import io.github.bpodolski.caspergis.project.datamodel.CgMap;
 import io.github.bpodolski.caspergis.project.datamodel.CgProjectInfo;
 import io.github.bpodolski.caspergis.services.ProjectInfoService;
-import io.github.bpodolski.caspergis.services.ProjectListService;
+import io.github.bpodolski.caspergis.services.ServiceProjectManager;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -26,7 +26,7 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-@ServiceProvider(service = ProjectInfoService.class)
+//@ServiceProvider(service = ProjectInfoService.class)
 public class CgProjectInfoService extends ProjectInfoService {
 
     @Override
@@ -87,8 +87,8 @@ public class CgProjectInfoService extends ProjectInfoService {
     @Override
     public List<ProjectBean> getProjectList() {
         List<ProjectBean> listP = new ArrayList<>();
-//        ProjectListService projectService = Lookup.getDefault().lookup(ProjectListService.class);//Lookups.forPath("system").lookupAll( ProjectListService.class);//
-        ProjectListService projectService = Lookups.forPath("system").lookupAll(ProjectListService.class).iterator().next();
+//        ServiceProjectManager projectService = Lookup.getDefault().lookup(ServiceProjectManager.class);//Lookups.forPath("system").lookupAll( ServiceProjectManager.class);//
+        ServiceProjectManager projectService = Lookups.forPath("system").lookupAll(ServiceProjectManager.class).iterator().next();
 
         //add temp project at first
         listP.add(projectService.getSystemProject());

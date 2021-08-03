@@ -8,10 +8,19 @@ package io.github.bpodolski.caspergis.gui;
 import io.github.bpodolski.caspergis.CgRegistry;
 import io.github.bpodolski.caspergis.Installer;
 import io.github.bpodolski.caspergis.beans.ProjectBean;
+import io.github.bpodolski.caspergis.model.ModelProjectList;
 import io.github.bpodolski.caspergis.gui.nodes.MapNode;
+import io.github.bpodolski.caspergis.gui.nodes.ProjectsRootNode;
+import io.github.bpodolski.caspergis.services.ProjectInfoService;
+import io.github.bpodolski.caspergis.services.ServiceProjectManager;
 import java.awt.BorderLayout;
 import java.beans.IntrospectionException;
 import java.beans.PropertyVetoException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import org.netbeans.api.io.IOProvider;
+import org.netbeans.api.io.InputOutput;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.actions.CopyAction;
 import org.openide.actions.CutAction;
@@ -21,12 +30,13 @@ import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.ExplorerUtils;
-import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
+import org.openide.util.Lookup;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.actions.SystemAction;
+import org.openide.util.lookup.Lookups;
 
 /**
  * Top component which displays something.
@@ -56,6 +66,7 @@ public final class ProjectListTopComponent extends TopComponent implements Explo
 
     private final ExplorerManager mgr = new ExplorerManager();
     CgRegistry cgr = Installer.cgRegistry;
+    InputOutput io = IOProvider.getDefault().getIO("Output", false);
 
     public ProjectListTopComponent() throws IntrospectionException, PropertyVetoException {
         initComponents();
@@ -106,8 +117,8 @@ public final class ProjectListTopComponent extends TopComponent implements Explo
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAddProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddProjectActionPerformed
-        ProjectBean bean = new ProjectBean();
-        CgRegistry.systemFactory.add(bean);
+//        ProjectBean bean = new ProjectBean();
+//        CgRegistry.systemFactory.add(bean);
     }//GEN-LAST:event_btnAddProjectActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -163,10 +174,18 @@ public final class ProjectListTopComponent extends TopComponent implements Explo
 
         this.add(view, BorderLayout.CENTER);
 
-        
-        Children sysChildren = Children.create(CgRegistry.systemFactory, true);
-        Node rootNode = new AbstractNode(sysChildren);
+//        ServiceProjectManager projectListService = Lookup.getDefault().lookup(ServiceProjectManager.class);
+        Collection<? extends ServiceProjectManager> srvList = Lookups.forPath("System").lookupAll(ServiceProjectManager.class);
+        ServiceProjectManager projectListService = srvList.iterator().next();
+
+        List<ProjectBean> projectList = new ArrayList();
+        projectList.add(projectListService.getSystemProject());
+        projectList.addAll(projectListService.getProjectList());
+        ModelProjectList model = new ModelProjectList(projectList);
+
+        Node rootNode = new ProjectsRootNode(model);
         rootNode.setDisplayName("System");
+
         mgr.setRootContext(rootNode);
         rootNode.setPreferred(false);
 
@@ -175,7 +194,6 @@ public final class ProjectListTopComponent extends TopComponent implements Explo
         if (Installer.cgRegistry.getActiveMapNode() != null) {
             MapNode mn = Installer.cgRegistry.getActiveMapNode();
             mgr.setSelectedNodes(new Node[]{mn});
-//            Installer.cgRegistry.getActiveMapNode().getPreferredAction().actionPerformed(null);
             MapDisplayerTopComponent tc = new MapDisplayerTopComponent(Installer.cgRegistry.getActiveMapBean());
             tc.open();
         }
