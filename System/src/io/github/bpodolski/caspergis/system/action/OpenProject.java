@@ -9,6 +9,8 @@ package io.github.bpodolski.caspergis.system.action;
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
+import io.github.bpodolski.caspergis.beans.ProjectBean;
+import io.github.bpodolski.caspergis.services.ServiceProjectManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -20,6 +22,7 @@ import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.filesystems.FileChooserBuilder;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.lookup.Lookups;
 
 @ActionID(
         category = "Project",
@@ -38,14 +41,26 @@ public class OpenProject implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-       FileFilter cgFIleFilter = new FileNameExtensionFilter("Casper GIS project file(.cgpr)","cgpr");
-        
+        FileFilter cgFIleFilter = new FileNameExtensionFilter("Casper GIS project file(.cgpr)", "cgpr");
+
         File toAdd = new FileChooserBuilder("Open Project")
                 .setTitle("Open Casper GIS Project")
                 .setApproveText("Open")
                 .setFileFilter(cgFIleFilter)
                 .setAcceptAllFileFilterUsed(false)
                 .showOpenDialog();
+
+        if (toAdd != null) {
+            ProjectBean projectBean = new ProjectBean();//            
+            projectBean.setName(toAdd.getName());
+            projectBean.setPath(toAdd.getPath());
+
+            ServiceProjectManager projectSystemService = Lookups.forPath("System").lookupAll(ServiceProjectManager.class).iterator().next();
+            ServiceProjectManager projectCoreService = Lookups.forPath("Core").lookupAll(ServiceProjectManager.class).iterator().next();
+            projectSystemService.add(projectBean);
+            projectCoreService.add(projectBean);
+
+        }
 
     }
 }

@@ -19,7 +19,7 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
 @ServiceProvider(service = ServiceProjectManager.class, path = "Project")
-public class CgProjectListService  extends ServiceProjectManager {
+public class CgProjectListService extends ServiceProjectManager {
 
     @Override
     public ProjectBean getSystemProject() {
@@ -38,12 +38,14 @@ public class CgProjectListService  extends ServiceProjectManager {
 
     @Override
     public void delete(ProjectBean projectBean) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ProjectDAO dao = (ProjectDAO) cgProjectDaoMap.get(projectBean);
+        dao.dispose();
     }
 
     @Override
     public void close(ProjectBean projectBean) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ProjectDAO dao = (ProjectDAO) cgProjectDaoMap.get(projectBean);
+        dao.dispose();
     }
 
     @Override
@@ -53,23 +55,20 @@ public class CgProjectListService  extends ServiceProjectManager {
 
     @Override
     public void add(ProjectBean projectBean) {
-       File fProject = new File(projectBean.getPath());
+        File fProject = new File(projectBean.getPath());
         if (!fProject.exists()) {
             fProject.delete();
         }
 
-//        ProjectDAO.createDb(projectBean.getPath());
-        
         ProjectDAO dao = new ProjectDAO(projectBean.getPath(), true);//(ProjectDAO) cgProjectDaoMap.get(projectBean);
         cgProjectDaoMap.put(projectBean, dao);
-
 
         CgProjectInfo pi = dao.getProjectInfo();
         pi.setName(projectBean.getName());
         pi.setPath(projectBean.getPath());
         pi.setDescription(projectBean.getDescription());
         dao.saveProjectInfo(pi);
-//        dao.dispose();
+
     }
-    
+
 }

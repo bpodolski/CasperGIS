@@ -10,13 +10,16 @@ package io.github.bpodolski.caspergis.system.action;
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
 import io.github.bpodolski.caspergis.beans.ProjectBean;
+import io.github.bpodolski.caspergis.services.ServiceProjectManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.lookup.Lookups;
 
 @ActionID(
         category = "Project",
@@ -41,6 +44,21 @@ public class DeleteProject implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // TODO implement action body
+        ProjectBean projectBean = context;
+        ServiceProjectManager projectSystemService = Lookups.forPath("System").lookupAll(ServiceProjectManager.class).iterator().next();
+        projectSystemService.add(projectBean);
+        ServiceProjectManager projectCoreService = Lookups.forPath("Core").lookupAll(ServiceProjectManager.class).iterator().next();
+        projectCoreService.add(projectBean);
+        ServiceProjectManager projectProjectService = Lookups.forPath("Project").lookupAll(ServiceProjectManager.class).iterator().next();
+        projectProjectService.add(projectBean);
+        
+        File f = new File(projectBean.getPath());
+        
+        projectProjectService.delete(projectBean);//close project DAO
+        projectCoreService.delete(projectBean); //delete from view model
+        projectSystemService.delete(projectBean);//delete from system DB
+        
+        f.delete();
+        
     }
 }

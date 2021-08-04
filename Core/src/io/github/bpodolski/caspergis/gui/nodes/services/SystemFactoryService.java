@@ -31,12 +31,14 @@ public class SystemFactoryService extends ServiceProjectManager {
 
     @Override
     public void delete(ProjectBean projectBean) {
-//        CgRegistry.systemFactory.removeChild(projectBean);
+        ModelProjectList model = CgRegistry.modelProjectList;
+        model.remove(projectBean);
     }
 
     @Override
     public void close(ProjectBean projectBean) {
-//        CgRegistry.systemFactory.removeChild(projectBean);
+        ModelProjectList model = CgRegistry.modelProjectList;
+        model.remove(projectBean);
     }
 
     @Override
