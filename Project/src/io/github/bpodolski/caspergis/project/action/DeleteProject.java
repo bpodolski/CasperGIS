@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package io.github.bpodolski.caspergis.system.action;
+package io.github.bpodolski.caspergis.project.action;
 
 /**
  *
@@ -26,7 +26,7 @@ import org.openide.util.lookup.Lookups;
         id = "io.github.bpodolski.caspergis.system.action.DeleteProject"
 )
 @ActionRegistration(
-        iconBase = "io/github/bpodolski/caspergis/system/action/project_new.png",
+        iconBase = "io/github/bpodolski/caspergis/project/action/project_delete.png",
         displayName = "#CTL_DeleteProject"
 )
 @ActionReferences({
@@ -49,13 +49,9 @@ public class DeleteProject implements ActionListener {
         ServiceProjectManager projectCoreService = Lookups.forPath("Core").lookupAll(ServiceProjectManager.class).iterator().next();
         ServiceProjectManager projectProjectService = Lookups.forPath("Project").lookupAll(ServiceProjectManager.class).iterator().next();
         
-        File f = new File(projectBean.getPath());
-        
         projectProjectService.delete(projectBean);//close project DAO
         projectCoreService.delete(projectBean); //delete from view model
-        projectSystemService.delete(projectBean);//delete from system DB
-        
-        f.delete();
-        
+        projectSystemService.delete(projectBean);//delete from system DB 
+
     }
 }
