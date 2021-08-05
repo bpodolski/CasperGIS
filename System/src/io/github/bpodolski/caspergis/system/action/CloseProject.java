@@ -13,7 +13,6 @@ import io.github.bpodolski.caspergis.beans.ProjectBean;
 import io.github.bpodolski.caspergis.services.ServiceProjectManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -33,7 +32,7 @@ import org.openide.util.lookup.Lookups;
     @ActionReference(path = "Menu/Project", position = 30),
     @ActionReference(path = "Toolbars/Project", position = 30)
 })
-@Messages("CTL_CloseProject=New Project")
+@Messages("CTL_CloseProject=Close Project")
 public class CloseProject implements ActionListener {
 
     private final ProjectBean context;
@@ -46,16 +45,15 @@ public class CloseProject implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         ProjectBean projectBean = context;
         ServiceProjectManager projectSystemService = Lookups.forPath("System").lookupAll(ServiceProjectManager.class).iterator().next();
-        projectSystemService.add(projectBean);
         ServiceProjectManager projectCoreService = Lookups.forPath("Core").lookupAll(ServiceProjectManager.class).iterator().next();
-        projectCoreService.add(projectBean);
         ServiceProjectManager projectProjectService = Lookups.forPath("Project").lookupAll(ServiceProjectManager.class).iterator().next();
-        projectProjectService.add(projectBean);
+
         
-         
-        projectProjectService.delete(projectBean);//close project DAO
+        projectSystemService.delete(projectBean);//delete from system DB 
         projectCoreService.delete(projectBean); //delete from view model
-        projectSystemService.delete(projectBean);//delete from system DB
+        projectProjectService.delete(projectBean);//close project DAO
+        
+        
         
     }
 }

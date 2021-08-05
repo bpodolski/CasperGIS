@@ -25,7 +25,7 @@ import org.openide.util.NbBundle.Messages;
 import org.openide.util.lookup.Lookups;
 
 @ActionID(
-        category = "Project",
+        category = "System",
         id = "io.github.bpodolski.caspergis.system.action.OpenProject"
 )
 @ActionRegistration(
@@ -33,8 +33,8 @@ import org.openide.util.lookup.Lookups;
         displayName = "#CTL_OpenProject"
 )
 @ActionReferences({
-    @ActionReference(path = "Menu/Project", position = 10),
-    @ActionReference(path = "Toolbars/Project", position = 10)
+    @ActionReference(path = "Menu/System", position = 10),
+    @ActionReference(path = "Toolbars/System", position = 10)
 })
 @Messages("CTL_OpenProject=Open Project")
 public class OpenProject implements ActionListener {

@@ -6,7 +6,7 @@
 package io.github.bpodolski.caspergis.project.services;
 
 import io.github.bpodolski.caspergis.beans.ProjectBean;
-import static io.github.bpodolski.caspergis.project.CgRegistryProject.cgProjectDaoMap;
+import io.github.bpodolski.caspergis.project.CgRegistryProject;
 import io.github.bpodolski.caspergis.project.dao.ProjectDAO;
 import io.github.bpodolski.caspergis.project.datamodel.CgProjectInfo;
 import io.github.bpodolski.caspergis.services.ServiceProjectManager;
@@ -21,6 +21,9 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = ServiceProjectManager.class, path = "Project")
 public class CgProjectListService extends ServiceProjectManager {
 
+//    private static final HashMap projectDaoMap = new HashMap<ProjectBean, ProjectDAO>();
+    
+    
     @Override
     public ProjectBean getSystemProject() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -28,7 +31,7 @@ public class CgProjectListService extends ServiceProjectManager {
 
     @Override
     public String getServiceName() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this.getClass().getName();
     }
 
     @Override
@@ -38,14 +41,15 @@ public class CgProjectListService extends ServiceProjectManager {
 
     @Override
     public void delete(ProjectBean projectBean) {
-        ProjectDAO dao = (ProjectDAO) cgProjectDaoMap.get(projectBean);
-        dao.dispose();
+        close(projectBean);
+        File f = new File(projectBean.getPath());
+        if (f.exists()) f.delete();
     }
 
     @Override
     public void close(ProjectBean projectBean) {
-        ProjectDAO dao = (ProjectDAO) cgProjectDaoMap.get(projectBean);
-        dao.dispose();
+        ProjectDAO dao = (ProjectDAO) CgRegistryProject.cgProjectDaoMap.get(projectBean);
+        if (dao != null)  dao.dispose();
     }
 
     @Override
@@ -61,7 +65,7 @@ public class CgProjectListService extends ServiceProjectManager {
         }
 
         ProjectDAO dao = new ProjectDAO(projectBean.getPath(), true);//(ProjectDAO) cgProjectDaoMap.get(projectBean);
-        cgProjectDaoMap.put(projectBean, dao);
+        CgRegistryProject.cgProjectDaoMap.put(projectBean, dao);
 
         CgProjectInfo pi = dao.getProjectInfo();
         pi.setName(projectBean.getName());

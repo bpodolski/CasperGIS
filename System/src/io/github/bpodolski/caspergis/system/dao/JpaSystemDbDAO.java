@@ -63,10 +63,10 @@ public class JpaSystemDbDAO {
     }
 
     public List<CgProject> getProjects() {
-        Session session = this.sessionFactory.openSession();
         List<CgProject> listProjects;
-        listProjects = session.createQuery("from CgProject", CgProject.class).list();
-        session.close();
+        try (Session session = this.sessionFactory.openSession()) {
+            listProjects = session.createQuery("from CgProject", CgProject.class).list();
+        }
         return listProjects;
 
     }

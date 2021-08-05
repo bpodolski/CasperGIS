@@ -46,11 +46,8 @@ public class DeleteProject implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         ProjectBean projectBean = context;
         ServiceProjectManager projectSystemService = Lookups.forPath("System").lookupAll(ServiceProjectManager.class).iterator().next();
-        projectSystemService.add(projectBean);
         ServiceProjectManager projectCoreService = Lookups.forPath("Core").lookupAll(ServiceProjectManager.class).iterator().next();
-        projectCoreService.add(projectBean);
         ServiceProjectManager projectProjectService = Lookups.forPath("Project").lookupAll(ServiceProjectManager.class).iterator().next();
-        projectProjectService.add(projectBean);
         
         File f = new File(projectBean.getPath());
         

@@ -8,9 +8,12 @@ package io.github.bpodolski.caspergis.gui.nodes;
 import io.github.bpodolski.caspergis.beans.ProjectBean;
 import io.github.bpodolski.caspergis.gui.nodes.factories.ProjectItemsFactory;
 import java.beans.IntrospectionException;
+import java.util.List;
 import javax.swing.Action;
+import org.openide.awt.Actions;
 import org.openide.nodes.BeanNode;
 import org.openide.nodes.Children;
+import org.openide.util.Utilities;
 import org.openide.util.lookup.Lookups;
 
 /**
@@ -27,13 +30,19 @@ public class ProjectNode extends BeanNode<ProjectBean> {
     }
 
     @Override
-    public String getShortDescription() {        
+    public String getShortDescription() {
         return super.getBean().getDescription();
     }
 
     @Override
     public Action getPreferredAction() {
-        return null;
+        return Actions.forID("Project", "io.github.bpodolski.caspergis.system.action.CTL_ProjectProperties");
+    }
+
+    @Override
+    public Action[] getActions(boolean context) {
+        List<? extends Action> carProject= Utilities.actionsForPath("Menu/Project");
+        return carProject.toArray(new Action[carProject.size()]);
     }
 
 }

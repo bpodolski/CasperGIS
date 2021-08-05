@@ -6,7 +6,6 @@
 package io.github.bpodolski.caspergis.system.action.wizard;
 
 import io.github.bpodolski.caspergis.beans.ProjectBean;
-import io.github.bpodolski.caspergis.services.ProjectInfoService;
 import io.github.bpodolski.caspergis.services.ServiceProjectManager;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -16,23 +15,21 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JComponent;
 import org.openide.DialogDisplayer;
-import org.openide.NotifyDescriptor;
 import org.openide.WizardDescriptor;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
-import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.Lookups;
 
 // An example action demonstrating how the wizard could be called from within
 // your code. You can move the code below wherever you need, or register an action:
-@ActionID(category = "Project", id = "io.github.bpodolski.caspergis.system.action.wizard.NewProjectWizardAction")
+@ActionID(category = "System", id = "io.github.bpodolski.caspergis.system.action.wizard.NewProjectWizardAction")
 @ActionRegistration(iconBase = "io/github/bpodolski/caspergis/system/action/project_new.png", displayName = "#CTL_AddProject")
 @ActionReferences({
-    @ActionReference(path = "Menu/Project", position = 20),
-    @ActionReference(path = "Toolbars/Project", position = 20)
+    @ActionReference(path = "Menu/System", position = 20),
+    @ActionReference(path = "Toolbars/System", position = 20)
 })
 @NbBundle.Messages("CTL_AddProject=New Project")
 public final class NewProjectWizardAction implements ActionListener {
@@ -73,10 +70,10 @@ public final class NewProjectWizardAction implements ActionListener {
             projectBean.setPath(sProjectFile);
 
             ServiceProjectManager projectSystemService = Lookups.forPath("System").lookupAll(ServiceProjectManager.class).iterator().next();
-            projectSystemService.add(projectBean);
             ServiceProjectManager projectCoreService = Lookups.forPath("Core").lookupAll(ServiceProjectManager.class).iterator().next();
-            projectCoreService.add(projectBean);
 
+            projectSystemService.add(projectBean);
+            projectCoreService.add(projectBean);
 
         }
     }

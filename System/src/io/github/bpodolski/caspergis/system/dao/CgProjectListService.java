@@ -10,6 +10,7 @@ import io.github.bpodolski.caspergis.beans.ProjectBean;
 import io.github.bpodolski.caspergis.services.ServiceProjectManager;
 import io.github.bpodolski.caspergis.system.CgRegistrySystem;
 import io.github.bpodolski.caspergis.system.datamodel.CgProject;
+import io.github.bpodolski.caspergis.utils.CgUtils;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -47,7 +48,7 @@ public class CgProjectListService extends ServiceProjectManager {
             projectBean.setPath(cgProject.getPath());
             projectList.add(projectBean);
 
-            CgRegistrySystem.projectMap.put(projectBean, itr);
+            CgRegistrySystem.projectMap.put(projectBean, cgProject);
 
         }
 
@@ -56,8 +57,7 @@ public class CgProjectListService extends ServiceProjectManager {
 
     @Override
     public void delete(ProjectBean projectBean) {
-        CgProject project = (CgProject) CgRegistrySystem.projectMap.get(projectBean);
-        daoSystem.deleteProject(project);
+        close(projectBean);
     }
 
     @Override
@@ -79,12 +79,18 @@ public class CgProjectListService extends ServiceProjectManager {
         Collection<? extends ServiceProjectManager> srvList = Lookups.forPath("Project").lookupAll(ServiceProjectManager.class);
         ServiceProjectManager projectListService = srvList.iterator().next();
         projectListService.add(projectBean);
-        
+
     }
 
     @Override
     public void close(ProjectBean projectBean) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (CgRegistrySystem.projectMap.containsKey(projectBean)) {
+            CgProject project = (CgProject) CgRegistrySystem.projectMap.get(projectBean);
+            daoSystem.deleteProject(project);
+            CgUtils.io.getOut().println(projectBean.getName()+" deleted");
+        } else {
+            CgUtils.io.getOut().println(projectBean.getName()+" can't delete");            
+        }
     }
 
     @Override

@@ -113,7 +113,7 @@ public class ProjectDAO {
 
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
         this.sessionFactory = configuration.buildSessionFactory(serviceRegistry);
-        
+
         setProjectInfo();
     }
 
@@ -129,8 +129,11 @@ public class ProjectDAO {
     }
 
     public void dispose() {
-        this.sessionFactory.getCurrentSession().close();
-        sessionFactory.close();
+        if (sessionFactory != null) {
+            if (!sessionFactory.isClosed()) {
+                sessionFactory.close();
+            }
+        }
     }
 
     public SessionFactory getSessionFactory() {
@@ -195,10 +198,10 @@ public class ProjectDAO {
     public List<CgLayer> getLayers(CgMap cgMap) {
         List<CgLayer> cgLayers;
         try (Session session = this.sessionFactory.openSession()) {
-   
-            Query query = session.createQuery("select b from CgLayer b where b.cgMap = :cgMap").setParameter("cgMap", cgMap);            
+
+            Query query = session.createQuery("select b from CgLayer b where b.cgMap = :cgMap").setParameter("cgMap", cgMap);
             cgLayers = query.getResultList();
-            
+
             session.close();
         }
         return cgLayers;

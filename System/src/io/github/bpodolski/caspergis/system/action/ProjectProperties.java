@@ -12,6 +12,9 @@ package io.github.bpodolski.caspergis.system.action;
 import io.github.bpodolski.caspergis.beans.ProjectBean;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JPanel;
+import org.openide.DialogDescriptor;
+import org.openide.DialogDisplayer;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -41,6 +44,7 @@ public class ProjectProperties implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // TODO implement action body
+        DialogDescriptor d = new DialogDescriptor(new JPanel(), context.getName()+" - project properties", true, null);
+        DialogDisplayer.getDefault().createDialog(d).setVisible(true);
     }
 }
