@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package io.github.bpodolski.caspergis.project.action;
+package io.github.bpodolski.caspergis.project.project;
 
 /**
  *
@@ -26,7 +26,7 @@ import org.openide.util.NbBundle.Messages;
         id = "io.github.bpodolski.caspergis.system.action.CTL_ProjectProperties"
 )
 @ActionRegistration(
-        iconBase = "io/github/bpodolski/caspergis/project/action/project_properties.png",
+        iconBase = "io/github/bpodolski/caspergis/project/project/project_properties.png",
         displayName = "#CTL_ProjectProperties"
 )
 @ActionReferences({

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package io.github.bpodolski.caspergis.project.action;
+package io.github.bpodolski.caspergis.project.project;
 
 /**
  *
@@ -26,7 +26,7 @@ import org.openide.util.lookup.Lookups;
         id = "io.github.bpodolski.caspergis.system.action.DeleteProject"
 )
 @ActionRegistration(
-        iconBase = "io/github/bpodolski/caspergis/project/action/project_delete.png",
+        iconBase = "io/github/bpodolski/caspergis/project/project/project_delete.png",
         displayName = "#CTL_DeleteProject"
 )
 @ActionReferences({

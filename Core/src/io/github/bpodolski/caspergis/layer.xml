@@ -16,6 +16,12 @@
             <file name="org-openide-actions-SaveAsAction.shadow_hidden"/>
         </folder>
         <file name="GoTo_hidden"/>
+        <folder name="Help">
+            <file name="Separator1.instance_hidden"/>
+            <file name="master-help.xml_hidden"/>
+            <file name="org-netbeans-core-actions-AboutAction.shadow_hidden"/>
+            <file name="org-netbeans-modules-autoupdate-ui-actions-CheckForUpdatesAction.shadow_hidden"/>
+        </folder>
         <folder name="View">
             <file name="Separator1.instance_hidden"/>
             <file name="org-netbeans-core-multiview-EditorsAction.instance_hidden"/>
