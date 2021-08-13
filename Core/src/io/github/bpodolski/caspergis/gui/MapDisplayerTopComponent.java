@@ -53,6 +53,8 @@ public class MapDisplayerTopComponent extends TopComponent implements ExplorerMa
 
         initView();
         initActions();
+        
+        this.setName(mapBean.getName()+" - editor");
 
         lookupMapBean = new AbstractLookup(this.instanceContent);
         instanceContent.add(mapBean);

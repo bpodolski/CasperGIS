@@ -26,7 +26,7 @@ import org.openide.util.NbPreferences;
 )
 @TopComponent.Registration(mode = "editor", openAtStartup = true)
 @ActionID(category = "Window", id = "io.github.bpodolski.caspergis.gui.StartPageTopComponent")
-@ActionReference(path = "Menu/Window" /*, position = 333 */)
+@ActionReference(path = "Menu/Help" , position = 100)
 @TopComponent.OpenActionRegistration(
         displayName = "#CTL_StartPageAction",
         preferredID = "StartPageTopComponent"

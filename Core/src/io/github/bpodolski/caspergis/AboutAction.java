@@ -23,7 +23,7 @@ import org.openide.util.NbBundle.Messages;
         displayName = "#CTL_AboutAction"
 )
 @ActionReferences({
-    @ActionReference(path = "Menu/Help", position = 10)
+    @ActionReference(path = "Menu/Help", position = 300)
 })
 @Messages("CTL_AboutAction=About")
 public final class AboutAction implements ActionListener {

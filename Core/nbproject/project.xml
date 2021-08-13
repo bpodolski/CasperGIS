@@ -162,6 +162,7 @@
                 </dependency>
             </module-dependencies>
             <public-packages>
+                <package>io.github.bpodolski.caspergis.gui.pnl</package>
                 <package>io.github.bpodolski.caspergis.res</package>
             </public-packages>
         </data>

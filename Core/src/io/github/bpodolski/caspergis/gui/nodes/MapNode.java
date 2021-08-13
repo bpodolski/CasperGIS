@@ -8,12 +8,17 @@ package io.github.bpodolski.caspergis.gui.nodes;
 import io.github.bpodolski.caspergis.beans.MapBean;
 import io.github.bpodolski.caspergis.gui.MapDisplayerTopComponent;
 import java.beans.IntrospectionException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import javax.swing.Action;
 import org.openide.actions.OpenAction;
+import org.openide.awt.Actions;
 import org.openide.cookies.OpenCookie;
+import org.openide.filesystems.FileUtil;
 import org.openide.nodes.BeanNode;
 import org.openide.nodes.Children;
+import org.openide.util.Utilities;
 import org.openide.util.actions.SystemAction;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
@@ -44,6 +49,8 @@ public class MapNode extends BeanNode<MapBean> {
             tc.requestActive();
         });
 
+        ic.add(mapBean);
+
         this.mapBean = mapBean;
         setIconBaseWithExtension("io/github/bpodolski/caspergis/res/map.png");
 
@@ -69,14 +76,32 @@ public class MapNode extends BeanNode<MapBean> {
 
     @Override
     public Action[] getActions(boolean context) {
-        return new Action[]{SystemAction.get(OpenAction.class)};
+
+//        ArrayList<Action> am = new ArrayList();
+//        am.add(SystemAction.get(OpenAction.class));
+//        am.addAll(Utilities.actionsForPath("Menu/Map"));
+//        return (Action[]) am.toArray();
+        return new Action[]{
+            SystemAction.get(OpenAction.class),
+            Actions.forID("Map", "io.github.bpodolski.caspergis.project.map.ActivateMap"),
+            Actions.forID("Map", "io.github.bpodolski.caspergis.project.map.AddLayer"),
+            Actions.forID("Map", "io.github.bpodolski.caspergis.project.map.MapProperties")
+        };
     }
 
     private TopComponent findTopComponent(MapBean mapBean) {
         Set<TopComponent> openTopComponents = WindowManager.getDefault().getRegistry().getOpened();
         for (TopComponent tc : openTopComponents) {
-            if (tc.getLookup().lookup(MapBean.class) == mapBean) {
-                return tc;
+            if (tc.getLookup().lookup(MapBean.class
+            ) == mapBean) {
+//                return tc;
+//                if (tc.getName().endsWith(" - editor")) {
+//                    return tc;
+//                }
+                if (tc.getClass()
+                        .getSimpleName().equalsIgnoreCase("MapDisplayerTopComponent")) {
+                    return tc;
+                }
             }
         }
         return null;

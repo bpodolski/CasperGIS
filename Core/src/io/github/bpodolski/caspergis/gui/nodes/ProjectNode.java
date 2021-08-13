@@ -41,8 +41,8 @@ public class ProjectNode extends BeanNode<ProjectBean> {
 
     @Override
     public Action[] getActions(boolean context) {
-        List<? extends Action> carProject= Utilities.actionsForPath("Menu/Project");
-        return carProject.toArray(new Action[carProject.size()]);
+        List<? extends Action> actProject= Utilities.actionsForPath("Menu/Project");
+        return actProject.toArray(new Action[actProject.size()]);
     }
 
 }

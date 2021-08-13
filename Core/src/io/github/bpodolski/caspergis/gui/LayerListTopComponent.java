@@ -10,6 +10,8 @@ import io.github.bpodolski.caspergis.beans.LayerBean;
 import io.github.bpodolski.caspergis.beans.MapBean;
 import io.github.bpodolski.caspergis.gui.nodes.InternalMapNode;
 import java.beans.IntrospectionException;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
@@ -62,7 +64,7 @@ import org.openide.util.lookup.ProxyLookup;
     "HINT_LayerListTopComponent=This is a LayerList window"
 })
 public final class LayerListTopComponent extends TopComponent implements ExplorerManager.Provider,
-        LookupListener {
+        LookupListener, PropertyChangeListener {
 
     private MapBean mapBean = null;
     private MapBean mapBeanX = new MapBean(null, "[..]");
@@ -101,7 +103,7 @@ public final class LayerListTopComponent extends TopComponent implements Explore
         jLabel1 = new javax.swing.JLabel();
         pnl = new javax.swing.JPanel();
         btnAddLayer = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
+        lblTest = new javax.swing.JLabel();
         view = new org.openide.explorer.view.BeanTreeView();
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(LayerListTopComponent.class, "LayerListTopComponent.jLabel1.text")); // NOI18N
@@ -121,8 +123,8 @@ public final class LayerListTopComponent extends TopComponent implements Explore
         });
         pnl.add(btnAddLayer);
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(LayerListTopComponent.class, "LayerListTopComponent.jLabel2.text")); // NOI18N
-        pnl.add(jLabel2);
+        org.openide.awt.Mnemonics.setLocalizedText(lblTest, org.openide.util.NbBundle.getMessage(LayerListTopComponent.class, "LayerListTopComponent.lblTest.text")); // NOI18N
+        pnl.add(lblTest);
 
         add(pnl, java.awt.BorderLayout.NORTH);
         add(view, java.awt.BorderLayout.CENTER);
@@ -157,7 +159,7 @@ public final class LayerListTopComponent extends TopComponent implements Explore
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddLayer;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel lblTest;
     private javax.swing.JPanel pnl;
     private org.openide.explorer.view.BeanTreeView view;
     // End of variables declaration//GEN-END:variables
@@ -224,14 +226,17 @@ public final class LayerListTopComponent extends TopComponent implements Explore
                 if (!reg.isActive()) {
                     mapBean = mapBeanX;
                     mgr = new ExplorerManager();
-                  
+
                     this.setExplorerManager((ExplorerManager) CgRegistry.explorerManagerMap.get(mapBean));
                     initView();
                     view.addNotify();
 
                 }
             }
-        } 
+
+            this.lblTest.setText(mapBean.getName());
+            mapBean.addPropertyChangeListener(this);
+        }
     }
 
     private void initActions() {
@@ -251,6 +256,17 @@ public final class LayerListTopComponent extends TopComponent implements Explore
         getActionMap().put(delete.getActionMapKey(), ExplorerUtils.actionDelete(mgr, true));
 
         this.lookupAction = ExplorerUtils.createLookup(mgr, map);
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        this.lblTest.setText(evt.getPropertyName());
+        evt.getPropertyName();
+//        if (mapBean.isActive()) {
+//            this.lblTest.setText("OK");
+//        } else {
+//            this.lblTest.setText("false");
+//        }
     }
 
 }
