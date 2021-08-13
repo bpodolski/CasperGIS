@@ -7,6 +7,7 @@ package io.github.bpodolski.caspergis.gui.nodes;
 
 import io.github.bpodolski.caspergis.beans.MapBean;
 import io.github.bpodolski.caspergis.gui.MapDisplayerTopComponent;
+import io.github.bpodolski.caspergis.utils.CgUtils;
 import java.beans.IntrospectionException;
 import java.util.ArrayList;
 import java.util.List;
@@ -77,10 +78,6 @@ public class MapNode extends BeanNode<MapBean> {
     @Override
     public Action[] getActions(boolean context) {
 
-//        ArrayList<Action> am = new ArrayList();
-//        am.add(SystemAction.get(OpenAction.class));
-//        am.addAll(Utilities.actionsForPath("Menu/Map"));
-//        return (Action[]) am.toArray();
         return new Action[]{
             SystemAction.get(OpenAction.class),
             Actions.forID("Map", "io.github.bpodolski.caspergis.project.map.ActivateMap"),
@@ -88,22 +85,17 @@ public class MapNode extends BeanNode<MapBean> {
             Actions.forID("Map", "io.github.bpodolski.caspergis.project.map.MapProperties")
         };
     }
-
-    private TopComponent findTopComponent(MapBean mapBean) {
+    public TopComponent findTopComponent(MapBean mapBean) {
         Set<TopComponent> openTopComponents = WindowManager.getDefault().getRegistry().getOpened();
         for (TopComponent tc : openTopComponents) {
             if (tc.getLookup().lookup(MapBean.class
-            ) == mapBean) {
-//                return tc;
-//                if (tc.getName().endsWith(" - editor")) {
-//                    return tc;
-//                }
-                if (tc.getClass()
-                        .getSimpleName().equalsIgnoreCase("MapDisplayerTopComponent")) {
+            ) == mapBean) {//
+                if (tc.getClass().getSimpleName().equalsIgnoreCase("MapDisplayerTopComponent")) {
                     return tc;
                 }
             }
         }
         return null;
     }
+    
 }

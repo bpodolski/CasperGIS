@@ -6,6 +6,7 @@
 package io.github.bpodolski.caspergis.project.map;
 
 import io.github.bpodolski.caspergis.beans.MapBean;
+import io.github.bpodolski.caspergis.utils.CgUtils;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import org.openide.awt.ActionID;
@@ -13,6 +14,7 @@ import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle;
+import org.openide.windows.*;
 
 /**
  *
@@ -42,6 +44,7 @@ public class ActivateMap implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         MapBean mapBean = context;
+
         mapBean.setActive(!mapBean.isActive());
 
     }
