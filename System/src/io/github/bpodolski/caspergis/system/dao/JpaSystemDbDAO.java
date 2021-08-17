@@ -7,7 +7,7 @@ package io.github.bpodolski.caspergis.system.dao;
 
 
 import io.github.bpodolski.caspergis.api.CasperInfo;
-import io.github.bpodolski.caspergis.system.datamodel.CgProject;
+import io.github.bpodolski.caspergis.system.datamodel.CgSysProject;
 import java.io.File;
 import java.util.List;
 import java.util.Properties;
@@ -56,16 +56,16 @@ public class JpaSystemDbDAO {
 
         configuration.setProperties(properties);
 
-        configuration.addAnnotatedClass(CgProject.class);
+        configuration.addAnnotatedClass(CgSysProject.class);
 
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
         this.sessionFactory = configuration.buildSessionFactory(serviceRegistry);
     }
 
-    public List<CgProject> getProjects() {
-        List<CgProject> listProjects;
+    public List<CgSysProject> getProjects() {
+        List<CgSysProject> listProjects;
         try (Session session = this.sessionFactory.openSession()) {
-            listProjects = session.createQuery("from CgProject", CgProject.class).list();
+            listProjects = session.createQuery("from CgProject", CgSysProject.class).list();
         }
         return listProjects;
 
@@ -79,7 +79,7 @@ public class JpaSystemDbDAO {
         return sessionFactory;
     }
 
-    public void saveProject(CgProject project) {
+    public void saveProject(CgSysProject project) {
         Session session = this.sessionFactory.openSession();
         Transaction transaction = null;
         try {
@@ -95,7 +95,7 @@ public class JpaSystemDbDAO {
         session.close();
     }
     
-    public void deleteProject(CgProject project) {
+    public void deleteProject(CgSysProject project) {
         Session session = this.sessionFactory.openSession();
         Transaction transaction = null;
         try {

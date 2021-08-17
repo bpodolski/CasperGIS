@@ -11,8 +11,8 @@ import io.github.bpodolski.caspergis.beans.ProjectBean;
 import io.github.bpodolski.caspergis.model.ModelProjectList;
 import io.github.bpodolski.caspergis.gui.nodes.MapNode;
 import io.github.bpodolski.caspergis.gui.nodes.ProjectsRootNode;
-import io.github.bpodolski.caspergis.services.ProjectInfoService;
-import io.github.bpodolski.caspergis.services.ServiceProjectManager;
+import io.github.bpodolski.caspergis.services.ProjectMgr;
+import io.github.bpodolski.caspergis.services.ProjectListMgr;
 import java.awt.BorderLayout;
 import java.beans.IntrospectionException;
 import java.beans.PropertyVetoException;
@@ -174,8 +174,8 @@ public final class ProjectListTopComponent extends TopComponent implements Explo
 
         this.add(view, BorderLayout.CENTER);
 
-        Collection<? extends ServiceProjectManager> srvList = Lookups.forPath("System").lookupAll(ServiceProjectManager.class);
-        ServiceProjectManager projectListService = srvList.iterator().next();
+        Collection<? extends ProjectListMgr> srvList = Lookups.forPath("System").lookupAll(ProjectListMgr.class);
+        ProjectListMgr projectListService = srvList.iterator().next();
 
         List<ProjectBean> projectList = new ArrayList();
         projectList.add(projectListService.getSystemProject());

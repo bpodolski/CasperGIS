@@ -27,17 +27,17 @@ import java.util.ArrayList;
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-public class MapBean extends ElementProjectBean {
+public class MapBean extends ProjectitemBean {
 
-    private ArrayList<ElementMapBean> mapElementList = new ArrayList();
+    private ArrayList<MapitemBean> mapElementList = new ArrayList();
     boolean active = false;
     private final PropertyChangeSupport propertyChangeSupport;
 
-    public MapBean(ArrayList<ElementMapBean> mapElementList) {
+    public MapBean(ArrayList<MapitemBean> mapElementList) {
         this(mapElementList, "Layers");
     }
 
-    public MapBean(ArrayList<ElementMapBean> mapElementList, String name) {
+    public MapBean(ArrayList<MapitemBean> mapElementList, String name) {
         this.setName(name);
         this.setDisplayName(name);
         this.mapElementList = mapElementList;
@@ -45,11 +45,11 @@ public class MapBean extends ElementProjectBean {
         propertyChangeSupport = new PropertyChangeSupport(this);
     }
 
-    public ArrayList<ElementMapBean> getMapElementList() {
+    public ArrayList<MapitemBean> getMapElementList() {
         return mapElementList;
     }
 
-    public void setMapElementList(ArrayList<ElementMapBean> mapElementList) {
+    public void setMapElementList(ArrayList<MapitemBean> mapElementList) {
         this.mapElementList = mapElementList;
     }
 

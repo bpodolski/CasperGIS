@@ -5,7 +5,7 @@
  */
 package io.github.bpodolski.caspergis.model;
 
-import io.github.bpodolski.caspergis.beans.ProjectBean;
+import io.github.bpodolski.caspergis.beans.MapitemBean;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,43 +16,43 @@ import org.openide.util.ChangeSupport;
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-public class ModelProjectList {
-    
-    private final List<ProjectBean> projectBeans;
+public class ModelMapElementsList {
+
+    private final List<MapitemBean> elementMapBeans;
     private final ChangeSupport cs = new ChangeSupport(this);
+
+    public ModelMapElementsList() {
+        this(new ArrayList<MapitemBean>());
+    }
+
+    public ModelMapElementsList(List<MapitemBean> elementMapBeans) {
+        this.elementMapBeans = elementMapBeans;
+    }
     
-     public ModelProjectList() {
-        this(new ArrayList<ProjectBean>());
-    }
-     
-    public ModelProjectList(List<ProjectBean> projectBeans) {
-        this.projectBeans = projectBeans;
+    public List<? extends MapitemBean> list() {
+        return elementMapBeans;
     }
 
-    public List<? extends ProjectBean> list() {
-        return projectBeans;
-    }
-
-    public void add(ProjectBean c) {
-        c.setPosition(projectBeans.size() + 1);
-        projectBeans.add(c);
+    public void add(MapitemBean c) {
+        c.setPosition(elementMapBeans.size() + 1);
+        elementMapBeans.add(c);
         cs.fireChange();
     }
     
-    public void remove(ProjectBean c) {
-        projectBeans.remove(c);
+    public void remove(MapitemBean c) {
+        elementMapBeans.remove(c);
         cs.fireChange();
     }
 
     public void reorder(int[] perm) {
-        ProjectBean[] reordered = new ProjectBean[projectBeans.size()];
+        MapitemBean[] reordered = new MapitemBean[elementMapBeans.size()];
         for (int i = 0; i < perm.length; i++) {
             int j = perm[i];
-            ProjectBean c = projectBeans.get(i);
+            MapitemBean c = elementMapBeans.get(i);
             reordered[j] = c;
         }
-        projectBeans.clear();
-        projectBeans.addAll(Arrays.asList(reordered));
+        elementMapBeans.clear();
+        elementMapBeans.addAll(Arrays.asList(reordered));
         cs.fireChange();
     }
 
@@ -63,4 +63,5 @@ public class ModelProjectList {
     public void removeChangeListener(ChangeListener l) {
         cs.removeChangeListener(l);
     }
+
 }

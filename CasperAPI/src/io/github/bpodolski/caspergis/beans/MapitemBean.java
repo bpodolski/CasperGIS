@@ -25,17 +25,19 @@ import java.util.List;
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-public class ElementMapBean {
+public class MapitemBean {
 
-    private List<ElementMapBean> mapElementBeans;
+    private List<MapitemBean> mapElementBeans;
     
     
 
     private BeanType beanType = BeanType.MAP_ELEMENT;
     private String name = "Map Element";
     private String displayName = "Map Element";
+        //position in project list, used by comparator, (calculate by position in parent node children list)
+    int position = 0;
 
-    public ElementMapBean(List<ElementMapBean> mapElementBeans, String name) {
+    public MapitemBean(List<MapitemBean> mapElementBeans, String name) {
         this.mapElementBeans = mapElementBeans;
         this.name = name;
     }
@@ -64,11 +66,19 @@ public class ElementMapBean {
         this.displayName = displayName;
     }
 
-    public List<ElementMapBean> getMapElementBeans() {
+    public List<MapitemBean> getMapElementBeans() {
         if (mapElementBeans == null) {
             mapElementBeans = new ArrayList<>();
         }
         return mapElementBeans;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
     }
 
 }

@@ -26,7 +26,7 @@ import java.util.List;
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-public class LayerBean extends ElementMapBean {
+public class LayerBean extends MapitemBean {
 
     private int transparency = 0;
     private boolean visible = true;
@@ -45,7 +45,7 @@ public class LayerBean extends ElementMapBean {
 
     }
 
-    public LayerBean(List<ElementMapBean> mapElementBeans, String name) {
+    public LayerBean(List<MapitemBean> mapElementBeans, String name) {
         super(mapElementBeans, name);
         this.setBeanType(BeanType.LAYER);
     }

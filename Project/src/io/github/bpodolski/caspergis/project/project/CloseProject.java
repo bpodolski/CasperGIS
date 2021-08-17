@@ -10,7 +10,7 @@ package io.github.bpodolski.caspergis.project.project;
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
 import io.github.bpodolski.caspergis.beans.ProjectBean;
-import io.github.bpodolski.caspergis.services.ServiceProjectManager;
+import io.github.bpodolski.caspergis.services.ProjectListMgr;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import org.openide.awt.ActionID;
@@ -44,9 +44,9 @@ public class CloseProject implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         ProjectBean projectBean = context;
-        ServiceProjectManager projectSystemService = Lookups.forPath("System").lookupAll(ServiceProjectManager.class).iterator().next();
-        ServiceProjectManager projectCoreService = Lookups.forPath("Core").lookupAll(ServiceProjectManager.class).iterator().next();
-        ServiceProjectManager projectProjectService = Lookups.forPath("Project").lookupAll(ServiceProjectManager.class).iterator().next();
+        ProjectListMgr projectSystemService = Lookups.forPath("System").lookupAll(ProjectListMgr.class).iterator().next();
+        ProjectListMgr projectCoreService = Lookups.forPath("Core").lookupAll(ProjectListMgr.class).iterator().next();
+        ProjectListMgr projectProjectService = Lookups.forPath("Project").lookupAll(ProjectListMgr.class).iterator().next();
 
         
         projectSystemService.close(projectBean);//delete from system DB 

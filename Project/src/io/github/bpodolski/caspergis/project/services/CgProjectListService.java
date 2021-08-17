@@ -9,47 +9,62 @@ import io.github.bpodolski.caspergis.beans.ProjectBean;
 import io.github.bpodolski.caspergis.project.CgRegistryProject;
 import io.github.bpodolski.caspergis.project.dao.ProjectDAO;
 import io.github.bpodolski.caspergis.project.datamodel.CgProjectInfo;
-import io.github.bpodolski.caspergis.services.ServiceProjectManager;
+import io.github.bpodolski.caspergis.services.ProjectListMgr;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-@ServiceProvider(service = ServiceProjectManager.class, path = "Project")
-public class CgProjectListService extends ServiceProjectManager {
+@ServiceProvider(service = ProjectListMgr.class, path = "Project")
+public class CgProjectListService extends ProjectListMgr {
 
 //    private static final HashMap projectDaoMap = new HashMap<ProjectBean, ProjectDAO>();
-    
-    
     @Override
     public ProjectBean getSystemProject() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public String getServiceName() {
-        return this.getClass().getName();
-    }
-
-    @Override
     public List<ProjectBean> getProjectList() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<ProjectBean> listP = new ArrayList<>();
+
+        ProjectListMgr projectListMgr = Lookups.forPath("system").lookupAll(ProjectListMgr.class).iterator().next();
+        ProjectInfoMgr projectInfoMgr = Lookups.forPath("Project").lookupAll(ProjectInfoMgr.class).iterator().next();
+       
+        //add temp project at first
+        listP.add(projectListMgr.getSystemProject());
+        //add registered projects
+        listP.addAll(projectListMgr.getProjectList());
+
+        Iterator<ProjectBean> itr = listP.iterator();
+
+        while (itr.hasNext()) {
+            projectInfoMgr.setupProjectInfo(itr.next());
+        }
+        return listP;
     }
 
     @Override
     public void delete(ProjectBean projectBean) {
         close(projectBean);
         File f = new File(projectBean.getPath());
-        if (f.exists()) f.delete();
+        if (f.exists()) {
+            f.delete();
+        }
     }
 
     @Override
     public void close(ProjectBean projectBean) {
         ProjectDAO dao = (ProjectDAO) CgRegistryProject.cgProjectDaoMap.get(projectBean);
-        if (dao != null)  dao.dispose();
+        if (dao != null) {
+            dao.dispose();
+        }
     }
 
     @Override

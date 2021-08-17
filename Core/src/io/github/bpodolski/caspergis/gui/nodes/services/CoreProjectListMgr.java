@@ -8,7 +8,7 @@ package io.github.bpodolski.caspergis.gui.nodes.services;
 import io.github.bpodolski.caspergis.CgRegistry;
 import io.github.bpodolski.caspergis.beans.ProjectBean;
 import io.github.bpodolski.caspergis.model.ModelProjectList;
-import io.github.bpodolski.caspergis.services.ServiceProjectManager;
+import io.github.bpodolski.caspergis.services.ProjectListMgr;
 import java.util.List;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -16,8 +16,8 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-@ServiceProvider(service = ServiceProjectManager.class, path = "Core")
-public class SystemFactoryService extends ServiceProjectManager {
+@ServiceProvider(service = ProjectListMgr.class, path = "Core")
+public class CoreProjectListMgr extends ProjectListMgr {
 
     @Override
     public ProjectBean getSystemProject() {
@@ -52,9 +52,5 @@ public class SystemFactoryService extends ServiceProjectManager {
         model.add(projectBean);
     }
 
-    @Override
-    public String getServiceName() {
-        return "SystemFactoryService";
-    }
 
 }

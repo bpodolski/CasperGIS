@@ -9,9 +9,11 @@ import io.github.bpodolski.caspergis.beans.MapBean;
 import io.github.bpodolski.caspergis.beans.PrintoutBean;
 import io.github.bpodolski.caspergis.beans.ProjectBean;
 import io.github.bpodolski.caspergis.project.CgRegistryProject;
+import static io.github.bpodolski.caspergis.project.CgRegistryProject.cgProjectDaoMap;
 import io.github.bpodolski.caspergis.project.dao.ProjectDAO;
 import io.github.bpodolski.caspergis.project.datamodel.CgMap;
-import io.github.bpodolski.caspergis.services.ProjectInfoService;
+import io.github.bpodolski.caspergis.services.MapListMgr;
+import io.github.bpodolski.caspergis.services.ProjectMgr;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -21,8 +23,8 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-@ServiceProvider(service = ProjectInfoService.class)
-public class TestMapGetter extends ProjectInfoService {
+@ServiceProvider(service = MapListMgr.class, path = "Project")
+public class ProjectMapListMgr extends MapListMgr {
 
     @Override
     public List<MapBean> getMapList(ProjectBean projectBean) {
@@ -44,25 +46,27 @@ public class TestMapGetter extends ProjectInfoService {
         }
         return mapList;
     }
-
+    
     @Override
-    public List<PrintoutBean> gePrintoutList(ProjectBean projectBean) {
+    public void add(MapBean mapBean, ProjectBean projectBean) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public boolean setupProjectInfo(ProjectBean projectBean) {
+    public void delete(MapBean mapBean) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void updateProjectInfo(ProjectBean projectBean) {
+    public void close(MapBean mapBean) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public List<ProjectBean> getProjectList() {
+    public void update(MapBean mapBean) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+
 
 }

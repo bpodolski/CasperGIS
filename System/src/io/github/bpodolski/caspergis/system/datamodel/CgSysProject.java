@@ -16,8 +16,8 @@ import javax.persistence.Table;
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
 @Entity
-@Table(name = "CG_PROJECT")
-public class CgProject {
+@Table(name = "CGSYS_PROJECT")
+public class CgSysProject {
 
     @Id
     @GeneratedValue
@@ -25,16 +25,13 @@ public class CgProject {
     int id;
 
     @Column
-    String name;
-
-    @Column
-    String description;
-
-    @Column
     String path;
-
-    @Column(name = "XML_INFO", columnDefinition = "longvarchar")
-    private String xmlInfo;
+    
+    @Column
+    int position;
+    
+    @Column
+    boolean hidden;
 
     public int getId() {
         return id;
@@ -44,21 +41,6 @@ public class CgProject {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 
     public String getPath() {
         return path;
@@ -68,16 +50,22 @@ public class CgProject {
         this.path = path;
     }
 
-    public String getXmlInfo() {
-        return xmlInfo;
+    public int getPosition() {
+        return position;
     }
 
-    public void setXmlInfo(String xmlInfo) {
-        this.xmlInfo = xmlInfo;
+    public void setPosition(int position) {
+        this.position = position;
     }
 
-    @Override
-    public String toString() {
-        return "CgProject{" + "id=" + id + ", name=" + name + ", description=" + description + ", path=" + path + '}';
+    public boolean isHidden() {
+        return hidden;
     }
+
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
+    }
+
+
+    
 }

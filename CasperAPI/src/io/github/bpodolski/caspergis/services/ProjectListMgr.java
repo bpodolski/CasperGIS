@@ -12,11 +12,10 @@ import org.openide.util.Lookup;
 
 /**
  * Abstract class - The base for the service that provides the list of projects
- * from system database
- *
+ * 
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-public abstract class ServiceProjectManager {
+public abstract class ProjectListMgr {
 
     /**
      * Get default temporary project path based on NbPreferences
@@ -25,7 +24,6 @@ public abstract class ServiceProjectManager {
      */
     public abstract ProjectBean getSystemProject();
 
-    public abstract String getServiceName();
     /**
      * Get registered in system data base project paths in order based on field
      * POSITION
@@ -66,15 +64,15 @@ public abstract class ServiceProjectManager {
      *
      * @return
      */
-    public static ServiceProjectManager getDefault() {
-        ServiceProjectManager projectGetterService = Lookup.getDefault().lookup(ServiceProjectManager.class);
+    public static ProjectListMgr getDefault() {
+        ProjectListMgr projectGetterService = Lookup.getDefault().lookup(ProjectListMgr.class);
         if (projectGetterService == null) {
             projectGetterService = new DefaultProjectGetter();
         }
         return projectGetterService;
     }
 
-    private static class DefaultProjectGetter extends ServiceProjectManager {
+    private static class DefaultProjectGetter extends ProjectListMgr {
 
         @Override
         public ProjectBean getSystemProject() {
@@ -112,12 +110,6 @@ public abstract class ServiceProjectManager {
         public void close(ProjectBean projectBean) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
-
-        @Override
-        public String getServiceName() {
-            return "DefaultProjectGetter";
-        }
-
     }
 
 }

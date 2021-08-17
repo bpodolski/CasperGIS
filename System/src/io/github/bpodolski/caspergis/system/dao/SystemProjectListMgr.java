@@ -7,9 +7,9 @@ package io.github.bpodolski.caspergis.system.dao;
 
 import io.github.bpodolski.caspergis.api.CasperInfo;
 import io.github.bpodolski.caspergis.beans.ProjectBean;
-import io.github.bpodolski.caspergis.services.ServiceProjectManager;
+import io.github.bpodolski.caspergis.services.ProjectListMgr;
 import io.github.bpodolski.caspergis.system.CgRegistrySystem;
-import io.github.bpodolski.caspergis.system.datamodel.CgProject;
+import io.github.bpodolski.caspergis.system.datamodel.CgSysProject;
 import io.github.bpodolski.caspergis.utils.CgUtils;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,8 +23,8 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-@ServiceProvider(service = ServiceProjectManager.class, path = "System")
-public class CgProjectListService extends ServiceProjectManager {
+@ServiceProvider(service = ProjectListMgr.class, path = "System")
+public class SystemProjectListMgr extends ProjectListMgr {
 
     JpaSystemDbDAO daoSystem = new JpaSystemDbDAO();
 
@@ -39,16 +39,18 @@ public class CgProjectListService extends ServiceProjectManager {
     @Override
     public List<ProjectBean> getProjectList() {
         ArrayList<ProjectBean> projectList = new ArrayList<ProjectBean>();
-        Iterator<CgProject> itr = daoSystem.getProjects().iterator();
+        Iterator<CgSysProject> itr = daoSystem.getProjects().iterator();
         while (itr.hasNext()) {
-            CgProject cgProject = itr.next();
+            CgSysProject cgSysProject = itr.next();
             ProjectBean projectBean = new ProjectBean();
-
-            projectBean.setName(cgProject.getName());
-            projectBean.setPath(cgProject.getPath());
+            
+            projectBean.setPath(cgSysProject.getPath());
+            projectBean.setPosition(cgSysProject.getPosition());
+            projectBean.setHidden(cgSysProject.isHidden());
+            
             projectList.add(projectBean);
 
-            CgRegistrySystem.projectMap.put(projectBean, cgProject);
+            CgRegistrySystem.projectMap.put(projectBean, cgSysProject);
 
         }
 
@@ -62,22 +64,24 @@ public class CgProjectListService extends ServiceProjectManager {
 
     @Override
     public void update(ProjectBean projectBean) {
-        CgProject project = (CgProject) CgRegistrySystem.projectMap.get(projectBean);
+        CgSysProject project = (CgSysProject) CgRegistrySystem.projectMap.get(projectBean);
         daoSystem.saveProject(project);
     }
 
     @Override
     public void add(ProjectBean projectBean) {
 
-        CgProject project = new CgProject();
-        project.setName(projectBean.getName());
-        project.setPath(projectBean.getPath());
+        CgSysProject cgSysProject = new CgSysProject();
+        
+        cgSysProject.setPath(projectBean.getPath());
+        cgSysProject.setPosition(projectBean.getPosition());
+        cgSysProject.setHidden(projectBean.isHidden());
 
-        daoSystem.saveProject(project);
-        CgRegistrySystem.projectMap.put(projectBean, project);
+        daoSystem.saveProject(cgSysProject);
+        CgRegistrySystem.projectMap.put(projectBean, cgSysProject);
 
-        Collection<? extends ServiceProjectManager> srvList = Lookups.forPath("Project").lookupAll(ServiceProjectManager.class);
-        ServiceProjectManager projectListService = srvList.iterator().next();
+        Collection<? extends ProjectListMgr> srvList = Lookups.forPath("Project").lookupAll(ProjectListMgr.class);
+        ProjectListMgr projectListService = srvList.iterator().next();
         projectListService.add(projectBean);
 
     }
@@ -85,17 +89,12 @@ public class CgProjectListService extends ServiceProjectManager {
     @Override
     public void close(ProjectBean projectBean) {
         if (CgRegistrySystem.projectMap.containsKey(projectBean)) {
-            CgProject project = (CgProject) CgRegistrySystem.projectMap.get(projectBean);
+            CgSysProject project = (CgSysProject) CgRegistrySystem.projectMap.get(projectBean);
             daoSystem.deleteProject(project);
             CgUtils.io.getOut().println(projectBean.getName()+" deleted");
         } else {
             CgUtils.io.getOut().println(projectBean.getName()+" can't delete");            
         }
-    }
-
-    @Override
-    public String getServiceName() {
-        return "CgProjectListService";
     }
 
 }

@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package io.github.bpodolski.caspergis.project.services;
+package io.github.bpodolski.caspergis.gui.nodes.services;
 
-import io.github.bpodolski.caspergis.beans.PrintoutBean;
+import io.github.bpodolski.caspergis.beans.MapBean;
 import io.github.bpodolski.caspergis.beans.ProjectBean;
-import io.github.bpodolski.caspergis.services.PrintoutListMgr;
-import java.util.ArrayList;
+import io.github.bpodolski.caspergis.services.MapListMgr;
+import io.github.bpodolski.caspergis.services.ProjectListMgr;
 import java.util.List;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -16,35 +16,31 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-@ServiceProvider(service = PrintoutListMgr.class, path = "Project")
-public class TestPrintoutGetter  extends PrintoutListMgr {
-
-        @Override
-        public List<PrintoutBean> getPrintoutList(ProjectBean projectBean) {
-            ArrayList<PrintoutBean> printoutList = new <PrintoutBean>ArrayList();
-            for (int i = 1; i < 2; i++) {
-                printoutList.add(new PrintoutBean(null, i + ".TestPrintout"));
-            }
-            return printoutList;
-        }
+@ServiceProvider(service = MapListMgr.class, path = "Core")
+public class CoreMapListMgr  extends MapListMgr {
 
     @Override
-    public void add(PrintoutBean printoutBean, ProjectBean projectBean) {
+    public List<MapBean> getMapList(ProjectBean projectBean) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void delete(PrintoutBean printoutBean) {
+    public void add(MapBean mapBean, ProjectBean projectBean) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void close(PrintoutBean printoutBean) {
+    public void delete(MapBean mapBean) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void update(PrintoutBean printoutBean) {
+    public void close(MapBean mapBean) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void update(MapBean mapBean) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

@@ -11,17 +11,17 @@ import java.util.ArrayList;
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-public class PrintoutBean extends ElementProjectBean{
+public class PrintoutBean extends ProjectitemBean{
          
-   private ArrayList<ElementProjectBean> projectElementBeans;
+   private ArrayList<ProjectitemBean> projectElementBeans;
 
 
-    public PrintoutBean(ArrayList<ElementProjectBean> projectElementBeans) {
+    public PrintoutBean(ArrayList<ProjectitemBean> projectElementBeans) {
        this(projectElementBeans, "Printouts");
        this.setBeanType(BeanType.PRINTOUT);
     }
     
-    public PrintoutBean(ArrayList<ElementProjectBean> projectElementBeans, String name) {
+    public PrintoutBean(ArrayList<ProjectitemBean> projectElementBeans, String name) {
         this.setName(name);
         this.setDisplayName(name);
         this.projectElementBeans = projectElementBeans;

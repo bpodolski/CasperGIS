@@ -7,8 +7,8 @@ package io.github.bpodolski.caspergis.gui.nodes;
 
 import io.github.bpodolski.caspergis.beans.LayerBean;
 import io.github.bpodolski.caspergis.beans.MapBean;
-import io.github.bpodolski.caspergis.beans.ElementMapBean;
-import io.github.bpodolski.caspergis.beans.ElementMapFlavor;
+import io.github.bpodolski.caspergis.beans.MapitemBean;
+import io.github.bpodolski.caspergis.beans.MapitemFlavor;
 import io.github.bpodolski.caspergis.gui.nodes.factories.MapItemsFactory;
 import io.github.bpodolski.caspergis.utils.LayerFileFilter;
 import java.awt.datatransfer.DataFlavor;
@@ -99,12 +99,12 @@ public class InternalMapNode extends BeanNode<MapBean> {
     
     @Override
     public PasteType getDropType(final Transferable t, int arg1, int arg2) {
-        if (t.isDataFlavorSupported(ElementMapFlavor.MAPELEMENT_FLAVOR)) {
+        if (t.isDataFlavorSupported(MapitemFlavor.MAPELEMENT_FLAVOR)) {
             return new PasteType() {
                 @Override
                 public Transferable paste() throws IOException {
                     try {
-                        factory.add((ElementMapBean) t.getTransferData(ElementMapFlavor.MAPELEMENT_FLAVOR));
+                        factory.add((MapitemBean) t.getTransferData(MapitemFlavor.MAPELEMENT_FLAVOR));
                         final Node node = NodeTransfer.node(t, NodeTransfer.DND_MOVE + NodeTransfer.CLIPBOARD_CUT);
 //                        if (node != null) {
 //                            node.destroy();

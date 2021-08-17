@@ -5,7 +5,7 @@
  */
 package io.github.bpodolski.caspergis.model;
 
-import io.github.bpodolski.caspergis.beans.ProjectBean;
+import io.github.bpodolski.caspergis.beans.PrintoutBean;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,43 +16,43 @@ import org.openide.util.ChangeSupport;
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-public class ModelProjectList {
-    
-    private final List<ProjectBean> projectBeans;
+public class ModelPrintOutsList {
+
+    private final List<PrintoutBean> printOutBeans;
     private final ChangeSupport cs = new ChangeSupport(this);
-    
-     public ModelProjectList() {
-        this(new ArrayList<ProjectBean>());
-    }
-     
-    public ModelProjectList(List<ProjectBean> projectBeans) {
-        this.projectBeans = projectBeans;
+
+    public ModelPrintOutsList() {
+        this(new ArrayList<PrintoutBean>());
     }
 
-    public List<? extends ProjectBean> list() {
-        return projectBeans;
+    public ModelPrintOutsList(List<PrintoutBean> printOutBeans) {
+        this.printOutBeans = printOutBeans;
     }
 
-    public void add(ProjectBean c) {
-        c.setPosition(projectBeans.size() + 1);
-        projectBeans.add(c);
+    public List<? extends PrintoutBean> list() {
+        return printOutBeans;
+    }
+
+    public void add(PrintoutBean c) {
+        c.setPosition(printOutBeans.size() + 1);
+        printOutBeans.add(c);
         cs.fireChange();
     }
-    
-    public void remove(ProjectBean c) {
-        projectBeans.remove(c);
+
+    public void remove(PrintoutBean c) {
+        printOutBeans.remove(c);
         cs.fireChange();
     }
 
     public void reorder(int[] perm) {
-        ProjectBean[] reordered = new ProjectBean[projectBeans.size()];
+        PrintoutBean[] reordered = new PrintoutBean[printOutBeans.size()];
         for (int i = 0; i < perm.length; i++) {
             int j = perm[i];
-            ProjectBean c = projectBeans.get(i);
+            PrintoutBean c = printOutBeans.get(i);
             reordered[j] = c;
         }
-        projectBeans.clear();
-        projectBeans.addAll(Arrays.asList(reordered));
+        printOutBeans.clear();
+        printOutBeans.addAll(Arrays.asList(reordered));
         cs.fireChange();
     }
 

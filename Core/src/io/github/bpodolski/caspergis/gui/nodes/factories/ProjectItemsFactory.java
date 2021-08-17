@@ -11,10 +11,11 @@ import io.github.bpodolski.caspergis.beans.BeanType;
 import io.github.bpodolski.caspergis.beans.MapBean;
 import io.github.bpodolski.caspergis.beans.PrintoutBean;
 import io.github.bpodolski.caspergis.beans.ProjectBean;
-import io.github.bpodolski.caspergis.beans.ElementProjectBean;
+import io.github.bpodolski.caspergis.beans.ProjectitemBean;
 import io.github.bpodolski.caspergis.gui.nodes.MapNode;
 import io.github.bpodolski.caspergis.gui.nodes.PrintoutNode;
-import io.github.bpodolski.caspergis.services.ProjectInfoService;
+import io.github.bpodolski.caspergis.services.MapListMgr;
+import io.github.bpodolski.caspergis.services.ProjectMgr;
 import java.beans.IntrospectionException;
 import java.beans.PropertyVetoException;
 import java.io.File;
@@ -30,34 +31,33 @@ import org.openide.util.Lookup;
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-public class ProjectItemsFactory extends ChildFactory<ElementProjectBean> {
+public class ProjectItemsFactory extends ChildFactory<ProjectitemBean> {
 
     private final ProjectBean projectBean;
-    private final ProjectInfoService projectInfoService;
-//    private final PrintoutGetter printoutGetterService;
+    MapListMgr mapListMgr;
 
-    private final List<ElementProjectBean> projectElementList = new ArrayList<>();
+
+    private final List<ProjectitemBean> projectElementList = new ArrayList<>();
 
     public ProjectItemsFactory(ProjectBean projectBean) {
         this.projectBean = projectBean;
         File f = new File(projectBean.getPath());
 
-        this.projectInfoService = Lookup.getDefault().lookup(ProjectInfoService.class);
-//        this.printoutGetterService = Lookup.getDefault().lookup(PrintoutGetter.class);
+        this.mapListMgr = Lookup.getDefault().lookup(MapListMgr.class);
         if (f.exists()) {
-            projectElementList.addAll(projectInfoService.getMapList(projectBean));
+            projectElementList.addAll(mapListMgr.getMapList(projectBean));
         }
 
     }
 
     @Override
-    protected boolean createKeys(List<ElementProjectBean> list) {
+    protected boolean createKeys(List<ProjectitemBean> list) {
         list.addAll(this.projectElementList);
         return true;
     }
 
     @Override
-    protected Node createNodeForKey(ElementProjectBean key) {
+    protected Node createNodeForKey(ProjectitemBean key) {
         BeanNode node = null;
 
         try {

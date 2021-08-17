@@ -6,7 +6,7 @@
 package io.github.bpodolski.caspergis;
 
 import io.github.bpodolski.caspergis.beans.MapBean;
-import io.github.bpodolski.caspergis.beans.ElementMapBean;
+import io.github.bpodolski.caspergis.beans.MapitemBean;
 import io.github.bpodolski.caspergis.beans.ProjectBean;
 import io.github.bpodolski.caspergis.gui.nodes.MapNode;
 import io.github.bpodolski.caspergis.gui.nodes.factories.MapItemsFactory;
@@ -30,7 +30,7 @@ public class CgRegistry {
     
     public static ModelProjectList modelProjectList;
     
-    public static final HashMap mapItemsFactoryMap = new HashMap<ElementMapBean, MapItemsFactory>();
+    public static final HashMap mapItemsFactoryMap = new HashMap<MapitemBean, MapItemsFactory>();
     public static final HashMap projectItemsFactoryMap = new HashMap<ProjectBean, ProjectItemsFactory>();
     
     
