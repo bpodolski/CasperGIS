@@ -65,7 +65,7 @@ public class JpaSystemDbDAO {
     public List<CgSysProject> getProjects() {
         List<CgSysProject> listProjects;
         try (Session session = this.sessionFactory.openSession()) {
-            listProjects = session.createQuery("from CgProject", CgSysProject.class).list();
+            listProjects = session.createQuery("from CgSysProject", CgSysProject.class).list();
         }
         return listProjects;
 

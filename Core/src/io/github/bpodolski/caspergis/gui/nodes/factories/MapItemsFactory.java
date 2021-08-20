@@ -12,7 +12,9 @@ import io.github.bpodolski.caspergis.gui.nodes.MapItemNode;
 import io.github.bpodolski.caspergis.model.ModelMapElementsList;
 import io.github.bpodolski.caspergis.services.MapitemListMgr;
 import java.beans.IntrospectionException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import org.openide.nodes.BeanNode;
 import org.openide.nodes.ChildFactory;
@@ -27,26 +29,32 @@ import org.openide.util.lookup.Lookups;
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
 public class MapItemsFactory extends ChildFactory.Detachable<MapitemBean> {
-
+    
     private final MapBean mapBean; //when paren is map
-    private final MapitemListMgr mapItemsGetterService;
-    private List<MapitemBean> mapItemsList;
+    private final MapitemListMgr mapitemListMgr;
+    private List<MapitemBean> mapItemsList = new ArrayList();
     
     private ModelMapElementsList model = new ModelMapElementsList();
-
+    
     public MapItemsFactory(MapBean mapBean) {
         this.mapBean = mapBean;
-        this.mapItemsGetterService = Lookup.getDefault().lookup(MapitemListMgr.class);
-
+        
+        Collection<? extends MapitemListMgr> srvList = Lookups.forPath("Project").lookupAll(MapitemListMgr.class);
+        if (srvList.iterator().hasNext()) {
+            this.mapitemListMgr = srvList.iterator().next();
+        } else {
+            this.mapitemListMgr = MapitemListMgr.getDefault();
+        }
+        mapItemsList.addAll(mapitemListMgr.getMapItemsList(mapBean));
 //model.
     }
-
+    
     @Override
     protected boolean createKeys(List<MapitemBean> list) {
         list.addAll(mapItemsList);
         return true;
     }
-
+    
     @Override
     protected Node createNodeForKey(MapitemBean bean) {
         BeanNode node = null;
@@ -54,47 +62,47 @@ public class MapItemsFactory extends ChildFactory.Detachable<MapitemBean> {
             try {
                 node = new MapItemNode((MapitemBean) bean, Children.LEAF, Lookups.singleton(bean), this);
                 
-           } catch (IntrospectionException ex) {
+            } catch (IntrospectionException ex) {
                 Exceptions.printStackTrace(ex);
             }
         }
         return node;
     }
-
+    
     public void add(MapitemBean bean) {
         mapItemsList.add(bean);
         refresh(true);
     }
-
+    
     public void add(int index, MapitemBean bean) {
         mapItemsList.add(index, bean);
         refresh(true);
     }
-
+    
     public void addAll(List list) {
         mapItemsList.addAll(list);
         refresh(true);
     }
-
+    
     public void addAll(int index, List list) {
         mapItemsList.addAll(index, list);
         refresh(true);
     }
-
+    
     public void removeChild(MapitemBean bean) {
         mapItemsList.remove(bean);
         refresh(true);
     }
-
+    
     @Override
     protected void addNotify() {
     }
-
+    
     @Override
     protected void removeNotify() {
-
+        
     }
-
+    
     public void reorder(int[] perm) {
         MapitemBean[] reordered = new MapitemBean[this.mapItemsList.size()];
         for (int i = 0; i < perm.length; i++) {
@@ -105,7 +113,7 @@ public class MapItemsFactory extends ChildFactory.Detachable<MapitemBean> {
         this.mapItemsList.clear();
         this.mapItemsList.addAll(Arrays.asList(reordered));
         refresh(true);
-
+        
     }
-
+    
 }
