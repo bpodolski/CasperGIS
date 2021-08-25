@@ -8,7 +8,7 @@ package io.github.bpodolski.caspergis.gui;
 import io.github.bpodolski.caspergis.beans.MapBean;
 import io.github.bpodolski.caspergis.gui.geotools.JMapPanelCG;
 import io.github.bpodolski.caspergis.gui.nodes.InternalMapNode;
-import io.github.bpodolski.caspergis.gui.nodes.services.ExplorerManagerMgr;
+import io.github.bpodolski.caspergis.gui.nodes.services.CoreMapExplorerManagerMgr;
 import io.github.bpodolski.caspergis.services.MapExplorerManagerMgr;
 import java.beans.IntrospectionException;
 import java.util.Collection;
@@ -42,7 +42,7 @@ public class MapDisplayerTopComponent extends TopComponent implements ExplorerMa
     private final MapBean mapBean;
     private ExplorerManager mgr = null;
 
-    MapExplorerManagerMgr explorerManagerMgr;// = ExplorerManagerMgr.getDefault();
+    MapExplorerManagerMgr explorerManagerMgr;// = CoreMapExplorerManagerMgr.getDefault();
 
     InstanceContent instanceContent = new InstanceContent();
 

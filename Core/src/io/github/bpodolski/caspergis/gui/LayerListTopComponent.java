@@ -6,7 +6,6 @@
 package io.github.bpodolski.caspergis.gui;
 
 import io.github.bpodolski.caspergis.beans.MapBean;
-import io.github.bpodolski.caspergis.gui.nodes.services.ExplorerManagerMgr;
 import io.github.bpodolski.caspergis.services.MapExplorerManagerMgr;
 import java.util.Collection;
 import javax.swing.ActionMap;
@@ -247,11 +246,6 @@ public final class LayerListTopComponent extends TopComponent implements Explore
 
     @Override
     public void stateChanged(ChangeEvent evt) {
-//        if (this.mapBean.isActive()) {
-//            this.lblTest.setText(this.mapBean.getName());
-//        } else {
-//            this.lblTest.setText(">>>");
-//        }
         this.mapBean = this.explorerManagerMgr.getActiveMapBean();
         view.addNotify();
         this.lblTest.setText("ExpMgr. - " + mapBean.getName());

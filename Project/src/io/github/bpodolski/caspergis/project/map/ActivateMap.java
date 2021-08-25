@@ -6,7 +6,6 @@
 package io.github.bpodolski.caspergis.project.map;
 
 import io.github.bpodolski.caspergis.beans.MapBean;
-import io.github.bpodolski.caspergis.utils.CgUtils;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.Action;
@@ -16,7 +15,6 @@ import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.awt.Actions;
 import org.openide.util.NbBundle;
-import org.openide.windows.*;
 
 /**
  *
