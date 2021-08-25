@@ -9,10 +9,12 @@ import io.github.bpodolski.caspergis.beans.MapBean;
 import io.github.bpodolski.caspergis.utils.CgUtils;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.Action;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
+import org.openide.awt.Actions;
 import org.openide.util.NbBundle;
 import org.openide.windows.*;
 
@@ -39,13 +41,19 @@ public class ActivateMap implements ActionListener {
 
     public ActivateMap(MapBean context) {
         this.context = context;
+
+
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         MapBean mapBean = context;
-
         mapBean.setActive(!mapBean.isActive());
-
+        Action ac = Actions.forID("Map", "io.github.bpodolski.caspergis.project.map.ActivateMap");
+        if (context.isActive()) {
+            ac.putValue(Action.NAME, "Deactivate Map");
+        } else {
+            ac.putValue(Action.NAME, "Activate Map");
+        }
     }
 }

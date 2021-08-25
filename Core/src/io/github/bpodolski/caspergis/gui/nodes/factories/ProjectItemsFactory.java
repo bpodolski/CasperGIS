@@ -5,8 +5,6 @@
  */
 package io.github.bpodolski.caspergis.gui.nodes.factories;
 
-import io.github.bpodolski.caspergis.CgRegistry;
-import io.github.bpodolski.caspergis.Installer;
 import io.github.bpodolski.caspergis.beans.BeanType;
 import io.github.bpodolski.caspergis.beans.MapBean;
 import io.github.bpodolski.caspergis.beans.PrintoutBean;
@@ -14,10 +12,9 @@ import io.github.bpodolski.caspergis.beans.ProjectBean;
 import io.github.bpodolski.caspergis.beans.ProjectitemBean;
 import io.github.bpodolski.caspergis.gui.nodes.MapNode;
 import io.github.bpodolski.caspergis.gui.nodes.PrintoutNode;
+import io.github.bpodolski.caspergis.services.MapExplorerManagerMgr;
 import io.github.bpodolski.caspergis.services.MapListMgr;
-import io.github.bpodolski.caspergis.services.ProjectListMgr;
 import java.beans.IntrospectionException;
-import java.beans.PropertyVetoException;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,7 +23,6 @@ import org.openide.nodes.BeanNode;
 import org.openide.nodes.ChildFactory;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
-import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
 
 /**
@@ -37,6 +33,7 @@ public class ProjectItemsFactory extends ChildFactory<ProjectitemBean> {
 
     private final ProjectBean projectBean;
     MapListMgr mapListMgr;
+    MapExplorerManagerMgr explorerManagerMgr;// = ExplorerManagerMgr.getDefault();
 
     private final List<ProjectitemBean> projectElementList = new ArrayList<>();
 
@@ -47,9 +44,17 @@ public class ProjectItemsFactory extends ChildFactory<ProjectitemBean> {
         Collection<? extends MapListMgr> srvList = Lookups.forPath("Project").lookupAll(MapListMgr.class);
         if (srvList.iterator().hasNext()) {
             this.mapListMgr = srvList.iterator().next();
-        }else this.mapListMgr = MapListMgr.getDefault();
+        } else {
+            this.mapListMgr = MapListMgr.getDefault();
+        }
 
-//        this.mapListMgr = Lookup.getDefault().lookup(MapListMgr.class);
+        Collection<? extends MapExplorerManagerMgr> srvMapExp = Lookups.forPath("Core").lookupAll(MapExplorerManagerMgr.class);
+        if (srvMapExp.iterator().hasNext()) {
+            this.explorerManagerMgr = srvMapExp.iterator().next();
+        } else {
+            this.explorerManagerMgr = MapExplorerManagerMgr.getDefault();
+        }
+
         if (f.exists()) {
             projectElementList.addAll(mapListMgr.getMapList(projectBean));
         }
@@ -70,11 +75,8 @@ public class ProjectItemsFactory extends ChildFactory<ProjectitemBean> {
             if (key.getBeanType() == BeanType.MAP) {
                 MapBean mb = (MapBean) key;
                 node = new MapNode(mb);
-                if (mb.isActive()) {
-                    CgRegistry cgr = Installer.cgRegistry;
-                    cgr.setActiveMapBean(mb);
-                    cgr.setActiveMapNode((MapNode) node);
-                }
+
+                explorerManagerMgr.addMapExplorerManager(mb);
 
             }
             if (key.getBeanType() == BeanType.PRINTOUT) {
@@ -82,7 +84,7 @@ public class ProjectItemsFactory extends ChildFactory<ProjectitemBean> {
                 node = new PrintoutNode((PrintoutBean) key);
             }
 
-        } catch (IntrospectionException | PropertyVetoException ex) {
+        } catch (IntrospectionException ex) {
             Exceptions.printStackTrace(ex);
         }
         return node;

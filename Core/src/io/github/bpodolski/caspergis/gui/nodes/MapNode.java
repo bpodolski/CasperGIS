@@ -72,14 +72,16 @@ public class MapNode extends BeanNode<MapBean> {
 
     @Override
     public Action[] getActions(boolean context) {
-
+        Action ac = Actions.forID("Map", "io.github.bpodolski.caspergis.project.map.ActivateMap");
+//        ac.putValue(Action.NAME, "Dupa");
         return new Action[]{
             SystemAction.get(OpenAction.class),
-            Actions.forID("Map", "io.github.bpodolski.caspergis.project.map.ActivateMap"),
+            ac,
             Actions.forID("Map", "io.github.bpodolski.caspergis.project.map.AddLayer"),
             Actions.forID("Map", "io.github.bpodolski.caspergis.project.map.MapProperties")
         };
     }
+
     public TopComponent findTopComponent(MapBean mapBean) {
         Set<TopComponent> openTopComponents = WindowManager.getDefault().getRegistry().getOpened();
         for (TopComponent tc : openTopComponents) {
@@ -92,5 +94,5 @@ public class MapNode extends BeanNode<MapBean> {
         }
         return null;
     }
-    
+
 }

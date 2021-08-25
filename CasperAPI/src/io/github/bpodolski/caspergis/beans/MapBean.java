@@ -18,9 +18,9 @@
  */
 package io.github.bpodolski.caspergis.beans;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
+import javax.swing.event.ChangeListener;
+import org.openide.util.ChangeSupport;
 //import org.geotools.map.MapContent;
 
 /**
@@ -31,7 +31,7 @@ public class MapBean extends ProjectitemBean {
 
     private ArrayList<MapitemBean> mapElementList = new ArrayList();
     boolean active = false;
-    private final PropertyChangeSupport propertyChangeSupport;
+    private final ChangeSupport cs = new ChangeSupport(this);
 
     public MapBean(ArrayList<MapitemBean> mapElementList) {
         this(mapElementList, "Layers");
@@ -42,7 +42,6 @@ public class MapBean extends ProjectitemBean {
         this.setDisplayName(name);
         this.mapElementList = mapElementList;
         this.setBeanType(BeanType.MAP);
-        propertyChangeSupport = new PropertyChangeSupport(this);
     }
 
     public ArrayList<MapitemBean> getMapElementList() {
@@ -60,16 +59,16 @@ public class MapBean extends ProjectitemBean {
     public void setActive(boolean active) {
         boolean oldValue = this.active;
         this.active = active;
-        propertyChangeSupport.firePropertyChange("active", oldValue, active);
+        cs.fireChange();
 
     }
 
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        propertyChangeSupport.addPropertyChangeListener(listener);
+    public void addChangeListener(ChangeListener l) {
+        cs.addChangeListener(l);
     }
 
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        propertyChangeSupport.removePropertyChangeListener(listener);
+    public void removeChangeListener(ChangeListener l) {
+        cs.removeChangeListener(l);
     }
 
 }

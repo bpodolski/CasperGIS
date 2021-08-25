@@ -5,19 +5,13 @@
  */
 package io.github.bpodolski.caspergis.gui;
 
-import io.github.bpodolski.caspergis.CgRegistry;
-import io.github.bpodolski.caspergis.beans.LayerBean;
 import io.github.bpodolski.caspergis.beans.MapBean;
-import io.github.bpodolski.caspergis.gui.nodes.InternalMapNode;
-import java.beans.IntrospectionException;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.io.File;
-import java.io.IOException;
+import io.github.bpodolski.caspergis.gui.nodes.services.ExplorerManagerMgr;
+import io.github.bpodolski.caspergis.services.MapExplorerManagerMgr;
 import java.util.Collection;
 import javax.swing.ActionMap;
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.actions.CopyAction;
 import org.openide.actions.CutAction;
@@ -27,16 +21,11 @@ import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.ExplorerUtils;
-import org.openide.nodes.BeanNode;
-import org.openide.nodes.Node;
-import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
-import org.openide.util.LookupEvent;
-import org.openide.util.LookupListener;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
-import org.openide.util.Utilities;
 import org.openide.util.actions.SystemAction;
+import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 
 /**
@@ -64,12 +53,13 @@ import org.openide.util.lookup.ProxyLookup;
     "HINT_LayerListTopComponent=This is a LayerList window"
 })
 public final class LayerListTopComponent extends TopComponent implements ExplorerManager.Provider,
-        LookupListener, PropertyChangeListener {
+        /*LookupListener,*/ ChangeListener {
 
     private MapBean mapBean = null;
-    private MapBean mapBeanX = new MapBean(null, "[..]");
-    private Lookup.Result<MapBean> result = null;
-    private ExplorerManager mgr = new ExplorerManager();
+    private final MapBean mapBeanX = new MapBean(null, "[No active map]");
+
+    //Serwisc - pobranie domyślnej implementacji
+    MapExplorerManagerMgr explorerManagerMgr;
 
     Lookup lookupMapBean = null;
     Lookup lookupAction = null;
@@ -77,13 +67,23 @@ public final class LayerListTopComponent extends TopComponent implements Explore
 
     public LayerListTopComponent() {
         initComponents();
+
+        Collection<? extends MapExplorerManagerMgr> srvMapExp = Lookups.forPath("Core").lookupAll(MapExplorerManagerMgr.class);
+        if (srvMapExp.iterator().hasNext()) {
+            this.explorerManagerMgr = srvMapExp.iterator().next();
+        } else {
+            this.explorerManagerMgr = MapExplorerManagerMgr.getDefault();
+        }
+
         setName(Bundle.CTL_LayerListTopComponent());
         setToolTipText(Bundle.HINT_LayerListTopComponent());
         putClientProperty(TopComponent.PROP_CLOSING_DISABLED, Boolean.TRUE);
         putClientProperty(TopComponent.PROP_MAXIMIZATION_DISABLED, Boolean.TRUE);
 
         mapBean = mapBeanX;
-        CgRegistry.explorerManagerMap.put(mapBeanX, mgr);
+        explorerManagerMgr.addMapExplorerManager(mapBean);
+
+        explorerManagerMgr.addChangeListener(this);
 
         initView();
         initActions();
@@ -131,28 +131,27 @@ public final class LayerListTopComponent extends TopComponent implements Explore
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAddLayerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddLayerActionPerformed
-        InternalMapNode mn = (InternalMapNode) mgr.getRootContext();
+//        InternalMapNode mn = (InternalMapNode) mgr.getRootContext();
 
-        var chooser = new JFileChooser();
-        chooser.setCurrentDirectory(new File("."));
-        chooser.setFileFilter(new FileNameExtensionFilter("SHP files", "shp", "shp"));
-        chooser.setAcceptAllFileFilterUsed(false);
-        chooser.setMultiSelectionEnabled(true);
-        int result = chooser.showOpenDialog(this);
-        if (result == JFileChooser.APPROVE_OPTION) {
-            var files = chooser.getSelectedFiles();
-            for (int i = 0; i < files.length; i++) {
-                var f = files[i];
-                var lb = new LayerBean(f.getName());
-                try {
-                    lb.setConnectionStr(f.getCanonicalPath());
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-                mn.getFactory().add(lb);
-            }
-        }
-
+//        var chooser = new JFileChooser();
+//        chooser.setCurrentDirectory(new File("."));
+//        chooser.setFileFilter(new FileNameExtensionFilter("SHP files", "shp", "shp"));
+//        chooser.setAcceptAllFileFilterUsed(false);
+//        chooser.setMultiSelectionEnabled(true);
+//        int result = chooser.showOpenDialog(this);
+//        if (result == JFileChooser.APPROVE_OPTION) {
+//            var files = chooser.getSelectedFiles();
+//            for (int i = 0; i < files.length; i++) {
+//                var f = files[i];
+//                var lb = new LayerBean(f.getName());
+//                try {
+//                    lb.setConnectionStr(f.getCanonicalPath());
+//                } catch (IOException ex) {
+//                    Exceptions.printStackTrace(ex);
+//                }
+//                mn.getFactory().add(lb);
+//            }
+//        }
 
     }//GEN-LAST:event_btnAddLayerActionPerformed
 
@@ -165,13 +164,13 @@ public final class LayerListTopComponent extends TopComponent implements Explore
     // End of variables declaration//GEN-END:variables
     @Override
     public void componentOpened() {
-        result = Utilities.actionsGlobalContext().lookupResult(MapBean.class);
-        result.addLookupListener(this);
+//        result = Utilities.actionsGlobalContext().lookupResult(MapBean.class);
+//        result.addLookupListener(this);
     }
 
     @Override
     public void componentClosed() {
-        result.removeLookupListener(this);
+//        result.removeLookupListener(this);
     }
 
     void writeProperties(java.util.Properties p) {
@@ -186,64 +185,52 @@ public final class LayerListTopComponent extends TopComponent implements Explore
         // TODO read your settings according to their version
     }
 
-    public void setExplorerManager(ExplorerManager mgr) {
-        this.mgr = mgr;
-        initActions();
-    }
-
     @Override
     public ExplorerManager getExplorerManager() {
-        return mgr;
+        return this.explorerManagerMgr.getMapExplorerManager(mapBean);
     }
 
     private void initView() {
-        Node rootNode;
-        try {
-            rootNode = new BeanNode("[No active map]");
-            rootNode.setName("[No active map]");
-            mgr.setRootContext(rootNode);
-        } catch (IntrospectionException ex) {
-            Exceptions.printStackTrace(ex);
-        }
 
     }
 
-    @Override
-    public void resultChanged(LookupEvent ev) {
-        Collection<? extends MapBean> allRegistryMapBeans = result.allInstances();
-        if (!allRegistryMapBeans.isEmpty()) {
-            MapBean reg = allRegistryMapBeans.iterator().next();
-            if (reg != mapBean) {
-                if (reg.isActive()) {
-                    mapBean = reg;
-                    if (CgRegistry.explorerManagerMap.get(mapBean) != null) {
-                        this.setExplorerManager((ExplorerManager) CgRegistry.explorerManagerMap.get(mapBean));
-                    }
-
-                    view.addNotify();
-                }
-            } else {
-                if (!reg.isActive()) {
-                    mapBean = mapBeanX;
-                    mgr = new ExplorerManager();
-
-                    this.setExplorerManager((ExplorerManager) CgRegistry.explorerManagerMap.get(mapBean));
-                    initView();
-                    view.addNotify();
-
-                }
-            }
-
-            this.lblTest.setText(mapBean.getName());
-            mapBean.addPropertyChangeListener(this);
-        }
-    }
-
+//    @Override
+//    public void resultChanged(LookupEvent ev) {
+//        Collection<? extends MapBean> allRegistryMapBeans = result.allInstances();
+//        if (!allRegistryMapBeans.isEmpty()) {
+//            MapBean reg = allRegistryMapBeans.iterator().next();
+//            if (reg != mapBean) {
+//                if (reg.isActive()) {
+//                    mapBean = reg;
+//                    if (CgRegistry.explorerManagerMap.get(mapBean) != null) {
+//                        this.setExplorerManager((ExplorerManager) CgRegistry.explorerManagerMap.get(mapBean));
+//                    }
+//
+//                    view.addNotify();
+//                }
+//            } else {
+//                if (!reg.isActive()) {
+//                    mapBean = mapBeanX;
+//                    mgr = new ExplorerManager();
+//
+//                    this.setExplorerManager((ExplorerManager) CgRegistry.explorerManagerMap.get(mapBean));
+//                    initView();
+//                    view.addNotify();
+//
+//                }
+//            }
+//
+//            this.lblTest.setText(mapBean.getName());
+//            mapBean.addChangeListener(this);
+//        }
+//    }
     private void initActions() {
 
         ActionMap map = this.getActionMap();
+        ExplorerManager mgr = this.getExplorerManager();
 
         CutAction cut = SystemAction.get(CutAction.class);
+
         getActionMap().put(cut.getActionMapKey(), ExplorerUtils.actionCut(mgr));
 
         CopyAction copy = SystemAction.get(CopyAction.class);
@@ -259,14 +246,15 @@ public final class LayerListTopComponent extends TopComponent implements Explore
     }
 
     @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        this.lblTest.setText(evt.getPropertyName());
-        evt.getPropertyName();
-//        if (mapBean.isActive()) {
-//            this.lblTest.setText("OK");
+    public void stateChanged(ChangeEvent evt) {
+//        if (this.mapBean.isActive()) {
+//            this.lblTest.setText(this.mapBean.getName());
 //        } else {
-//            this.lblTest.setText("false");
+//            this.lblTest.setText(">>>");
 //        }
+        this.mapBean = this.explorerManagerMgr.getActiveMapBean();
+        view.addNotify();
+        this.lblTest.setText("ExpMgr. - " + mapBean.getName());
     }
 
 }
