@@ -29,16 +29,18 @@ public class CoreMapExplorerManagerMgr extends MapExplorerManagerMgr implements 
     private final HashMap mapExplorerManagers = new HashMap<MapBean, ExplorerManager>();
     private final ExplorerManager defaultMgr = new ExplorerManager();
     private MapBean activeMapBean;
-//        private final MapBean mapBeanX = new MapBean(null, "[No active map]");
+    private final MapBean defaultMapBean = new MapBean(null, "[No active map]");
 
     private final ChangeSupport cs = new ChangeSupport(this);
 
     public CoreMapExplorerManagerMgr() {
         Node rootNode;
         try {
-            rootNode = new BeanNode("[No active map]");
+            rootNode = new BeanNode(defaultMapBean);
             rootNode.setName("[No active map]");
             defaultMgr.setRootContext(rootNode);
+            mapExplorerManagers.put(defaultMapBean, defaultMgr);
+            
         } catch (IntrospectionException ex) {
             Exceptions.printStackTrace(ex);
         }
@@ -108,10 +110,16 @@ public class CoreMapExplorerManagerMgr extends MapExplorerManagerMgr implements 
     public void stateChanged(ChangeEvent e) {
         MapBean mapBean = (MapBean) e.getSource();
         if (this.getActiveMapBean() != mapBean) {
-
             if (mapBean.isActive()) {
                 setActiveMapBean(mapBean);
             } else {
+
+            }
+        } else {
+            if (!mapBean.isActive()) {
+                clearActiveMapBean();
+            } else {
+
             }
         }
     }

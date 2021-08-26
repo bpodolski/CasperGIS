@@ -80,11 +80,9 @@ public final class LayerListTopComponent extends TopComponent implements Explore
         putClientProperty(TopComponent.PROP_MAXIMIZATION_DISABLED, Boolean.TRUE);
 
         mapBean = mapBeanX;
+
         explorerManagerMgr.addMapExplorerManager(mapBean);
-
         explorerManagerMgr.addChangeListener(this);
-
-        initView();
         initActions();
 
         associateLookup(this.lookupAction);
@@ -189,40 +187,6 @@ public final class LayerListTopComponent extends TopComponent implements Explore
         return this.explorerManagerMgr.getMapExplorerManager(mapBean);
     }
 
-    private void initView() {
-
-    }
-
-//    @Override
-//    public void resultChanged(LookupEvent ev) {
-//        Collection<? extends MapBean> allRegistryMapBeans = result.allInstances();
-//        if (!allRegistryMapBeans.isEmpty()) {
-//            MapBean reg = allRegistryMapBeans.iterator().next();
-//            if (reg != mapBean) {
-//                if (reg.isActive()) {
-//                    mapBean = reg;
-//                    if (CgRegistry.explorerManagerMap.get(mapBean) != null) {
-//                        this.setExplorerManager((ExplorerManager) CgRegistry.explorerManagerMap.get(mapBean));
-//                    }
-//
-//                    view.addNotify();
-//                }
-//            } else {
-//                if (!reg.isActive()) {
-//                    mapBean = mapBeanX;
-//                    mgr = new ExplorerManager();
-//
-//                    this.setExplorerManager((ExplorerManager) CgRegistry.explorerManagerMap.get(mapBean));
-//                    initView();
-//                    view.addNotify();
-//
-//                }
-//            }
-//
-//            this.lblTest.setText(mapBean.getName());
-//            mapBean.addChangeListener(this);
-//        }
-//    }
     private void initActions() {
 
         ActionMap map = this.getActionMap();
@@ -246,9 +210,18 @@ public final class LayerListTopComponent extends TopComponent implements Explore
 
     @Override
     public void stateChanged(ChangeEvent evt) {
-        this.mapBean = this.explorerManagerMgr.getActiveMapBean();
-        view.addNotify();
+
+        setActiveMapBean();
+    }
+
+    private void setActiveMapBean() {
+        if (this.explorerManagerMgr.getActiveMapBean() != null) {
+            this.mapBean = this.explorerManagerMgr.getActiveMapBean();
+        } else {
+            this.mapBean = this.mapBeanX;
+        }
         this.lblTest.setText("ExpMgr. - " + mapBean.getName());
+        view.addNotify();
     }
 
 }

@@ -7,14 +7,18 @@ package io.github.bpodolski.caspergis.gui.nodes;
 
 import io.github.bpodolski.caspergis.beans.MapBean;
 import io.github.bpodolski.caspergis.gui.MapDisplayerTopComponent;
+import java.awt.Image;
 import java.beans.IntrospectionException;
 import java.util.Set;
 import javax.swing.Action;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import org.openide.actions.OpenAction;
 import org.openide.awt.Actions;
 import org.openide.cookies.OpenCookie;
 import org.openide.nodes.BeanNode;
 import org.openide.nodes.Children;
+import org.openide.util.ImageUtilities;
 import org.openide.util.actions.SystemAction;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
@@ -25,7 +29,7 @@ import org.openide.windows.WindowManager;
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-public class MapNode extends BeanNode<MapBean> {
+public class MapNode extends BeanNode<MapBean> implements ChangeListener {
 
     MapBean mapBean;
 
@@ -50,6 +54,8 @@ public class MapNode extends BeanNode<MapBean> {
         this.mapBean = mapBean;
         setIconBaseWithExtension("io/github/bpodolski/caspergis/res/map.png");
 
+        mapBean.addChangeListener(this);
+
     }
 
     @Override
@@ -59,7 +65,8 @@ public class MapNode extends BeanNode<MapBean> {
 
                 return "<b>" + mapBean.getName() + "</b>";
             } else {
-                return mapBean.getName();
+                return "<font color='AAAAAA'>" + mapBean.getName() + "</font>";
+//                return mapBean.getName();
             }
         }
         return super.getDisplayName(); //To change body of generated methods, choose Tools | Templates.
@@ -93,6 +100,23 @@ public class MapNode extends BeanNode<MapBean> {
             }
         }
         return null;
+    }
+
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        this.fireIconChange();
+        this.fireCookieChange();
+        this.fireNameChange(mapBean.getName(), mapBean.getName());
+    }
+
+    @Override
+    public Image getIcon(int type) {
+        if (mapBean != null) {
+            if (mapBean.isActive()) {
+                return ImageUtilities.loadImage("io/github/bpodolski/caspergis/res/mapActive.png");
+            } 
+        }
+        return ImageUtilities.loadImage("io/github/bpodolski/caspergis/res/map.png");
     }
 
 }
