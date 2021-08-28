@@ -11,6 +11,8 @@ import io.github.bpodolski.caspergis.gui.nodes.InternalMapNode;
 import io.github.bpodolski.caspergis.gui.nodes.services.CoreMapExplorerManagerMgr;
 import io.github.bpodolski.caspergis.services.MapExplorerManagerMgr;
 import java.beans.IntrospectionException;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Collection;
 import javax.swing.Action;
 import javax.swing.ActionMap;
@@ -37,7 +39,7 @@ import org.openide.windows.TopComponent;
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-public class MapDisplayerTopComponent extends TopComponent implements ExplorerManager.Provider, ChangeListener {
+public class MapDisplayerTopComponent extends TopComponent implements ExplorerManager.Provider, PropertyChangeListener {
 
     private final MapBean mapBean;
     private ExplorerManager mgr = null;
@@ -83,7 +85,7 @@ public class MapDisplayerTopComponent extends TopComponent implements ExplorerMa
         Action ac = Actions.forID("Map", "io.github.bpodolski.caspergis.project.map.ActivateMap");
         this.btnTest.setAction(ac);
 
-        this.mapBean.addChangeListener(this);
+        this.mapBean.addPropertyChangeListener(this);
     }
 
     /**
@@ -218,8 +220,9 @@ public class MapDisplayerTopComponent extends TopComponent implements ExplorerMa
         putClientProperty(TopComponent.PROP_UNDOCKING_DISABLED, Boolean.FALSE);
     }
 
+
     @Override
-    public void stateChanged(ChangeEvent e) {
+    public void propertyChange(PropertyChangeEvent evt) {
         if (this.mapBean.isActive()) {
             this.txt.setText(this.mapBean.getName());
         } else {

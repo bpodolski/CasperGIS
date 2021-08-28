@@ -189,14 +189,6 @@ public final class ProjectListTopComponent extends TopComponent implements Explo
         rootNode.setPreferred(false);
 
         expandTreeNode(rootNode);
-
-//        if (Installer.cgRegistry.getActiveMapNode() != null) {
-//            MapNode mn = Installer.cgRegistry.getActiveMapNode();
-//            mgr.setSelectedNodes(new Node[]{mn});
-//            MapDisplayerTopComponent tc = new MapDisplayerTopComponent(Installer.cgRegistry.getActiveMapBean());
-//            tc.open();
-//        }
-
     }
 
     private void expandTreeNode(final Node node) {

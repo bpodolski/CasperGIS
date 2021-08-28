@@ -6,15 +6,16 @@
 package io.github.bpodolski.caspergis.project.map;
 
 import io.github.bpodolski.caspergis.beans.MapBean;
+import io.github.bpodolski.caspergis.services.MapExplorerManagerMgr;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.Action;
+import java.util.Collection;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
-import org.openide.awt.Actions;
 import org.openide.util.NbBundle;
+import org.openide.util.lookup.Lookups;
 
 /**
  *
@@ -34,24 +35,26 @@ import org.openide.util.NbBundle;
 })
 @NbBundle.Messages("CTL_ActivateMap=Activate Map")
 public class ActivateMap implements ActionListener {
-
+    
     private final MapBean context;
 
+    //Serwis 
+    MapExplorerManagerMgr explorerManagerMgr;
+    
     public ActivateMap(MapBean context) {
         this.context = context;
-
-
+        Collection<? extends MapExplorerManagerMgr> srvMapExp = Lookups.forPath("Core").lookupAll(MapExplorerManagerMgr.class);
+        if (srvMapExp.iterator().hasNext()) {
+            this.explorerManagerMgr = srvMapExp.iterator().next();
+        } else {
+            this.explorerManagerMgr = MapExplorerManagerMgr.getDefault();
+        }
+        
     }
-
+    
     @Override
     public void actionPerformed(ActionEvent e) {
-        MapBean mapBean = context;
-        mapBean.setActive(!mapBean.isActive());
-        Action ac = Actions.forID("Map", "io.github.bpodolski.caspergis.project.map.ActivateMap");
-        if (context.isActive()) {
-            ac.putValue(Action.NAME, "Deactivate Map");
-        } else {
-            ac.putValue(Action.NAME, "Activate Map");
-        }
+        explorerManagerMgr.getActiveMapBean().setActive(false);
+        context.setActive(true);
     }
 }

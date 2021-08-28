@@ -43,28 +43,14 @@ public class MapProperties implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        String initialValue = "Purchase";
-        String cashOut = "Cashout";
-        String cashOut2 = "Cashout2";
-        String[] options = new String[]{initialValue, cashOut, cashOut2};
-
         NotifyDescriptor d = new NotifyDescriptor(
                 new PnlMapProperties1(), // message
                 "Map properties", // title
                 NotifyDescriptor.OK_CANCEL_OPTION, // option type
                 NotifyDescriptor.PLAIN_MESSAGE, // message type
-                options, // own buttons as Object[]
-                initialValue); // initial value
+                null, // own buttons as Object[]
+                NotifyDescriptor.CANCEL_OPTION); // initial value
         DialogDisplayer.getDefault().notify(d);
-
-        String selectedValue = (String) DialogDisplayer.getDefault().notify(d);
-        if (selectedValue.equals(initialValue)) {
-            // handle Purchase
-        } else if (selectedValue.equals(cashOut)) {
-            // handle Cashout   
-        } else {
-            // dialog closed with top close button
-        }
 
     }
 }

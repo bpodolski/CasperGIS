@@ -57,7 +57,7 @@ public final class LayerListTopComponent extends TopComponent implements Explore
     private MapBean mapBean = null;
     private final MapBean mapBeanX = new MapBean(null, "[No active map]");
 
-    //Serwisc - pobranie domyślnej implementacji
+    //Serwis 
     MapExplorerManagerMgr explorerManagerMgr;
 
     Lookup lookupMapBean = null;
@@ -161,8 +161,7 @@ public final class LayerListTopComponent extends TopComponent implements Explore
     // End of variables declaration//GEN-END:variables
     @Override
     public void componentOpened() {
-//        result = Utilities.actionsGlobalContext().lookupResult(MapBean.class);
-//        result.addLookupListener(this);
+
     }
 
     @Override
@@ -215,6 +214,7 @@ public final class LayerListTopComponent extends TopComponent implements Explore
     }
 
     private void setActiveMapBean() {
+        
         if (this.explorerManagerMgr.getActiveMapBean() != null) {
             this.mapBean = this.explorerManagerMgr.getActiveMapBean();
         } else {

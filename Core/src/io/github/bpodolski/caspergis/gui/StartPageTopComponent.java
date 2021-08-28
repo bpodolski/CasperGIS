@@ -5,12 +5,18 @@
  */
 package io.github.bpodolski.caspergis.gui;
 
+import io.github.bpodolski.caspergis.services.MapExplorerManagerMgr;
+import java.util.Collection;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
+import org.openide.explorer.ExplorerManager;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.NbPreferences;
+import org.openide.util.lookup.Lookups;
 
 /**
  * Top component which displays something.
@@ -26,7 +32,7 @@ import org.openide.util.NbPreferences;
 )
 @TopComponent.Registration(mode = "editor", openAtStartup = true)
 @ActionID(category = "Window", id = "io.github.bpodolski.caspergis.gui.StartPageTopComponent")
-@ActionReference(path = "Menu/Help" , position = 100)
+@ActionReference(path = "Menu/Help", position = 100)
 @TopComponent.OpenActionRegistration(
         displayName = "#CTL_StartPageAction",
         preferredID = "StartPageTopComponent"
@@ -36,13 +42,22 @@ import org.openide.util.NbPreferences;
     "CTL_StartPageTopComponent=StartPage Window",
     "HINT_StartPageTopComponent=This is a StartPage window"
 })
-public final class StartPageTopComponent extends TopComponent {
+public final class StartPageTopComponent extends TopComponent implements  ChangeListener  {
+
+    //Serwis 
+    MapExplorerManagerMgr explorerManagerMgr;
 
     public StartPageTopComponent() {
         initComponents();
         setName(Bundle.CTL_StartPageTopComponent());
         setToolTipText(Bundle.HINT_StartPageTopComponent());
-//        putClientProperty(TopComponent.PROP_DRAGGING_DISABLED, Boolean.TRUE);
+
+        Collection<? extends MapExplorerManagerMgr> srvMapExp = Lookups.forPath("Core").lookupAll(MapExplorerManagerMgr.class);
+        if (srvMapExp.iterator().hasNext()) {
+            this.explorerManagerMgr = srvMapExp.iterator().next();
+        } else {
+            this.explorerManagerMgr = MapExplorerManagerMgr.getDefault();
+        }
 
     }
 
@@ -55,6 +70,8 @@ public final class StartPageTopComponent extends TopComponent {
     private void initComponents() {
 
         cbShowOnStart = new javax.swing.JCheckBox();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        txt = new javax.swing.JTextArea();
 
         cbShowOnStart.setSelected(true);
         org.openide.awt.Mnemonics.setLocalizedText(cbShowOnStart, org.openide.util.NbBundle.getMessage(StartPageTopComponent.class, "StartPageTopComponent.cbShowOnStart.text")); // NOI18N
@@ -64,19 +81,29 @@ public final class StartPageTopComponent extends TopComponent {
             }
         });
 
+        txt.setColumns(20);
+        txt.setRows(5);
+        jScrollPane1.setViewportView(txt);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(cbShowOnStart)
-                .addContainerGap(305, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 503, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(cbShowOnStart)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(272, Short.MAX_VALUE)
+                .addGap(27, 27, 27)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 353, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(cbShowOnStart)
                 .addContainerGap())
         );
@@ -92,6 +119,8 @@ public final class StartPageTopComponent extends TopComponent {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox cbShowOnStart;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextArea txt;
     // End of variables declaration//GEN-END:variables
     @Override
     public void componentOpened() {
@@ -118,5 +147,10 @@ public final class StartPageTopComponent extends TopComponent {
     void readProperties(java.util.Properties p) {
         String version = p.getProperty("version");
         // TODO read your settings according to their version
+    }
+
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        txt.setText("");
     }
 }

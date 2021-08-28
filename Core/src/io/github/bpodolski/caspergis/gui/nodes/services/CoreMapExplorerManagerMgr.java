@@ -9,6 +9,8 @@ import io.github.bpodolski.caspergis.beans.MapBean;
 import io.github.bpodolski.caspergis.gui.nodes.InternalMapNode;
 import io.github.bpodolski.caspergis.services.MapExplorerManagerMgr;
 import java.beans.IntrospectionException;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -24,7 +26,7 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
 @ServiceProvider(service = MapExplorerManagerMgr.class, path = "Core")
-public class CoreMapExplorerManagerMgr extends MapExplorerManagerMgr implements ChangeListener {
+public class CoreMapExplorerManagerMgr extends MapExplorerManagerMgr implements PropertyChangeListener {
 
     private final HashMap mapExplorerManagers = new HashMap<MapBean, ExplorerManager>();
     private final ExplorerManager defaultMgr = new ExplorerManager();
@@ -35,12 +37,14 @@ public class CoreMapExplorerManagerMgr extends MapExplorerManagerMgr implements 
 
     public CoreMapExplorerManagerMgr() {
         Node rootNode;
+        defaultMapBean.setActive(false);
         try {
             rootNode = new BeanNode(defaultMapBean);
             rootNode.setName("[No active map]");
             defaultMgr.setRootContext(rootNode);
             mapExplorerManagers.put(defaultMapBean, defaultMgr);
-            
+            clearActiveMapBean();
+
         } catch (IntrospectionException ex) {
             Exceptions.printStackTrace(ex);
         }
@@ -49,7 +53,7 @@ public class CoreMapExplorerManagerMgr extends MapExplorerManagerMgr implements 
     @Override
     public void addMapExplorerManager(MapBean mapBean, ExplorerManager mgr) {
         mapExplorerManagers.put(mapBean, mgr);
-        mapBean.addChangeListener(this);
+        mapBean.addPropertyChangeListener(this);
 
     }
 
@@ -93,7 +97,7 @@ public class CoreMapExplorerManagerMgr extends MapExplorerManagerMgr implements 
 
     @Override
     public void clearActiveMapBean() {
-        setActiveMapBean(null);
+           setActiveMapBean(defaultMapBean);
     }
 
     @Override
@@ -107,21 +111,18 @@ public class CoreMapExplorerManagerMgr extends MapExplorerManagerMgr implements 
     }
 
     @Override
-    public void stateChanged(ChangeEvent e) {
-        MapBean mapBean = (MapBean) e.getSource();
-        if (this.getActiveMapBean() != mapBean) {
-            if (mapBean.isActive()) {
-                setActiveMapBean(mapBean);
-            } else {
+    public void propertyChange(PropertyChangeEvent evt) {
 
-            }
-        } else {
-            if (!mapBean.isActive()) {
+        if (evt.getPropertyName().equals("active")) {
+            MapBean mapBean = (MapBean) evt.getSource();
+            if (evt.getNewValue().equals(Boolean.FALSE)) {
                 clearActiveMapBean();
             } else {
-
+                setActiveMapBean(mapBean);
             }
         }
+
+       
     }
 
 }
