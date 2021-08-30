@@ -5,21 +5,12 @@
  */
 package io.github.bpodolski.caspergis.project.services;
 
-import io.github.bpodolski.caspergis.beans.MapBean;
-import io.github.bpodolski.caspergis.beans.PrintoutBean;
 import io.github.bpodolski.caspergis.beans.ProjectBean;
-import io.github.bpodolski.caspergis.project.CgRegistryProject;
 import static io.github.bpodolski.caspergis.project.CgRegistryProject.cgProjectDaoMap;
 import io.github.bpodolski.caspergis.project.dao.ProjectDAO;
-import io.github.bpodolski.caspergis.project.datamodel.CgMap;
 import io.github.bpodolski.caspergis.project.datamodel.CgProjectInfo;
 import io.github.bpodolski.caspergis.services.ProjectMgr;
-import io.github.bpodolski.caspergis.services.ProjectListMgr;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ServiceProvider;
 
 /**

@@ -207,7 +207,7 @@ public class ProjectDAO {
         return cgLayers;
     }
 
-    public void addMap(String name) {
+    public CgMap addMap(String name) {
         CgMap cgMap = new CgMap();
         if (name.equals("")) {
             name = "Layers";
@@ -220,12 +220,13 @@ public class ProjectDAO {
                 session.save(cgMap);
                 transaction.commit();
                 session.close();
-            } catch (Exception e) {
+            } catch (HibernateException e) {
                 if (transaction != null) {
                     transaction.rollback();
                 }
             }
         }
+        return cgMap;
     }
 
     public void saveMap(CgMap cgMap) {

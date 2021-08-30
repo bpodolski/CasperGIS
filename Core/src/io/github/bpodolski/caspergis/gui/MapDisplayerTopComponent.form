@@ -21,8 +21,12 @@
               <Component id="pnlMap" pref="410" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Component id="btnTest" alignment="1" max="32767" attributes="0"/>
-                  <Component id="view" alignment="1" pref="179" max="32767" attributes="0"/>
+                  <Component id="view" min="-2" pref="179" max="-2" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <Component id="btnTest" min="-2" pref="63" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
+                      <Component id="btnTest2" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -34,7 +38,10 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <Component id="btnTest" min="-2" pref="21" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="btnTest" alignment="3" min="-2" pref="21" max="-2" attributes="0"/>
+                          <Component id="btnTest2" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="view" pref="449" max="32767" attributes="0"/>
                   </Group>
@@ -89,6 +96,16 @@
           <ResourceString bundle="io/github/bpodolski/caspergis/gui/Bundle.properties" key="MapDisplayerTopComponent.btnTest.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnTest2">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="io/github/bpodolski/caspergis/gui/Bundle.properties" key="MapDisplayerTopComponent.btnTest2.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnTest2ActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

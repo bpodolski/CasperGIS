@@ -102,6 +102,7 @@ public class MapDisplayerTopComponent extends TopComponent implements ExplorerMa
         jScrollPane1 = new javax.swing.JScrollPane();
         txt = new javax.swing.JTextArea();
         btnTest = new javax.swing.JButton();
+        btnTest2 = new javax.swing.JButton();
 
         pnlMap.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         pnlMap.setLayout(new java.awt.BorderLayout());
@@ -114,6 +115,13 @@ public class MapDisplayerTopComponent extends TopComponent implements ExplorerMa
 
         org.openide.awt.Mnemonics.setLocalizedText(btnTest, org.openide.util.NbBundle.getMessage(MapDisplayerTopComponent.class, "MapDisplayerTopComponent.btnTest.text")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(btnTest2, org.openide.util.NbBundle.getMessage(MapDisplayerTopComponent.class, "MapDisplayerTopComponent.btnTest2.text")); // NOI18N
+        btnTest2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTest2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -123,8 +131,11 @@ public class MapDisplayerTopComponent extends TopComponent implements ExplorerMa
                 .addComponent(pnlMap, javax.swing.GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnTest, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(view, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE))
+                    .addComponent(view, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnTest, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnTest2)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -133,7 +144,9 @@ public class MapDisplayerTopComponent extends TopComponent implements ExplorerMa
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnTest, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnTest, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnTest2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(view, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -142,9 +155,22 @@ public class MapDisplayerTopComponent extends TopComponent implements ExplorerMa
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnTest2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTest2ActionPerformed
+        Action acA = Actions.forID("Map", "io.github.bpodolski.caspergis.project.map.ActivateMap");
+        Action acD = Actions.forID("Map", "io.github.bpodolski.caspergis.project.map.ActivateMap");
+        if (this.mapBean.isActive()) {
+            acD.actionPerformed(null);
+        } else {
+            acA.actionPerformed(null);
+        }
+
+
+    }//GEN-LAST:event_btnTest2ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnTest;
+    private javax.swing.JButton btnTest2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel pnlMap;
     private javax.swing.JTextArea txt;
@@ -173,14 +199,24 @@ public class MapDisplayerTopComponent extends TopComponent implements ExplorerMa
     }
 
     private void initView() {
-        Node rootNode = null;
-        try {
-            rootNode = new InternalMapNode(this.mapBean);
-        } catch (IntrospectionException ex) {
-            Exceptions.printStackTrace(ex);
-        }
 
-        mgr.setRootContext(rootNode);
+//        if (this.explorerManagerMgr.getActiveMapBean() != null) {
+//            if (this.mapBean != 
+//        
+//        
+//        } else {
+//            this.mapBean = this.mapBeanX;
+//        }
+//        this.lblTest.setText("ExpMgr. - " + mapBean.getName());
+//        view.addNotify();
+//        Node rootNode = null;
+//        try {
+//            rootNode = new InternalMapNode(this.mapBean);
+//        } catch (IntrospectionException ex) {
+//            Exceptions.printStackTrace(ex);
+//        }
+//
+//        mgr.setRootContext(rootNode);
     }
 
     @Override
@@ -219,7 +255,6 @@ public class MapDisplayerTopComponent extends TopComponent implements ExplorerMa
         putClientProperty(TopComponent.PROP_SLIDING_DISABLED, Boolean.FALSE);
         putClientProperty(TopComponent.PROP_UNDOCKING_DISABLED, Boolean.FALSE);
     }
-
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {

@@ -41,7 +41,6 @@ public class MapBean extends ProjectitemBean {
         this.setDisplayName(name);
         this.mapElementList = mapElementList;
         this.setBeanType(BeanType.MAP);
-
     }
 
     public ArrayList<MapitemBean> getMapElementList() {

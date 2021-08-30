@@ -37,57 +37,57 @@ import org.openide.util.lookup.ProxyLookup;
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
 public class InternalMapNode extends BeanNode<MapBean> {
-    
+
     private MapItemsFactory factory;
     private MapBean bean;
     private InstanceContent instContent;
-    
+
     public InternalMapNode(MapBean bean) throws IntrospectionException {
         this(bean, new MapItemsFactory(bean), new InstanceContent());
     }
-    
+
     public InternalMapNode(MapBean bean, final MapItemsFactory factory, InstanceContent instContent) throws IntrospectionException {
         super(bean, Children.create(factory, true), new ProxyLookup(Lookups.singleton(bean), new AbstractLookup(instContent)));
-        
+
         setIconBaseWithExtension("io/github/bpodolski/caspergis/res/map.png");
-        
+
         this.bean = bean;
         this.factory = factory;
         this.setDisplayName(bean.getName());
         this.instContent = instContent;
-        
+
         instContent.add(new Index.Support() {
-            
+
             @Override
             public Node[] getNodes() {
                 return getChildren().getNodes();
             }
-            
+
             @Override
             public int getNodesCount() {
                 return getNodes().length;
             }
-            
+
             @Override
             public void reorder(int[] perm) {
                 factory.reorder(perm);
-                
+
             }
         });
-        
+
     }
-    
+
     @Override
     public Action getPreferredAction() {
         return null;
     }
-    
+
     @Override
     public Action[] getActions(boolean context) {
         return new Action[]{
             PasteAction.get(PasteAction.class),};
     }
-    
+
     @Override
     protected void createPasteTypes(Transferable t, List<PasteType> s) {
         super.createPasteTypes(t, s);
@@ -96,55 +96,62 @@ public class InternalMapNode extends BeanNode<MapBean> {
             s.add(p);
         }
     }
-    
+
     @Override
     public PasteType getDropType(final Transferable t, int arg1, int arg2) {
-        if (t.isDataFlavorSupported(MapitemFlavor.MAPELEMENT_FLAVOR)) {
-            return new PasteType() {
-                @Override
-                public Transferable paste() throws IOException {
-                    try {
-                        factory.add((MapitemBean) t.getTransferData(MapitemFlavor.MAPELEMENT_FLAVOR));
-                        final Node node = NodeTransfer.node(t, NodeTransfer.DND_MOVE + NodeTransfer.CLIPBOARD_CUT);
+        if (this.bean.isActive()) {
+            if (t.isDataFlavorSupported(MapitemFlavor.MAPELEMENT_FLAVOR)) {
+                return new PasteType() {
+                    @Override
+                    public Transferable paste() throws IOException {
+                        try {
+                            factory.add((MapitemBean) t.getTransferData(MapitemFlavor.MAPELEMENT_FLAVOR));
+                            final Node node = NodeTransfer.node(t, NodeTransfer.DND_MOVE + NodeTransfer.CLIPBOARD_CUT);
 //                        if (node != null) {
 //                            node.destroy();
 //                        }
-                    } catch (UnsupportedFlavorException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
-                    return null;
-                }
-            };
-        } else if (t.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
-            return new PasteType() {
-                @Override
-                public Transferable paste() throws IOException {
-                    try {
-                        List fileList = (List) t.getTransferData(DataFlavor.javaFileListFlavor);
-                        for (Object f : fileList) {
-                            File file = (File) f;
-                            
-                            if (LayerFileFilter.LAYER_FILEFILTER.accept(file)) {
-                                LayerBean lb = new LayerBean(file.getName());
-                                lb.setConnectionStr(file.getAbsolutePath());
-                                factory.add(lb);
-                            }
+                        } catch (UnsupportedFlavorException ex) {
+                            Exceptions.printStackTrace(ex);
                         }
-                    } catch (UnsupportedFlavorException ex) {
-                        Exceptions.printStackTrace(ex);
+                        return null;
                     }
-                    return null;
-                }
-            };
-            
-        } else {
-            return null;
+                };
+            } else if (t.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
+                return new PasteType() {
+                    @Override
+                    public Transferable paste() throws IOException {
+                        try {
+                            List fileList = (List) t.getTransferData(DataFlavor.javaFileListFlavor);
+                            for (Object f : fileList) {
+                                File file = (File) f;
+
+                                if (LayerFileFilter.LAYER_FILEFILTER.accept(file)) {
+                                    LayerBean lb = new LayerBean(file.getName());
+                                    lb.setConnectionStr(file.getAbsolutePath());
+                                    factory.add(lb);
+                                }
+                            }
+                        } catch (UnsupportedFlavorException ex) {
+                            Exceptions.printStackTrace(ex);
+                        }
+                        return null;
+                    }
+                };
+
+            } else {
+                return null;
+            }
         }
+        return null;
     }
 
     public MapItemsFactory getFactory() {
         return factory;
     }
-    
-    
+
+    @Override
+    public MapBean getBean() {
+        return bean;
+    }
+
 }

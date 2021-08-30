@@ -7,16 +7,20 @@ package io.github.bpodolski.caspergis.gui.nodes.factories;
 
 import io.github.bpodolski.caspergis.beans.BeanType;
 import io.github.bpodolski.caspergis.beans.MapBean;
+import io.github.bpodolski.caspergis.beans.ProjectitemBean;
 import io.github.bpodolski.caspergis.beans.PrintoutBean;
 import io.github.bpodolski.caspergis.beans.ProjectBean;
 import io.github.bpodolski.caspergis.beans.ProjectitemBean;
 import io.github.bpodolski.caspergis.gui.nodes.MapNode;
 import io.github.bpodolski.caspergis.gui.nodes.PrintoutNode;
+import io.github.bpodolski.caspergis.model.ModelMapElementsList;
+import io.github.bpodolski.caspergis.model.ModelMapsList;
 import io.github.bpodolski.caspergis.services.MapExplorerManagerMgr;
 import io.github.bpodolski.caspergis.services.MapListMgr;
 import java.beans.IntrospectionException;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import org.openide.nodes.BeanNode;
@@ -29,13 +33,15 @@ import org.openide.util.lookup.Lookups;
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-public class ProjectItemsFactory extends ChildFactory<ProjectitemBean> {
+public class ProjectItemsFactory extends ChildFactory.Detachable<ProjectitemBean> {
 
     private final ProjectBean projectBean;
     MapListMgr mapListMgr;
     MapExplorerManagerMgr explorerManagerMgr;// = ExplorerManagerMgr.getDefault();
 
     private final List<ProjectitemBean> projectElementList = new ArrayList<>();
+    
+    ModelMapsList modelMapsList = new ModelMapsList();
 
     public ProjectItemsFactory(ProjectBean projectBean) {
         this.projectBean = projectBean;
@@ -88,5 +94,52 @@ public class ProjectItemsFactory extends ChildFactory<ProjectitemBean> {
             Exceptions.printStackTrace(ex);
         }
         return node;
+    }
+    
+    public void add(ProjectitemBean bean) {
+        projectElementList.add(bean);
+        refresh(true);
+    }
+    
+    public void add(int index, ProjectitemBean bean) {
+        projectElementList.add(index, bean);
+        refresh(true);
+    }
+    
+    public void addAll(List list) {
+        projectElementList.addAll(list);
+        refresh(true);
+    }
+    
+    public void addAll(int index, List list) {
+        projectElementList.addAll(index, list);
+        refresh(true);
+    }
+    
+    public void removeChild(ProjectitemBean bean) {
+        projectElementList.remove(bean);
+        refresh(true);
+    }
+    
+    @Override
+    protected void addNotify() {
+    }
+    
+    @Override
+    protected void removeNotify() {
+        
+    }
+    
+    public void reorder(int[] perm) {
+        ProjectitemBean[] reordered = new ProjectitemBean[this.projectElementList.size()];
+        for (int i = 0; i < perm.length; i++) {
+            int j = perm[i];
+            ProjectitemBean c = (ProjectitemBean) this.projectElementList.get(i);
+            reordered[j] = c;
+        }
+        this.projectElementList.clear();
+        this.projectElementList.addAll(Arrays.asList(reordered));
+        refresh(true);
+        
     }
 }

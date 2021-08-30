@@ -9,6 +9,11 @@ package io.github.bpodolski.caspergis.services;
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-public class SystemValidator {
-    
+public abstract class CgValidator {
+
+    /**
+     *
+     * @return
+     */
+    public abstract boolean isValid(Object object);
 }

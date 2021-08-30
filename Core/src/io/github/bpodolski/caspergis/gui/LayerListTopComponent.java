@@ -5,12 +5,19 @@
  */
 package io.github.bpodolski.caspergis.gui;
 
+import io.github.bpodolski.caspergis.beans.LayerBean;
 import io.github.bpodolski.caspergis.beans.MapBean;
+import io.github.bpodolski.caspergis.gui.nodes.InternalMapNode;
+import io.github.bpodolski.caspergis.gui.nodes.factories.MapItemsFactory;
 import io.github.bpodolski.caspergis.services.MapExplorerManagerMgr;
+import io.github.bpodolski.caspergis.utils.LayerFileFilter;
+import java.io.File;
 import java.util.Collection;
 import javax.swing.ActionMap;
+import javax.swing.JFileChooser;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.actions.CopyAction;
 import org.openide.actions.CutAction;
@@ -66,6 +73,7 @@ public final class LayerListTopComponent extends TopComponent implements Explore
 
     public LayerListTopComponent() {
         initComponents();
+   
 
         Collection<? extends MapExplorerManagerMgr> srvMapExp = Lookups.forPath("Core").lookupAll(MapExplorerManagerMgr.class);
         if (srvMapExp.iterator().hasNext()) {
@@ -128,27 +136,30 @@ public final class LayerListTopComponent extends TopComponent implements Explore
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAddLayerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddLayerActionPerformed
-//        InternalMapNode mn = (InternalMapNode) mgr.getRootContext();
 
-//        var chooser = new JFileChooser();
-//        chooser.setCurrentDirectory(new File("."));
-//        chooser.setFileFilter(new FileNameExtensionFilter("SHP files", "shp", "shp"));
-//        chooser.setAcceptAllFileFilterUsed(false);
-//        chooser.setMultiSelectionEnabled(true);
-//        int result = chooser.showOpenDialog(this);
-//        if (result == JFileChooser.APPROVE_OPTION) {
-//            var files = chooser.getSelectedFiles();
-//            for (int i = 0; i < files.length; i++) {
-//                var f = files[i];
-//                var lb = new LayerBean(f.getName());
-//                try {
-//                    lb.setConnectionStr(f.getCanonicalPath());
-//                } catch (IOException ex) {
-//                    Exceptions.printStackTrace(ex);
-//                }
-//                mn.getFactory().add(lb);
+//        if (this.getExplorerManager().getRootContext().getClass().isInstance(InternalMapNode.class)) {
+            InternalMapNode mn = (InternalMapNode) this.getExplorerManager().getRootContext();
+            if (mn.getBean().isActive()) {
+                MapItemsFactory factory = mn.getFactory();
+                var chooser = new JFileChooser();
+                chooser.setCurrentDirectory(new File("."));
+                chooser.setFileFilter(new FileNameExtensionFilter("SHP files", "shp", "shp"));
+                chooser.setAcceptAllFileFilterUsed(false);
+                chooser.setMultiSelectionEnabled(true);
+                int result = chooser.showOpenDialog(this);
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    var files = chooser.getSelectedFiles();
+                    for (int i = 0; i < files.length; i++) {
+                        var f = files[i];
+                        if (LayerFileFilter.LAYER_FILEFILTER.accept(f)) {
+                            LayerBean lb = new LayerBean(f.getName());
+                            lb.setConnectionStr(f.getAbsolutePath());
+                            factory.add(lb);
+                        }
+                    }
+                }
 //            }
-//        }
+        }
 
     }//GEN-LAST:event_btnAddLayerActionPerformed
 
@@ -214,9 +225,10 @@ public final class LayerListTopComponent extends TopComponent implements Explore
     }
 
     private void setActiveMapBean() {
-        
+
         if (this.explorerManagerMgr.getActiveMapBean() != null) {
             this.mapBean = this.explorerManagerMgr.getActiveMapBean();
+            initActions();
         } else {
             this.mapBean = this.mapBeanX;
         }
