@@ -63,4 +63,8 @@ public class ModelMapsList {
     public void removeChangeListener(ChangeListener l) {
         cs.removeChangeListener(l);
     }
+
+    public void addAll(List<MapBean> mapList) {
+       mapBeans.addAll(mapList);
+    }
 }

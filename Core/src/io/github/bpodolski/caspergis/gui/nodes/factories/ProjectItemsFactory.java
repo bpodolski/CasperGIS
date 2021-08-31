@@ -5,24 +5,23 @@
  */
 package io.github.bpodolski.caspergis.gui.nodes.factories;
 
+import io.github.bpodolski.caspergis.CgRegistry;
 import io.github.bpodolski.caspergis.beans.BeanType;
 import io.github.bpodolski.caspergis.beans.MapBean;
-import io.github.bpodolski.caspergis.beans.ProjectitemBean;
 import io.github.bpodolski.caspergis.beans.PrintoutBean;
 import io.github.bpodolski.caspergis.beans.ProjectBean;
 import io.github.bpodolski.caspergis.beans.ProjectitemBean;
 import io.github.bpodolski.caspergis.gui.nodes.MapNode;
 import io.github.bpodolski.caspergis.gui.nodes.PrintoutNode;
-import io.github.bpodolski.caspergis.model.ModelMapElementsList;
 import io.github.bpodolski.caspergis.model.ModelMapsList;
 import io.github.bpodolski.caspergis.services.MapExplorerManagerMgr;
 import io.github.bpodolski.caspergis.services.MapListMgr;
 import java.beans.IntrospectionException;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import org.openide.nodes.BeanNode;
 import org.openide.nodes.ChildFactory;
 import org.openide.nodes.Node;
@@ -33,13 +32,11 @@ import org.openide.util.lookup.Lookups;
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-public class ProjectItemsFactory extends ChildFactory.Detachable<ProjectitemBean> {
+public class ProjectItemsFactory extends ChildFactory.Detachable<ProjectitemBean> implements ChangeListener {
 
     private final ProjectBean projectBean;
     MapListMgr mapListMgr;
-    MapExplorerManagerMgr explorerManagerMgr;// = ExplorerManagerMgr.getDefault();
-
-    private final List<ProjectitemBean> projectElementList = new ArrayList<>();
+    MapExplorerManagerMgr explorerManagerMgr;
     
     ModelMapsList modelMapsList = new ModelMapsList();
 
@@ -62,14 +59,17 @@ public class ProjectItemsFactory extends ChildFactory.Detachable<ProjectitemBean
         }
 
         if (f.exists()) {
-            projectElementList.addAll(mapListMgr.getMapList(projectBean));
+            this.modelMapsList.addAll(mapListMgr.getMapList(projectBean));
         }
+        
+        CgRegistry.modelMapsList.put(projectBean, modelMapsList);
 
     }
 
     @Override
     protected boolean createKeys(List<ProjectitemBean> list) {
-        list.addAll(this.projectElementList);
+       
+        list.addAll(this.modelMapsList.list());
         return true;
     }
 
@@ -96,50 +96,19 @@ public class ProjectItemsFactory extends ChildFactory.Detachable<ProjectitemBean
         return node;
     }
     
-    public void add(ProjectitemBean bean) {
-        projectElementList.add(bean);
-        refresh(true);
-    }
-    
-    public void add(int index, ProjectitemBean bean) {
-        projectElementList.add(index, bean);
-        refresh(true);
-    }
-    
-    public void addAll(List list) {
-        projectElementList.addAll(list);
-        refresh(true);
-    }
-    
-    public void addAll(int index, List list) {
-        projectElementList.addAll(index, list);
-        refresh(true);
-    }
-    
-    public void removeChild(ProjectitemBean bean) {
-        projectElementList.remove(bean);
-        refresh(true);
-    }
-    
+        
     @Override
     protected void addNotify() {
+        modelMapsList.addChangeListener(this);
     }
     
     @Override
     protected void removeNotify() {
-        
+        modelMapsList.removeChangeListener(this);        
     }
     
-    public void reorder(int[] perm) {
-        ProjectitemBean[] reordered = new ProjectitemBean[this.projectElementList.size()];
-        for (int i = 0; i < perm.length; i++) {
-            int j = perm[i];
-            ProjectitemBean c = (ProjectitemBean) this.projectElementList.get(i);
-            reordered[j] = c;
-        }
-        this.projectElementList.clear();
-        this.projectElementList.addAll(Arrays.asList(reordered));
+    @Override
+    public void stateChanged(ChangeEvent e) {
         refresh(true);
-        
     }
 }
