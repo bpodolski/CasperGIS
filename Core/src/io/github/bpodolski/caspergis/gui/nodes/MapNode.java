@@ -22,6 +22,8 @@ import org.openide.awt.Actions;
 import org.openide.cookies.OpenCookie;
 import org.openide.nodes.BeanNode;
 import org.openide.nodes.Children;
+import org.openide.nodes.Index;
+import org.openide.nodes.Node;
 import org.openide.util.ImageUtilities;
 import org.openide.util.actions.SystemAction;
 import org.openide.util.lookup.AbstractLookup;
@@ -54,6 +56,23 @@ public class MapNode extends BeanNode<MapBean> implements PropertyChangeListener
         });
 
         ic.add(mapBean);
+
+        ic.add(new Index.Support() {
+            @Override
+            public Node[] getNodes() {
+                return getChildren().getNodes(true);
+            }
+
+            @Override
+            public int getNodesCount() {
+                return getNodes().length;
+            }
+
+            @Override
+            public void reorder(int[] perm) {
+//                model.reorder(perm);
+            }
+        });
 
         this.mapBean = mapBean;
         setIconBaseWithExtension("io/github/bpodolski/caspergis/res/map.png");
@@ -88,7 +107,6 @@ public class MapNode extends BeanNode<MapBean> implements PropertyChangeListener
         }
         return null;
     }
-
 
     @Override
     public Image getIcon(int type) {
@@ -126,11 +144,12 @@ public class MapNode extends BeanNode<MapBean> implements PropertyChangeListener
 //                "Title");
 //        DialogDisplayer.getDefault().notify(d);
 
-        if(this.mapBean.isActive())
-             setIconBaseWithExtension("io/github/bpodolski/caspergis/res/mapActive.png");
-        else
-             setIconBaseWithExtension("io/github/bpodolski/caspergis/res/map.png");
-            
+        if (this.mapBean.isActive()) {
+            setIconBaseWithExtension("io/github/bpodolski/caspergis/res/mapActive.png");
+        } else {
+            setIconBaseWithExtension("io/github/bpodolski/caspergis/res/map.png");
+        }
+
         this.fireIconChange();
     }
 
