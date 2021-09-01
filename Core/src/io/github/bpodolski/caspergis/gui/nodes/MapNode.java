@@ -139,10 +139,6 @@ public class MapNode extends BeanNode<MapBean> implements PropertyChangeListener
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-//       NotifyDescriptor d = new NotifyDescriptor.Confirmation(
-//                "Message",
-//                "Title");
-//        DialogDisplayer.getDefault().notify(d);
 
         if (this.mapBean.isActive()) {
             setIconBaseWithExtension("io/github/bpodolski/caspergis/res/mapActive.png");
@@ -153,4 +149,5 @@ public class MapNode extends BeanNode<MapBean> implements PropertyChangeListener
         this.fireIconChange();
     }
 
+    
 }
