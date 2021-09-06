@@ -5,10 +5,11 @@
  */
 package io.github.bpodolski.caspergis.beans;
 
-
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.IOException;
 import java.util.List;
 
@@ -24,9 +25,11 @@ public class ProjectitemBean implements Transferable {
     private BeanType beanType = BeanType.PROJECT_ELEMENT;
     private String name = "Project Element";
     private String displayName = "Project Element";
-    
-        //position in project list, used by comparator, (calculate by position in parent node children list)
+
+    //position in project list, used by comparator, (calculate by position in parent node children list)
     int position = 0;
+
+    private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
     public List<ProjectitemBean> getProjectElementBeans() {
         return projectElementBeans;
@@ -68,8 +71,6 @@ public class ProjectitemBean implements Transferable {
         this.position = position;
     }
 
-    
-    
     @Override
     public DataFlavor[] getTransferDataFlavors() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -87,6 +88,14 @@ public class ProjectitemBean implements Transferable {
         } else {
             throw new UnsupportedFlavorException(flavor);
         }
+    }
+
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener(listener);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener(listener);
     }
 
 }

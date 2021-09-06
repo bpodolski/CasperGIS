@@ -13,6 +13,7 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
@@ -25,7 +26,7 @@ import org.hibernate.annotations.LazyCollectionOption;
 @Table(name = "CG_PRINTOUT")
 public class CgPrintout {
 
-     @Id
+    @Id
     @GeneratedValue
     @Column(name = "ID_PRINTOUT")
     private int id;
@@ -36,6 +37,10 @@ public class CgPrintout {
     @Column(name = "DESCRIPTION")
     String description;
 
+    @Column(name = "POSITION")
+    @OrderColumn
+    int position;
+
     @Column(name = "XML_TREE", columnDefinition = "longvarchar")
     private String xmlTree;
 
@@ -45,7 +50,6 @@ public class CgPrintout {
     private List<CgPrintoutProperties> printoutProperties;
 
 //    protected Set<BpMapProperty> mapProperties = new LinkedHashSet<BpMapProperty>();
-    
     public CgPrintout() {
     }
 
@@ -73,6 +77,14 @@ public class CgPrintout {
         this.description = description;
     }
 
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+    
     public String getXmlTree() {
         return xmlTree;
     }
@@ -95,4 +107,6 @@ public class CgPrintout {
         }
         printoutProperties.add(prop);
     }
+    
+    
 }

@@ -62,10 +62,12 @@ public class MapBean extends ProjectitemBean {
 
     }
 
+    @Override
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         pc.addPropertyChangeListener(listener);
     }
 
+    @Override
     public void removePropertyChangeListener(PropertyChangeListener listener) {
         pc.removePropertyChangeListener(listener);
 

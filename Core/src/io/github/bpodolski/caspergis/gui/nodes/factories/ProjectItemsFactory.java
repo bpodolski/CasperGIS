@@ -38,7 +38,7 @@ public class ProjectItemsFactory extends ChildFactory.Detachable<ProjectitemBean
     MapListMgr mapListMgr;
     MapExplorerManagerMgr explorerManagerMgr;
     
-    ModelMapsList model = new ModelMapsList();
+    ModelMapsList modelMapsList = new ModelMapsList();
 
     public ProjectItemsFactory(ProjectBean projectBean) {
         this.projectBean = projectBean;
@@ -59,17 +59,17 @@ public class ProjectItemsFactory extends ChildFactory.Detachable<ProjectitemBean
         }
 
         if (f.exists()) {
-            this.model.addAll(mapListMgr.getMapList(projectBean));
+            this.modelMapsList.addAll(mapListMgr.getMapList(projectBean));
         }
         
-        CgRegistry.modelMapsList.put(projectBean, model);
+        CgRegistry.modelMapsList.put(projectBean, modelMapsList);
 
     }
 
     @Override
     protected boolean createKeys(List<ProjectitemBean> list) {
        
-        list.addAll(this.model.list());
+        list.addAll(this.modelMapsList.list());
         return true;
     }
 
@@ -81,6 +81,8 @@ public class ProjectItemsFactory extends ChildFactory.Detachable<ProjectitemBean
             if (key.getBeanType() == BeanType.MAP) {
                 MapBean mb = (MapBean) key;
                 node = new MapNode(mb);
+                MapNode mn = (MapNode) node;
+                mn.setFactory(this);
 
                 explorerManagerMgr.addMapExplorerManager(mb);
 
@@ -99,12 +101,12 @@ public class ProjectItemsFactory extends ChildFactory.Detachable<ProjectitemBean
         
     @Override
     protected void addNotify() {
-        model.addChangeListener(this);
+        modelMapsList.addChangeListener(this);
     }
     
     @Override
     protected void removeNotify() {
-        model.removeChangeListener(this);        
+        modelMapsList.removeChangeListener(this);        
     }
     
     @Override
@@ -113,7 +115,7 @@ public class ProjectItemsFactory extends ChildFactory.Detachable<ProjectitemBean
     }
 
     public ModelMapsList getModel() {
-        return model;
+        return modelMapsList;
     }
     
     

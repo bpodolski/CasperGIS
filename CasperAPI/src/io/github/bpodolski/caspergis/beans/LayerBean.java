@@ -19,6 +19,8 @@
 package io.github.bpodolski.caspergis.beans;
 
 //import org.geotools.map.Layer;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.List;
 
 //import org.geotools.styling.Style;
@@ -31,6 +33,8 @@ public class LayerBean extends MapitemBean {
     private int transparency = 0;
     private boolean visible = true;
     private String connectionStr;
+
+    private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
     public String getConnectionStr() {
         return connectionStr;
@@ -66,4 +70,11 @@ public class LayerBean extends MapitemBean {
         this.visible = visible;
     }
 
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener(listener);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener(listener);
+    }
 }

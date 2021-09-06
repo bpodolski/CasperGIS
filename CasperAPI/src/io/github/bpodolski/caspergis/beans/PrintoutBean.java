@@ -5,22 +5,24 @@
  */
 package io.github.bpodolski.caspergis.beans;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 
 /**
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-public class PrintoutBean extends ProjectitemBean{
-         
-   private ArrayList<ProjectitemBean> projectElementBeans;
+public class PrintoutBean extends ProjectitemBean {
 
+    private ArrayList<ProjectitemBean> projectElementBeans;
+    private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
     public PrintoutBean(ArrayList<ProjectitemBean> projectElementBeans) {
-       this(projectElementBeans, "Printouts");
-       this.setBeanType(BeanType.PRINTOUT);
+        this(projectElementBeans, "Printouts");
+        this.setBeanType(BeanType.PRINTOUT);
     }
-    
+
     public PrintoutBean(ArrayList<ProjectitemBean> projectElementBeans, String name) {
         this.setName(name);
         this.setDisplayName(name);
@@ -28,5 +30,11 @@ public class PrintoutBean extends ProjectitemBean{
         this.setBeanType(BeanType.PRINTOUT);
     }
 
-    
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener(listener);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener(listener);
+    }
 }

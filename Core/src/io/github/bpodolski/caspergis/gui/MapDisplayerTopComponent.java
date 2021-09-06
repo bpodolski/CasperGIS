@@ -114,6 +114,11 @@ public class MapDisplayerTopComponent extends TopComponent implements ExplorerMa
         pnlMap.add(jScrollPane1, java.awt.BorderLayout.PAGE_END);
 
         org.openide.awt.Mnemonics.setLocalizedText(btnTest, org.openide.util.NbBundle.getMessage(MapDisplayerTopComponent.class, "MapDisplayerTopComponent.btnTest.text")); // NOI18N
+        btnTest.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTestActionPerformed(evt);
+            }
+        });
 
         org.openide.awt.Mnemonics.setLocalizedText(btnTest2, org.openide.util.NbBundle.getMessage(MapDisplayerTopComponent.class, "MapDisplayerTopComponent.btnTest2.text")); // NOI18N
         btnTest2.addActionListener(new java.awt.event.ActionListener() {
@@ -157,7 +162,7 @@ public class MapDisplayerTopComponent extends TopComponent implements ExplorerMa
 
     private void btnTest2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTest2ActionPerformed
         Action acA = Actions.forID("Map", "io.github.bpodolski.caspergis.project.map.ActivateMap");
-        Action acD = Actions.forID("Map", "io.github.bpodolski.caspergis.project.map.ActivateMap");
+        Action acD = Actions.forID("Map", "io.github.bpodolski.caspergis.project.map.DeactivateMap");
         if (this.mapBean.isActive()) {
             acD.actionPerformed(null);
         } else {
@@ -166,6 +171,10 @@ public class MapDisplayerTopComponent extends TopComponent implements ExplorerMa
 
 
     }//GEN-LAST:event_btnTest2ActionPerformed
+
+    private void btnTestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTestActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnTestActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -22,6 +22,7 @@ import org.openide.nodes.Children;
 import org.openide.util.Lookup;
 import org.openide.util.actions.SystemAction;
 import org.openide.util.datatransfer.ExTransferable;
+import org.openide.util.lookup.InstanceContent;
 
 /**
  *
@@ -31,7 +32,7 @@ public class MapItemNode extends BeanNode<MapitemBean> {
 
     private MapItemsFactory factory;
     private MapitemBean bean;
-//    private InstanceContent instContent;
+    private InstanceContent instContent;
 
     public MapItemNode(MapitemBean bean, Children children, Lookup lookup, MapItemsFactory mapItemsFactory) throws IntrospectionException {
         super(bean, children, lookup);

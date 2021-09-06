@@ -18,6 +18,7 @@
  */
 package io.github.bpodolski.caspergis.beans;
 
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +37,8 @@ public class MapitemBean {
     private String displayName = "Map Element";
         //position in project list, used by comparator, (calculate by position in parent node children list)
     int position = 0;
+    
+    private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
     public MapitemBean(List<MapitemBean> mapElementBeans, String name) {
         this.mapElementBeans = mapElementBeans;

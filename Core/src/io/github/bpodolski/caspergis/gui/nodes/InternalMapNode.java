@@ -84,8 +84,12 @@ public class InternalMapNode extends BeanNode<MapBean> {
 
     @Override
     public Action[] getActions(boolean context) {
-        return new Action[]{
-            PasteAction.get(PasteAction.class),};
+        if (bean.isActive()) {
+            return new Action[]{
+                PasteAction.get(PasteAction.class),};
+        } else {
+            return null;
+        }
     }
 
     @Override

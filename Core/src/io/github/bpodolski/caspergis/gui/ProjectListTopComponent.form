@@ -22,14 +22,6 @@
 -->
 
 <Form version="1.4" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
-  <NonVisualComponents>
-    <Component class="org.openide.explorer.view.BeanTreeView" name="beanTreeView1">
-    </Component>
-    <Component class="org.openide.explorer.view.NodeRenderer" name="nodeRenderer1">
-    </Component>
-    <Component class="org.openide.explorer.view.ListView" name="listView1">
-    </Component>
-  </NonVisualComponents>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="1"/>
     <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
@@ -86,6 +78,12 @@
     <Component class="org.openide.explorer.view.BeanTreeView" name="view">
       <Properties>
         <Property name="rootVisible" type="boolean" value="false"/>
+        <Property name="rowHeader" type="javax.swing.JViewport" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="null"/>
+        </Property>
+        <Property name="rowHeaderView" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="null"/>
+        </Property>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout" value="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout$BorderConstraintsDescription">

@@ -68,6 +68,7 @@ public final class ProjectListTopComponent extends TopComponent implements Explo
 
     public ProjectListTopComponent() throws IntrospectionException, PropertyVetoException {
         initComponents();
+
         setName(Bundle.CTL_ProjectListTopComponent());
         setToolTipText(Bundle.HINT_ProjectListTopComponent());
         putClientProperty(TopComponent.PROP_CLOSING_DISABLED, Boolean.TRUE);
@@ -86,9 +87,6 @@ public final class ProjectListTopComponent extends TopComponent implements Explo
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        beanTreeView1 = new org.openide.explorer.view.BeanTreeView();
-        nodeRenderer1 = new org.openide.explorer.view.NodeRenderer();
-        listView1 = new org.openide.explorer.view.ListView();
         pnl = new javax.swing.JPanel();
         btnAddProject = new javax.swing.JButton();
         view = new org.openide.explorer.view.BeanTreeView();
@@ -111,6 +109,8 @@ public final class ProjectListTopComponent extends TopComponent implements Explo
         add(pnl, java.awt.BorderLayout.SOUTH);
 
         view.setRootVisible(false);
+        view.setRowHeader(null);
+        view.setRowHeaderView(null);
         add(view, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -120,10 +120,7 @@ public final class ProjectListTopComponent extends TopComponent implements Explo
     }//GEN-LAST:event_btnAddProjectActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private org.openide.explorer.view.BeanTreeView beanTreeView1;
     private javax.swing.JButton btnAddProject;
-    private org.openide.explorer.view.ListView listView1;
-    private org.openide.explorer.view.NodeRenderer nodeRenderer1;
     private javax.swing.JPanel pnl;
     private org.openide.explorer.view.BeanTreeView view;
     // End of variables declaration//GEN-END:variables
@@ -169,9 +166,6 @@ public final class ProjectListTopComponent extends TopComponent implements Explo
     }
 
     public void initView() throws IntrospectionException, PropertyVetoException {
-
-        this.add(view, BorderLayout.CENTER);
-
         Collection<? extends ProjectListMgr> srvList = Lookups.forPath("System").lookupAll(ProjectListMgr.class);
         ProjectListMgr projectListService = srvList.iterator().next();
 
@@ -180,7 +174,6 @@ public final class ProjectListTopComponent extends TopComponent implements Explo
         projectList.addAll(projectListService.getProjectList());
         ModelProjectList model = new ModelProjectList(projectList);
         CgRegistry.modelProjectList = model;
-        
 
         Node rootNode = new ProjectsRootNode(model);
         rootNode.setDisplayName("System");

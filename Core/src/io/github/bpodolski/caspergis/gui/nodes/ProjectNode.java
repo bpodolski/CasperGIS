@@ -10,16 +10,26 @@ import io.github.bpodolski.caspergis.gui.nodes.factories.ProjectItemsFactory;
 import io.github.bpodolski.caspergis.model.ModelMapsList;
 import io.github.bpodolski.caspergis.model.ModelProjectList;
 import java.beans.IntrospectionException;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.Action;
+import org.openide.actions.DeleteAction;
+import org.openide.actions.MoveDownAction;
+import org.openide.actions.MoveUpAction;
+import org.openide.actions.RenameAction;
+import org.openide.actions.ReorderAction;
 import org.openide.awt.Actions;
 import org.openide.nodes.BeanNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Index;
 import org.openide.nodes.Node;
 import org.openide.util.Utilities;
+import org.openide.util.actions.SystemAction;
+import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 import org.openide.util.lookup.Lookups;
+import org.openide.util.lookup.ProxyLookup;
 
 /**
  *
@@ -32,13 +42,13 @@ public class ProjectNode extends BeanNode<ProjectBean> {
     ProjectItemsFactory factory;
 
     public ProjectNode(ProjectBean bean) throws IntrospectionException {
-        this(bean, new ProjectItemsFactory(bean));
+        this(bean, new ProjectItemsFactory(bean), new InstanceContent());
     }
 
-    public ProjectNode(ProjectBean bean, ProjectItemsFactory factory) throws IntrospectionException {
-        super(bean, Children.create(factory, true), Lookups.singleton(bean));
+    public ProjectNode(ProjectBean bean, ProjectItemsFactory factory, InstanceContent ic) throws IntrospectionException {
+        super(bean, Children.create(factory, true), new ProxyLookup( new AbstractLookup(ic), Lookups.singleton(bean)));
         setIconBaseWithExtension("io/github/bpodolski/caspergis/res/project.png");
-
+              
         this.factory = factory;
 
         ic.add(new Index.Support() {
@@ -72,8 +82,53 @@ public class ProjectNode extends BeanNode<ProjectBean> {
 
     @Override
     public Action[] getActions(boolean context) {
+        ArrayList actList = new ArrayList();
         List<? extends Action> actProject = Utilities.actionsForPath("Menu/Project");
-        return actProject.toArray(new Action[actProject.size()]);
+
+//        ReorderAction reorderAction = SystemAction.get(ReorderAction.class);
+        MoveUpAction moveUpAction = SystemAction.get(MoveUpAction.class);
+        MoveDownAction moveDownAction = SystemAction.get(MoveDownAction.class);
+        RenameAction renameAction = SystemAction.get(RenameAction.class);
+
+        actList.add(moveUpAction);
+        actList.add(moveDownAction);
+        actList.add(renameAction);
+        
+        actList.addAll(actProject);
+
+        return (Action[]) actList.toArray(new Action[actList.size()]);
+    }
+
+    @Override
+    public String getName() {
+        ProjectBean bean = getLookup().lookup(ProjectBean.class);
+        if (null != bean.getName()) {
+            return bean.getName();
+        }
+        return super.getDisplayName();
+    }
+
+    @Override
+    public void setName(String newDisplayName) {
+        ProjectBean bean = getLookup().lookup(ProjectBean.class);
+        String oldDisplayName = bean.getName();
+        bean.setName(newDisplayName);
+        fireNameChange(oldDisplayName, newDisplayName);
+    }
+
+    @Override
+    public boolean canRename() {
+        return true;
+    }
+
+    @Override
+    public boolean canDestroy() {
+        return true;
+    }
+
+    @Override
+    public void destroy() throws IOException {
+        fireNodeDestroyed();
     }
 
 }

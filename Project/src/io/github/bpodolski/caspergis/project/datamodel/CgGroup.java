@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 /**
@@ -19,27 +20,31 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "CG_GROUP")
-public class CgGroup  implements Serializable{
-    
+public class CgGroup implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID_GROUP")
     int id;
-        
+
     @Column(name = "ID_MAP")
     int map_id;
-    
+
     @Column(name = "NAME")
     String name;
-    
+
     @Column(name = "DESCRIPTION")
     String description;
-    
+
     @Column(name = "VISIBLE")
     boolean visible;
-    
+
     @Column(name = "TRANSPARENT")
     int transparent;
+
+    @Column(name = "POSITION")
+    @OrderColumn
+    int position;
 
     public CgGroup() {
     }
@@ -89,14 +94,28 @@ public class CgGroup  implements Serializable{
     }
 
     public void setTransparent(int transparent) {
-        if(transparent > 100) transparent = 100;
-        if(transparent < 0)   transparent = 0;
+        if (transparent > 100) {
+            transparent = 100;
+        }
+        if (transparent < 0) {
+            transparent = 0;
+        }
         this.transparent = transparent;
     }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+    
+    
 
     @Override
     public String toString() {
         return "Group{" + "id=" + id + ", map_id=" + map_id + ", name=" + name + ", description=" + description + ", visible=" + visible + ", transparent=" + transparent + '}';
     }
-    
+
 }

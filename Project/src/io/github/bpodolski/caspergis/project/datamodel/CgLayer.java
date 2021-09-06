@@ -20,6 +20,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
@@ -63,13 +64,14 @@ public class CgLayer implements Serializable {
     int transparent;
 
     @Column(name = "POSITION")
+    @OrderColumn
     int position;
 
     @ElementCollection
     @CollectionTable(name = "CG_LAYER_PROP")
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<CgLayerProperties> layerProperties = new ArrayList<>();
-    
+
     @OneToOne(mappedBy = "cgLayer", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.LAZY)
     protected CgLayerStyle cgLayerStyle;
 
@@ -91,8 +93,6 @@ public class CgLayer implements Serializable {
     public void setCgMap(CgMap cgMap) {
         this.cgMap = cgMap;
     }
-
-
 
     public int getGroup_id() {
         return group_id;
@@ -186,7 +186,5 @@ public class CgLayer implements Serializable {
     public void setCgLayerStyle(CgLayerStyle cgLayerStyle) {
         this.cgLayerStyle = cgLayerStyle;
     }
-
-
 
 }

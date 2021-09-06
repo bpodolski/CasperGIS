@@ -31,10 +31,10 @@ public class ProjectBean {
     //position in project list, used by comparator, (calculate by position in parent node children list)
     int position = 0;
 
-    private final PropertyChangeSupport propertyChangeSupport;
+    private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
     public ProjectBean() {
-        propertyChangeSupport = new PropertyChangeSupport(this);
+
     }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {

@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 /**
@@ -26,10 +27,11 @@ public class CgSysProject {
 
     @Column
     String path;
-    
+
     @Column
+    @OrderColumn
     int position;
-    
+
     @Column
     boolean hidden;
 
@@ -40,7 +42,6 @@ public class CgSysProject {
     public void setId(int id) {
         this.id = id;
     }
-
 
     public String getPath() {
         return path;
@@ -66,6 +67,4 @@ public class CgSysProject {
         this.hidden = hidden;
     }
 
-
-    
 }
