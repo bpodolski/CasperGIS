@@ -26,7 +26,7 @@ import org.openide.util.NbPreferences;
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
 public class JpaSystemDbDAO {
-
+// test
     private final SessionFactory sessionFactory;
 
     public JpaSystemDbDAO() {
