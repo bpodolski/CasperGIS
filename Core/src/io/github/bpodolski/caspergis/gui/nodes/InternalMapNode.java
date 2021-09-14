@@ -50,6 +50,7 @@ public class InternalMapNode extends BeanNode<MapBean> {
         super(bean, Children.create(factory, true), new ProxyLookup(Lookups.singleton(bean), new AbstractLookup(instContent)));
 
         setIconBaseWithExtension("io/github/bpodolski/caspergis/res/map.png");
+        this.instContent = instContent;
 
         this.bean = bean;
         this.factory = factory;
@@ -75,6 +76,7 @@ public class InternalMapNode extends BeanNode<MapBean> {
             }
         });
 
+        instContent.add(this);
     }
 
     @Override

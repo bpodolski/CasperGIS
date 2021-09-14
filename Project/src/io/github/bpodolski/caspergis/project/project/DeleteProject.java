@@ -10,7 +10,7 @@ package io.github.bpodolski.caspergis.project.project;
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
 import io.github.bpodolski.caspergis.beans.ProjectBean;
-import io.github.bpodolski.caspergis.services.ProjectListMgr;
+import io.github.bpodolski.caspergis.services.SystemMgr;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -45,13 +45,8 @@ public class DeleteProject implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         ProjectBean projectBean = context;
-        ProjectListMgr projectSystemService = Lookups.forPath("System").lookupAll(ProjectListMgr.class).iterator().next();
-        ProjectListMgr projectCoreService = Lookups.forPath("Core").lookupAll(ProjectListMgr.class).iterator().next();
-        ProjectListMgr projectProjectService = Lookups.forPath("Project").lookupAll(ProjectListMgr.class).iterator().next();
-        
-        projectProjectService.delete(projectBean);//close project DAO
-        projectCoreService.delete(projectBean); //delete from view model
-        projectSystemService.delete(projectBean);//delete from system DB 
+        SystemMgr systemMgr = Lookups.forPath("System").lookupAll(SystemMgr.class).iterator().next();
+        systemMgr.closeProject(projectBean);
 
     }
 }

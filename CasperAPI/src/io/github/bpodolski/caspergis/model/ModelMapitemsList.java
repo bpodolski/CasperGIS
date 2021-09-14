@@ -16,16 +16,16 @@ import org.openide.util.ChangeSupport;
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-public class ModelMapElementsList {
+public class ModelMapitemsList {
 
     private final List<MapitemBean> elementMapBeans;
     private final ChangeSupport cs = new ChangeSupport(this);
 
-    public ModelMapElementsList() {
+    public ModelMapitemsList() {
         this(new ArrayList<MapitemBean>());
     }
 
-    public ModelMapElementsList(List<MapitemBean> elementMapBeans) {
+    public ModelMapitemsList(List<MapitemBean> elementMapBeans) {
         this.elementMapBeans = elementMapBeans;
     }
     

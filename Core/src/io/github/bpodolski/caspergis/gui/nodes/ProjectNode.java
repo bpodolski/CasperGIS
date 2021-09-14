@@ -40,15 +40,21 @@ public class ProjectNode extends BeanNode<ProjectBean> {
     InstanceContent ic = new InstanceContent();
     ModelMapsList model;
     ProjectItemsFactory factory;
+//
+//    public ProjectNode(ProjectBean bean) throws IntrospectionException {
+//        this(bean, new ProjectItemsFactory(bean), new InstanceContent());
+//    }
 
+    //do testow:
     public ProjectNode(ProjectBean bean) throws IntrospectionException {
-        this(bean, new ProjectItemsFactory(bean), new InstanceContent());
+        super(bean, Children.LEAF, Lookups.singleton(bean));
+        setIconBaseWithExtension("io/github/bpodolski/caspergis/res/project.png");
     }
 
     public ProjectNode(ProjectBean bean, ProjectItemsFactory factory, InstanceContent ic) throws IntrospectionException {
-        super(bean, Children.create(factory, true), new ProxyLookup( new AbstractLookup(ic), Lookups.singleton(bean)));
+        super(bean, Children.create(factory, true), new ProxyLookup(new AbstractLookup(ic), Lookups.singleton(bean)));
         setIconBaseWithExtension("io/github/bpodolski/caspergis/res/project.png");
-              
+
         this.factory = factory;
 
         ic.add(new Index.Support() {
@@ -67,6 +73,8 @@ public class ProjectNode extends BeanNode<ProjectBean> {
                 factory.getModel().reorder(perm);
             }
         });
+        
+        ic.add(this);
 
     }
 
@@ -93,7 +101,7 @@ public class ProjectNode extends BeanNode<ProjectBean> {
         actList.add(moveUpAction);
         actList.add(moveDownAction);
         actList.add(renameAction);
-        
+
         actList.addAll(actProject);
 
         return (Action[]) actList.toArray(new Action[actList.size()]);

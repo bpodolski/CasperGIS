@@ -9,8 +9,7 @@ package io.github.bpodolski.caspergis.system.action;
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-import io.github.bpodolski.caspergis.beans.ProjectBean;
-import io.github.bpodolski.caspergis.services.ProjectListMgr;
+import io.github.bpodolski.caspergis.services.SystemMgr;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -51,14 +50,8 @@ public class OpenProject implements ActionListener {
                 .showOpenDialog();
 
         if (toAdd != null) {
-            ProjectBean projectBean = new ProjectBean();//            
-            projectBean.setName(toAdd.getName());
-            projectBean.setPath(toAdd.getPath());
-
-            ProjectListMgr projectSystemService = Lookups.forPath("System").lookupAll(ProjectListMgr.class).iterator().next();
-            ProjectListMgr projectCoreService = Lookups.forPath("Core").lookupAll(ProjectListMgr.class).iterator().next();
-            projectSystemService.add(projectBean);
-            projectCoreService.add(projectBean);
+            SystemMgr systemMgr = Lookups.forPath("System").lookupAll(SystemMgr.class).iterator().next();
+            systemMgr.addProject(toAdd);
 
         }
 

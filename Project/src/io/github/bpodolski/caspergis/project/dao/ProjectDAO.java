@@ -5,6 +5,7 @@
  */
 package io.github.bpodolski.caspergis.project.dao;
 
+import io.github.bpodolski.caspergis.interfaces.DaoInterface;
 import io.github.bpodolski.caspergis.project.datamodel.*;
 import java.io.File;
 import java.util.List;
@@ -22,12 +23,13 @@ import org.hibernate.service.ServiceRegistry;
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-public class ProjectDAO {
+public class ProjectDAO implements DaoInterface{
 
     private SessionFactory sessionFactory;
     private CgProjectInfo cgProjectInfo;
 
-    public static void createDb(String path) {
+    @Override
+    public void createDb(String path) {
         File f = new File(path);
         if (f.exists()) {
             f.delete();

@@ -5,9 +5,10 @@
  */
 package io.github.bpodolski.caspergis.system.dao;
 
-
 import io.github.bpodolski.caspergis.api.CasperInfo;
 import io.github.bpodolski.caspergis.system.datamodel.CgSysProject;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.util.List;
 import java.util.Properties;
@@ -19,22 +20,47 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 import org.openide.util.NbPreferences;
 
-
-
 /**
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-public class JpaSystemDbDAO {
+public final class JpaSystemDbDAO {
 
     private final SessionFactory sessionFactory;
+    private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
+    
+    private boolean daoReady = false;
+
+    public static final String DAO_READY = "daoReady";
+
+    /**
+     * Get the value of daoReady
+     *
+     * @return the value of daoReady
+     */
+    public boolean isDaoReady() {
+        return daoReady;
+    }
+
+    /**
+     * Set the value of daoReady
+     *
+     * @param daoReady new value of daoReady
+     */
+    public void setDaoReady(boolean daoReady) {
+        boolean oldDaoReady = this.daoReady;
+        this.daoReady = daoReady;
+        propertyChangeSupport.firePropertyChange(DAO_READY, oldDaoReady, daoReady);
+    }
+
 
     public JpaSystemDbDAO() {
-        String DB_SYSTEM_PATH = NbPreferences.forModule(CasperInfo.class).get(CasperInfo.DB_SYSTEM_PATH,"");
+        String DB_SYSTEM_PATH = NbPreferences.forModule(CasperInfo.class).get(CasperInfo.DB_SYSTEM_PATH, "");
+        daoReady = false;
 
         File f = new File(DB_SYSTEM_PATH);
         boolean create = !f.exists();
-        
+
         Configuration configuration = new Configuration();
         Properties properties = new Properties();
 
@@ -60,6 +86,9 @@ public class JpaSystemDbDAO {
 
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
         this.sessionFactory = configuration.buildSessionFactory(serviceRegistry);
+
+        this.setDaoReady(true);//sessionFactory.isOpen());
+
     }
 
     public List<CgSysProject> getProjects() {
@@ -80,34 +109,40 @@ public class JpaSystemDbDAO {
     }
 
     public void saveProject(CgSysProject project) {
-        Session session = this.sessionFactory.openSession();
-        Transaction transaction = null;
-        try {
-            transaction = session.beginTransaction();
-            session.save(project);
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
+        try (Session session = this.sessionFactory.openSession()) {
+            Transaction transaction = null;
+            try {
+                transaction = session.beginTransaction();
+                session.save(project);
+                transaction.commit();
+            } catch (Exception e) {
+                if (transaction != null) {
+                    transaction.rollback();
+                }
+                e.printStackTrace();
             }
-            e.printStackTrace();
-        }
-        session.close();
-    }
-    
+        }    }
+
     public void deleteProject(CgSysProject project) {
-        Session session = this.sessionFactory.openSession();
-        Transaction transaction = null;
-        try {
-            transaction = session.beginTransaction();
-            session.delete(project);
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
+        try (Session session = this.sessionFactory.openSession()) {
+            Transaction transaction = null;
+            try {
+                transaction = session.beginTransaction();
+                session.delete(project);
+                transaction.commit();
+            } catch (Exception e) {
+                if (transaction != null) {
+                    transaction.rollback();
+                }
+                e.printStackTrace();
             }
-            e.printStackTrace();
-        }
-        session.close();
+        }    }
+
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener(listener);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener(listener);
     }
 }

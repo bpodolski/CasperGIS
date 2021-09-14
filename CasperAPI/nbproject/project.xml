@@ -76,6 +76,7 @@
             <public-packages>
                 <package>io.github.bpodolski.caspergis.api</package>
                 <package>io.github.bpodolski.caspergis.beans</package>
+                <package>io.github.bpodolski.caspergis.interfaces</package>
                 <package>io.github.bpodolski.caspergis.model</package>
                 <package>io.github.bpodolski.caspergis.services</package>
                 <package>io.github.bpodolski.caspergis.utils</package>

@@ -27,7 +27,9 @@ public class SystemFactory extends ChildFactory.Detachable<ProjectBean> implemen
 
     public SystemFactory(ModelProjectList model) {
         this.model = model;
+        this.model.addChangeListener(this);
     }
+    
 
     @Override
     protected boolean createKeys(List<ProjectBean> toPopulate) {
@@ -47,13 +49,11 @@ public class SystemFactory extends ChildFactory.Detachable<ProjectBean> implemen
     }
 
     public void add(ProjectBean bean) {
-//        projectList.add(bean);
         this.model.add(bean);
         refresh(true);
     }
 
     public void removeChild(ProjectBean bean) {
-//        projectList.remove(bean);
         this.model.remove(bean);
         refresh(true);
     }

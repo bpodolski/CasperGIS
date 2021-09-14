@@ -8,7 +8,6 @@ package io.github.bpodolski.caspergis.project.project;
 import io.github.bpodolski.caspergis.beans.MapBean;
 import io.github.bpodolski.caspergis.beans.ProjectBean;
 import io.github.bpodolski.caspergis.services.MapListMgr;
-import io.github.bpodolski.caspergis.services.ProjectListMgr;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import org.openide.DialogDescriptor;

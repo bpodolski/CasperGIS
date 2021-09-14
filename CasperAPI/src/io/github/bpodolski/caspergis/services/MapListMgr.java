@@ -7,8 +7,10 @@ package io.github.bpodolski.caspergis.services;
 
 import io.github.bpodolski.caspergis.beans.MapBean;
 import io.github.bpodolski.caspergis.beans.ProjectBean;
+import io.github.bpodolski.caspergis.model.ModelMapitemsList;
 import java.util.ArrayList;
 import java.util.List;
+import org.openide.explorer.ExplorerManager;
 import org.openide.util.Lookup;
 
 /**
@@ -19,6 +21,8 @@ import org.openide.util.Lookup;
  */
 public abstract class MapListMgr {
 
+    public abstract void initModel(ProjectBean projectBean);
+
     /**
      * Base function of service - get the list of maps in project
      *
@@ -28,14 +32,18 @@ public abstract class MapListMgr {
     public abstract List<MapBean> getMapList(ProjectBean projectBean);
 
     /**
-     * Add map     *
-     * @param mapBean  - map to add
+     * Add map
+     *
+     *
+     * @param mapBean - map to add
      * @param projectBean - project with maps
      */
     public abstract void add(MapBean mapBean, ProjectBean projectBean);
 
     /**
-     * Delete map     *
+     * Delete map
+     *
+     *
      * @param mapBean
      */
     public abstract void delete(MapBean mapBean);
@@ -64,9 +72,14 @@ public abstract class MapListMgr {
 
     private static class DefaultMapListMgr extends MapListMgr {
 
+        MapBean mapBean;
+        ModelMapitemsList model;
+        ProjectBean projectBean;
+
         public DefaultMapListMgr() {
         }
 
+    
         @Override
         public List<MapBean> getMapList(ProjectBean projectBean) {
             ArrayList<MapBean> mapList = new <MapBean>ArrayList();
@@ -94,6 +107,11 @@ public abstract class MapListMgr {
         @Override
         public void update(MapBean mapBean) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public void initModel(ProjectBean projectBean) {
+            this.projectBean = projectBean;
         }
     }
 }

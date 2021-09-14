@@ -7,17 +7,12 @@ package io.github.bpodolski.caspergis.gui;
 
 import io.github.bpodolski.caspergis.CgRegistry;
 import io.github.bpodolski.caspergis.Installer;
-import io.github.bpodolski.caspergis.beans.ProjectBean;
-import io.github.bpodolski.caspergis.model.ModelProjectList;
-import io.github.bpodolski.caspergis.gui.nodes.MapNode;
 import io.github.bpodolski.caspergis.gui.nodes.ProjectsRootNode;
-import io.github.bpodolski.caspergis.services.ProjectListMgr;
-import java.awt.BorderLayout;
+import io.github.bpodolski.caspergis.services.SystemMgr;
 import java.beans.IntrospectionException;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import org.netbeans.api.io.IOProvider;
 import org.netbeans.api.io.InputOutput;
 import org.netbeans.api.settings.ConvertAsProperties;
@@ -29,8 +24,10 @@ import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.ExplorerUtils;
+import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
+import org.openide.util.Exceptions;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.actions.SystemAction;
@@ -60,23 +57,27 @@ import org.openide.util.lookup.Lookups;
     "CTL_ProjectListTopComponent=ProjectList Window",
     "HINT_ProjectListTopComponent=This is a ProjectList window"
 })
-public final class ProjectListTopComponent extends TopComponent implements ExplorerManager.Provider {
-
+public final class ProjectListTopComponent extends TopComponent implements ExplorerManager.Provider, PropertyChangeListener {
+    
     private final ExplorerManager mgr = new ExplorerManager();
+    private SystemMgr systemMgr;
     CgRegistry cgr = Installer.cgRegistry;
     InputOutput io = IOProvider.getDefault().getIO("Output", false);
-
+    
     public ProjectListTopComponent() throws IntrospectionException, PropertyVetoException {
         initComponents();
-
+        
+        systemMgr = Lookups.forPath("System").lookupAll(SystemMgr.class).iterator().next();
+        systemMgr.addPropertyChangeListener(this);
+        systemMgr.initSystemDAO();
+        
         setName(Bundle.CTL_ProjectListTopComponent());
         setToolTipText(Bundle.HINT_ProjectListTopComponent());
         putClientProperty(TopComponent.PROP_CLOSING_DISABLED, Boolean.TRUE);
         putClientProperty(TopComponent.PROP_MAXIMIZATION_DISABLED, Boolean.TRUE);
-
+        
         initActions();
         associateLookup(ExplorerUtils.createLookup(mgr, getActionMap()));
-        initView();
     }
 
     /**
@@ -126,67 +127,73 @@ public final class ProjectListTopComponent extends TopComponent implements Explo
     // End of variables declaration//GEN-END:variables
     @Override
     public void componentOpened() {
-
+        try {
+            initView();
+        } catch (IntrospectionException ex) {
+            Exceptions.printStackTrace(ex);
+        } catch (PropertyVetoException ex) {
+            Exceptions.printStackTrace(ex);
+        }
     }
-
+    
     @Override
     public void componentClosed() {
-
+        
     }
-
+    
     void writeProperties(java.util.Properties p) {
         // better to version settings since initial version as advocated at
         // http://wiki.apidesign.org/wiki/PropertyFiles
         p.setProperty("version", "1.0");
         // TODO store your settings
     }
-
+    
     void readProperties(java.util.Properties p) {
         String version = p.getProperty("version");
         // TODO read your settings according to their version
     }
-
+    
     @Override
     public ExplorerManager getExplorerManager() {
         return mgr; //To change body of generated methods, choose Tools | Templates.
     }
-
+    
     private void initActions() {
         CutAction cut = SystemAction.get(CutAction.class);
         getActionMap().put(cut.getActionMapKey(), ExplorerUtils.actionCut(mgr));
-
+        
         CopyAction copy = SystemAction.get(CopyAction.class);
         getActionMap().put(copy.getActionMapKey(), ExplorerUtils.actionCopy(mgr));
-
+        
         PasteAction paste = SystemAction.get(PasteAction.class);
         getActionMap().put(paste.getActionMapKey(), ExplorerUtils.actionPaste(mgr));
-
+        
         DeleteAction delete = SystemAction.get(DeleteAction.class);
         getActionMap().put(delete.getActionMapKey(), ExplorerUtils.actionDelete(mgr, true));
     }
-
+    
     public void initView() throws IntrospectionException, PropertyVetoException {
-        Collection<? extends ProjectListMgr> srvList = Lookups.forPath("System").lookupAll(ProjectListMgr.class);
-        ProjectListMgr projectListService = srvList.iterator().next();
-
-        List<ProjectBean> projectList = new ArrayList();
-        projectList.add(projectListService.getSystemProject());
-        projectList.addAll(projectListService.getProjectList());
-        ModelProjectList model = new ModelProjectList(projectList);
-        CgRegistry.modelProjectList = model;
-
-        Node rootNode = new ProjectsRootNode(model);
-        rootNode.setDisplayName("System");
-
+        Node rootNode;
+        if (systemMgr.isSystemDAOready()) {
+            
+            rootNode = new ProjectsRootNode(systemMgr.getModelProjectList());
+            rootNode.setDisplayName("System");
+            this.view.setRootVisible(false);
+        } else {
+            rootNode = new AbstractNode(Children.LEAF);
+            rootNode.setDisplayName("SYSTEM ERROR");
+            this.view.setRootVisible(true);
+        }
         mgr.setRootContext(rootNode);
         rootNode.setPreferred(false);
-
+        
         expandTreeNode(rootNode);
+        
     }
-
+    
     private void expandTreeNode(final Node node) {
         view.expandNode(node);
-
+        
         Children children = node.getChildren();
         if (null != children) {
             int nodeCount = children.getNodesCount();
@@ -195,5 +202,18 @@ public final class ProjectListTopComponent extends TopComponent implements Explo
             }
         }
     }
+    
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        String propertyName = evt.getPropertyName();
+        if (propertyName.equals("SYSTEM_DAO_READY")) {
+            if((boolean) evt.getNewValue()) try {
+                this.initView();
+            } catch (IntrospectionException | PropertyVetoException ex) {
+                Exceptions.printStackTrace(ex);
+            }
 
+        }
+    }
+    
 }

@@ -18,7 +18,6 @@ import io.github.bpodolski.caspergis.services.MapExplorerManagerMgr;
 import io.github.bpodolski.caspergis.services.MapListMgr;
 import java.beans.IntrospectionException;
 import java.io.File;
-import java.util.Collection;
 import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -37,59 +36,58 @@ public class ProjectItemsFactory extends ChildFactory.Detachable<ProjectitemBean
     private final ProjectBean projectBean;
     MapListMgr mapListMgr;
     MapExplorerManagerMgr explorerManagerMgr;
-    
+
     ModelMapsList modelMapsList = new ModelMapsList();
 
     public ProjectItemsFactory(ProjectBean projectBean) {
         this.projectBean = projectBean;
         File f = new File(projectBean.getPath());
 
-        Collection<? extends MapListMgr> srvList = Lookups.forPath("Project").lookupAll(MapListMgr.class);
-        if (srvList.iterator().hasNext()) {
-            this.mapListMgr = srvList.iterator().next();
-        } else {
+        this.mapListMgr = Lookups.forPath("Project").lookupAll(MapListMgr.class).iterator().next();
+        if (this.mapListMgr == null) {
             this.mapListMgr = MapListMgr.getDefault();
         }
 
-        Collection<? extends MapExplorerManagerMgr> srvMapExp = Lookups.forPath("Core").lookupAll(MapExplorerManagerMgr.class);
-        if (srvMapExp.iterator().hasNext()) {
-            this.explorerManagerMgr = srvMapExp.iterator().next();
-        } else {
-            this.explorerManagerMgr = MapExplorerManagerMgr.getDefault();
+        this.explorerManagerMgr =  Lookups.forPath("Core").lookupAll(MapExplorerManagerMgr.class).iterator().next();
+        if (this.explorerManagerMgr == null) {
+               this.explorerManagerMgr = MapExplorerManagerMgr.getDefault();
         }
 
         if (f.exists()) {
             this.modelMapsList.addAll(mapListMgr.getMapList(projectBean));
         }
-        
-        CgRegistry.modelMapsList.put(projectBean, modelMapsList);
+//        
+//        
+//
+//        CgRegistry.modelMapsList.put(projectBean, modelMapsList);
 
     }
 
     @Override
-    protected boolean createKeys(List<ProjectitemBean> list) {
-       
-        list.addAll(this.modelMapsList.list());
+    protected boolean createKeys(List<ProjectitemBean> listProjectitemBean) {
+
+        listProjectitemBean.addAll(this.modelMapsList.list());
         return true;
     }
 
     @Override
-    protected Node createNodeForKey(ProjectitemBean key) {
+    protected Node createNodeForKey(ProjectitemBean projectitemBean) {
         BeanNode node = null;
 
         try {
-            if (key.getBeanType() == BeanType.MAP) {
-                MapBean mb = (MapBean) key;
+            if (projectitemBean.getBeanType() == BeanType.MAP) {
+                MapBean mb = (MapBean) projectitemBean;
                 node = new MapNode(mb);
                 MapNode mn = (MapNode) node;
                 mn.setFactory(this);
 
                 explorerManagerMgr.addMapExplorerManager(mb);
+//                explorerManagerMgr.addModelMapitems(mb);
 
             }
-            if (key.getBeanType() == BeanType.PRINTOUT) {
+            if (projectitemBean.getBeanType() == BeanType.PRINTOUT) {
 
-                node = new PrintoutNode((PrintoutBean) key);
+                node = new PrintoutNode((PrintoutBean) projectitemBean);
             }
 
         } catch (IntrospectionException ex) {
@@ -97,18 +95,17 @@ public class ProjectItemsFactory extends ChildFactory.Detachable<ProjectitemBean
         }
         return node;
     }
-    
-        
+
     @Override
     protected void addNotify() {
         modelMapsList.addChangeListener(this);
     }
-    
+
     @Override
     protected void removeNotify() {
-        modelMapsList.removeChangeListener(this);        
+        modelMapsList.removeChangeListener(this);
     }
-    
+
     @Override
     public void stateChanged(ChangeEvent e) {
         refresh(true);
@@ -117,6 +114,5 @@ public class ProjectItemsFactory extends ChildFactory.Detachable<ProjectitemBean
     public ModelMapsList getModel() {
         return modelMapsList;
     }
-    
-    
+
 }

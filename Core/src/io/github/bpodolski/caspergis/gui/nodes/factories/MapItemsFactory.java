@@ -9,7 +9,7 @@ import io.github.bpodolski.caspergis.beans.BeanType;
 import io.github.bpodolski.caspergis.beans.MapBean;
 import io.github.bpodolski.caspergis.beans.MapitemBean;
 import io.github.bpodolski.caspergis.gui.nodes.MapItemNode;
-import io.github.bpodolski.caspergis.model.ModelMapElementsList;
+import io.github.bpodolski.caspergis.model.ModelMapitemsList;
 import io.github.bpodolski.caspergis.services.MapitemListMgr;
 import java.beans.IntrospectionException;
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public class MapItemsFactory extends ChildFactory.Detachable<MapitemBean> {
     private final MapitemListMgr mapitemListMgr;
     private List<MapitemBean> mapItemsList = new ArrayList();
     
-    private ModelMapElementsList model = new ModelMapElementsList();
+    private ModelMapitemsList model = new ModelMapitemsList();
     
     public MapItemsFactory(MapBean mapBean) {
         this.mapBean = mapBean;

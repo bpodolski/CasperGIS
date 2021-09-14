@@ -12,10 +12,12 @@ import io.github.bpodolski.caspergis.project.CgRegistryProject;
 import io.github.bpodolski.caspergis.project.dao.ProjectDAO;
 import io.github.bpodolski.caspergis.project.datamodel.CgLayer;
 import io.github.bpodolski.caspergis.project.datamodel.CgMap;
+import io.github.bpodolski.caspergis.services.MapObjectMgr;
 import io.github.bpodolski.caspergis.services.MapitemListMgr;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -28,22 +30,25 @@ public class ProjectMapitemListMgr extends MapitemListMgr {
     @Override
     public List<MapitemBean> getMapItemsList(MapBean mapBean) {
         ArrayList<MapitemBean> mapItemsList = new <MapitemBean>ArrayList();
-        CgMap cgMap = (CgMap) CgRegistryProject.cgMapMap.get(mapBean);
-        if (cgMap == null) {
-            return mapItemsList;
-        }
-
-        ProjectDAO dao = (ProjectDAO) CgRegistryProject.cgMapDaoMap.get(mapBean);
-                
-        Iterator<CgLayer> itr = dao.getLayers(cgMap).iterator();//cgMap.getLayers().iterator();
         
-        while (itr.hasNext()) {
-            CgLayer cgl = itr.next();
-            LayerBean lb = new LayerBean(null, cgl.getName());
-            
-            CgRegistryProject.cgLayerMap.put(lb, cgl);
-            mapItemsList.add(lb);
-        }
+//        CgMap cgMap = (CgMap) CgRegistryProject.cgMapMap.get(mapBean);
+//        
+//        if (cgMap == null) {
+//            return mapItemsList;
+//        }
+//
+//        MapObjectMgr mapObjectMgr = Lookups.forPath("Project").lookupAll(MapObjectMgr.class).iterator().next();
+//        ProjectDAO dao = (ProjectDAO) mapObjectMgr.getDao(mapBean);
+//                
+//        Iterator<CgLayer> itr = dao.getLayers(cgMap).iterator();//cgMap.getLayers().iterator();
+//        
+//        while (itr.hasNext()) {
+//            CgLayer cgl = itr.next();
+//            LayerBean lb = new LayerBean(null, cgl.getName());
+//            
+//            CgRegistryProject.cgLayerMap.put(lb, cgl);
+//            mapItemsList.add(lb);
+//        }
 
         return mapItemsList;
     }

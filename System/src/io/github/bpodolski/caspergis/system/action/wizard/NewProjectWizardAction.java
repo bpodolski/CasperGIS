@@ -6,7 +6,6 @@
 package io.github.bpodolski.caspergis.system.action.wizard;
 
 import io.github.bpodolski.caspergis.beans.ProjectBean;
-import io.github.bpodolski.caspergis.services.ProjectListMgr;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -69,11 +68,9 @@ public final class NewProjectWizardAction implements ActionListener {
             projectBean.setName(sProjectTitle);
             projectBean.setPath(sProjectFile);
 
-            ProjectListMgr projectSystemService = Lookups.forPath("System").lookupAll(ProjectListMgr.class).iterator().next();
-            ProjectListMgr projectCoreService = Lookups.forPath("Core").lookupAll(ProjectListMgr.class).iterator().next();
+//            ProjectListMgr projectSystemService = Lookups.forPath("System").lookupAll(ProjectListMgr.class).iterator().next();
+//            ProjectListMgr projectCoreService = Lookups.forPath("Core").lookupAll(ProjectListMgr.class).iterator().next();
 
-            projectSystemService.add(projectBean);
-            projectCoreService.add(projectBean);
 
         }
     }

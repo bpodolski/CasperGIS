@@ -7,6 +7,7 @@ package io.github.bpodolski.caspergis.gui.nodes.services;
 
 import io.github.bpodolski.caspergis.beans.MapBean;
 import io.github.bpodolski.caspergis.gui.nodes.InternalMapNode;
+import io.github.bpodolski.caspergis.model.ModelMapitemsList;
 import io.github.bpodolski.caspergis.services.MapExplorerManagerMgr;
 import java.beans.IntrospectionException;
 import java.beans.PropertyChangeEvent;
@@ -28,7 +29,9 @@ import org.openide.util.lookup.ServiceProvider;
 public class CoreMapExplorerManagerMgr extends MapExplorerManagerMgr implements PropertyChangeListener {
 
     private final HashMap mapExplorerManagers = new HashMap<MapBean, ExplorerManager>();
+    
     private final ExplorerManager defaultMgr = new ExplorerManager();
+    
     private MapBean activeMapBean;
     private final MapBean defaultMapBean = new MapBean(null, "[No active map]");
 
@@ -42,6 +45,7 @@ public class CoreMapExplorerManagerMgr extends MapExplorerManagerMgr implements 
             rootNode.setName("[No active map]");
             defaultMgr.setRootContext(rootNode);
             mapExplorerManagers.put(defaultMapBean, defaultMgr);
+            
             clearActiveMapBean();
 
         } catch (IntrospectionException ex) {
@@ -53,8 +57,9 @@ public class CoreMapExplorerManagerMgr extends MapExplorerManagerMgr implements 
     public void addMapExplorerManager(MapBean mapBean, ExplorerManager mgr) {
         mapExplorerManagers.put(mapBean, mgr);
         mapBean.addPropertyChangeListener(this);
-
     }
+
+    
 
     @Override
     public void addMapExplorerManager(MapBean mapBean) {
@@ -96,7 +101,7 @@ public class CoreMapExplorerManagerMgr extends MapExplorerManagerMgr implements 
 
     @Override
     public void clearActiveMapBean() {
-           setActiveMapBean(defaultMapBean);
+        setActiveMapBean(defaultMapBean);
     }
 
     @Override
@@ -121,7 +126,6 @@ public class CoreMapExplorerManagerMgr extends MapExplorerManagerMgr implements 
             }
         }
 
-       
     }
 
 }

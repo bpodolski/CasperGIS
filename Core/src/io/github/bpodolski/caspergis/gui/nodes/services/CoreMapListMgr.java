@@ -8,10 +8,10 @@ package io.github.bpodolski.caspergis.gui.nodes.services;
 import io.github.bpodolski.caspergis.CgRegistry;
 import io.github.bpodolski.caspergis.beans.MapBean;
 import io.github.bpodolski.caspergis.beans.ProjectBean;
+import io.github.bpodolski.caspergis.model.ModelMapitemsList;
 import io.github.bpodolski.caspergis.model.ModelMapsList;
-import io.github.bpodolski.caspergis.model.ModelProjectList;
 import io.github.bpodolski.caspergis.services.MapListMgr;
-import io.github.bpodolski.caspergis.services.ProjectListMgr;
+import java.util.HashMap;
 import java.util.List;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -21,6 +21,34 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service = MapListMgr.class, path = "Core")
 public class CoreMapListMgr extends MapListMgr {
+
+    private final HashMap mapModelElementsManagers = new HashMap<MapBean, ModelMapitemsList>();
+    private final ModelMapitemsList defaultModel = new ModelMapitemsList();
+
+
+    @Override
+    public void initModel(ProjectBean projectBean) {
+
+    }
+
+//    @Override
+//    public void addModelMapitems(MapBean mapBean) {
+//        addModelMapitems(mapBean, new ModelMapitemsList());
+//    }
+//
+//    @Override
+//    public void addModelMapitems(MapBean mapBean, ModelMapitemsList model) {
+//        mapModelElementsManagers.put(mapBean, model);
+//    }
+//
+//    @Override
+//    public ModelMapitemsList getModelMapitems(MapBean mapBean) {
+//        ModelMapitemsList m = (ModelMapitemsList) mapModelElementsManagers.get(mapBean);
+//        if (m != null) {
+//            return m;
+//        }
+//        return this.defaultModel;
+//    }
 
     @Override
     public List<MapBean> getMapList(ProjectBean projectBean) {

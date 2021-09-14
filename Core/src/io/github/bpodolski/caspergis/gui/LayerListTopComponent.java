@@ -132,6 +132,8 @@ public final class LayerListTopComponent extends TopComponent implements Explore
         pnl.add(lblTest);
 
         add(pnl, java.awt.BorderLayout.NORTH);
+
+        view.setRootVisible(false);
         add(view, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 

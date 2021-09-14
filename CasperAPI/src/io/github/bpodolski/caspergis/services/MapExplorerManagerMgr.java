@@ -6,6 +6,7 @@
 package io.github.bpodolski.caspergis.services;
 
 import io.github.bpodolski.caspergis.beans.MapBean;
+import io.github.bpodolski.caspergis.model.ModelMapitemsList;
 import javax.swing.event.ChangeListener;
 import org.openide.explorer.ExplorerManager;
 import org.openide.util.Lookup;
@@ -29,7 +30,7 @@ public abstract class MapExplorerManagerMgr {
     public abstract ExplorerManager getMapExplorerManager(MapBean mapBean);
 
     public abstract void deleteMapExplorerManager(MapBean mapBean);
-
+    
     public abstract void addChangeListener(ChangeListener l);
 
     public abstract void removeChangeListener(ChangeListener l);
@@ -46,10 +47,12 @@ public abstract class MapExplorerManagerMgr {
 
         MapBean mapBean;
         ExplorerManager mgr;
+        ModelMapitemsList model;
 
         public DefaultMapExplorerManagerMgr() {
             this.mapBean = new MapBean(null, "[No active map]");
             this.mgr = new ExplorerManager();
+            this.model = new ModelMapitemsList();
         }
 
         @Override
@@ -98,5 +101,7 @@ public abstract class MapExplorerManagerMgr {
         public void removeChangeListener(ChangeListener l) {
 //            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
+
+       
     }
 }

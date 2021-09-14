@@ -19,9 +19,9 @@ import java.util.HashMap;
  */
 public class CgRegistryProject {
 
-    public static final HashMap cgProjectDaoMap = new HashMap<ProjectBean, ProjectDAO>();
-    public static final HashMap cgMapDaoMap = new HashMap<MapBean, ProjectDAO>();
-    
-    public static final HashMap cgMapMap = new HashMap<MapBean, CgMap>();
-    public static final HashMap cgLayerMap = new HashMap<LayerBean, CgLayer>();
+//    public static final HashMap cgProjectDaoMap = new HashMap<ProjectBean, ProjectDAO>();
+//    public static final HashMap cgMapDaoMap = new HashMap<MapBean, ProjectDAO>();
+//    
+//    public static final HashMap cgMapMap = new HashMap<MapBean, CgMap>();
+//    public static final HashMap cgLayerMap = new HashMap<LayerBean, CgLayer>();
 }

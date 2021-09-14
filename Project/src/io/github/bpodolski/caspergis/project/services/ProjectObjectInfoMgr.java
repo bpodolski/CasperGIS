@@ -6,34 +6,31 @@
 package io.github.bpodolski.caspergis.project.services;
 
 import io.github.bpodolski.caspergis.beans.ProjectBean;
-import static io.github.bpodolski.caspergis.project.CgRegistryProject.cgProjectDaoMap;
+import io.github.bpodolski.caspergis.interfaces.DaoInterface;
+
 import io.github.bpodolski.caspergis.project.dao.ProjectDAO;
 import io.github.bpodolski.caspergis.project.datamodel.CgProjectInfo;
-import io.github.bpodolski.caspergis.services.ProjectMgr;
+import io.github.bpodolski.caspergis.services.ProjectObjectMgr;
 import java.io.File;
+import java.util.HashMap;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-@ServiceProvider(service = ProjectMgr.class, path = "Project")
-public class ProjectInfoMgr extends ProjectMgr {
+@ServiceProvider(service = ProjectObjectMgr.class, path = "Project")
+public class ProjectObjectInfoMgr extends ProjectObjectMgr {
+
+    private HashMap cgProjectDaoMap = new HashMap<ProjectBean, ProjectDAO>();
 
     @Override
     public boolean setupProjectInfo(ProjectBean projectBean) {
-
-        File fProject = new File(projectBean.getPath());
-        if (!fProject.exists()) {
-            ProjectDAO.createDb(projectBean.getPath());
-        }
-
-        ProjectDAO dao = (ProjectDAO) cgProjectDaoMap.get(projectBean);
-        if (dao == null) {
-            dao = new ProjectDAO(projectBean.getPath(), false);
-            cgProjectDaoMap.put(projectBean, dao);
-        }
-
+        ProjectDAO dao;
+        File fProject = new File(projectBean.getPath());        
+        dao = new ProjectDAO(projectBean.getPath(), !fProject.exists());
+        cgProjectDaoMap.put(projectBean, dao);
+        
         CgProjectInfo pi = dao.getProjectInfo();
         pi.setName(projectBean.getName());
         pi.setPath(projectBean.getPath());
@@ -44,7 +41,12 @@ public class ProjectInfoMgr extends ProjectMgr {
 
     @Override
     public void updateProjectInfo(ProjectBean projectBean) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ProjectDAO dao = (ProjectDAO) cgProjectDaoMap.get(projectBean);
+    }
+
+    @Override
+    public DaoInterface getDao(ProjectBean projectBean) {
+        return (DaoInterface) cgProjectDaoMap.get(projectBean);
     }
 
 }

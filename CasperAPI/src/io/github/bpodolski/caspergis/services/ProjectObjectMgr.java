@@ -6,7 +6,7 @@
 package io.github.bpodolski.caspergis.services;
 
 import io.github.bpodolski.caspergis.beans.ProjectBean;
-import java.util.List;
+import io.github.bpodolski.caspergis.interfaces.DaoInterface;
 import org.openide.util.Lookup;
 
 /**
@@ -15,26 +15,28 @@ import org.openide.util.Lookup;
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-public abstract class ProjectMgr {
+public abstract class ProjectObjectMgr {
 
     /**
-     *
+     * 
      * @param projectBean
-     * @return
+     * @return true jeśli utworzenie projectDAO się powiodło
      */
     public abstract boolean setupProjectInfo(ProjectBean projectBean);
 
     public abstract void updateProjectInfo(ProjectBean projectBean);
+    
+    public abstract DaoInterface getDao(ProjectBean projectBean);
 
-    public static ProjectMgr getDefault() {
-        ProjectMgr service = Lookup.getDefault().lookup(ProjectMgr.class);
+    public static ProjectObjectMgr getDefault() {
+        ProjectObjectMgr service = Lookup.getDefault().lookup(ProjectObjectMgr.class);
         if (service == null) {
             service = new DefaultProjectMgr();
         }
         return service;
     }
 
-    private static class DefaultProjectMgr extends ProjectMgr {
+    private static class DefaultProjectMgr extends ProjectObjectMgr {
 
         @Override
         public boolean setupProjectInfo(ProjectBean projectBean) {
@@ -43,6 +45,11 @@ public abstract class ProjectMgr {
 
         @Override
         public void updateProjectInfo(ProjectBean projectBean) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public DaoInterface getDao(ProjectBean projectBean) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
     }

@@ -8,17 +8,12 @@ package io.github.bpodolski.caspergis.gui.nodes;
 import io.github.bpodolski.caspergis.model.ModelProjectList;
 import io.github.bpodolski.caspergis.gui.nodes.factories.SystemFactory;
 import java.util.ArrayList;
-import java.util.List;
 import javax.swing.Action;
-import org.openide.actions.MoveDownAction;
-import org.openide.actions.MoveUpAction;
-import org.openide.actions.RenameAction;
 import org.openide.actions.ReorderAction;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Index;
 import org.openide.nodes.Node;
-import org.openide.util.Utilities;
 import org.openide.util.actions.SystemAction;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
@@ -52,6 +47,8 @@ public class ProjectsRootNode extends AbstractNode {
                 model.reorder(perm);
             }
         });
+        
+        ic.add(this);
         
     }
     
