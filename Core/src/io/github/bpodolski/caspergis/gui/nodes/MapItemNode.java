@@ -7,7 +7,7 @@ package io.github.bpodolski.caspergis.gui.nodes;
 
 import io.github.bpodolski.caspergis.beans.MapitemBean;
 import io.github.bpodolski.caspergis.beans.MapitemFlavor;
-import io.github.bpodolski.caspergis.gui.nodes.factories.MapItemsFactory;
+import io.github.bpodolski.caspergis.gui.nodes.factories.MapitemsFactory;
 import java.awt.datatransfer.Transferable;
 import java.beans.IntrospectionException;
 import java.io.IOException;
@@ -30,11 +30,11 @@ import org.openide.util.lookup.InstanceContent;
  */
 public class MapItemNode extends BeanNode<MapitemBean> {
 
-    private MapItemsFactory factory;
+    private MapitemsFactory factory;
     private MapitemBean bean;
     private InstanceContent instContent;
 
-    public MapItemNode(MapitemBean bean, Children children, Lookup lookup, MapItemsFactory mapItemsFactory) throws IntrospectionException {
+    public MapItemNode(MapitemBean bean, Children children, Lookup lookup, MapitemsFactory mapItemsFactory) throws IntrospectionException {
         super(bean, children, lookup);
         this.factory = mapItemsFactory;
         this.bean = bean;
@@ -75,7 +75,7 @@ public class MapItemNode extends BeanNode<MapitemBean> {
     public void destroy() throws IOException {
 //        factory.removeChild(bean);
 //        fireNodeDestroyed();
-        factory.removeChild(getLookup().lookup(MapitemBean.class));
+        factory.getModel().remove(getLookup().lookup(MapitemBean.class));
     }
 
     @Override

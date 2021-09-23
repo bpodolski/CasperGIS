@@ -35,23 +35,18 @@ import org.openide.util.lookup.Lookups;
 })
 @NbBundle.Messages("CTL_ActivateMap=Activate Map")
 public class ActivateMap implements ActionListener {
-    
+
     private final MapBean context;
 
     //Serwis 
     MapExplorerManagerMgr explorerManagerMgr;
-    
+
     public ActivateMap(MapBean context) {
         this.context = context;
-        Collection<? extends MapExplorerManagerMgr> srvMapExp = Lookups.forPath("Core").lookupAll(MapExplorerManagerMgr.class);
-        if (srvMapExp.iterator().hasNext()) {
-            this.explorerManagerMgr = srvMapExp.iterator().next();
-        } else {
-            this.explorerManagerMgr = MapExplorerManagerMgr.getDefault();
-        }
-        
+        this.explorerManagerMgr = Lookups.forPath("Core").lookupAll(MapExplorerManagerMgr.class).iterator().next();
+
     }
-    
+
     @Override
     public void actionPerformed(ActionEvent e) {
         explorerManagerMgr.getActiveMapBean().setActive(false);

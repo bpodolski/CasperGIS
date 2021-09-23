@@ -29,7 +29,7 @@ public class ModelMapsList {
         this.mapBeans = mapBeans;
     }
 
-    public List<? extends MapBean> list() {
+    public List<MapBean> list() {
         return mapBeans;
     }
 

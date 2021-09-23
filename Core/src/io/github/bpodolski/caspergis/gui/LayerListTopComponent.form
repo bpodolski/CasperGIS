@@ -88,9 +88,6 @@
       </SubComponents>
     </Container>
     <Component class="org.openide.explorer.view.BeanTreeView" name="view">
-      <Properties>
-        <Property name="rootVisible" type="boolean" value="false"/>
-      </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout" value="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout$BorderConstraintsDescription">
           <BorderConstraints direction="Center"/>

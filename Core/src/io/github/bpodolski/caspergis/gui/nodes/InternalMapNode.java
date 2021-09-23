@@ -9,12 +9,16 @@ import io.github.bpodolski.caspergis.beans.LayerBean;
 import io.github.bpodolski.caspergis.beans.MapBean;
 import io.github.bpodolski.caspergis.beans.MapitemBean;
 import io.github.bpodolski.caspergis.beans.MapitemFlavor;
-import io.github.bpodolski.caspergis.gui.nodes.factories.MapItemsFactory;
+import io.github.bpodolski.caspergis.gui.nodes.factories.MapitemsFactory;
+import io.github.bpodolski.caspergis.services.MapExplorerManagerMgr;
 import io.github.bpodolski.caspergis.utils.LayerFileFilter;
+import java.awt.Image;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.beans.IntrospectionException;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -26,6 +30,7 @@ import org.openide.nodes.Index;
 import org.openide.nodes.Node;
 import org.openide.nodes.NodeTransfer;
 import org.openide.util.Exceptions;
+import org.openide.util.ImageUtilities;
 import org.openide.util.datatransfer.PasteType;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
@@ -36,47 +41,40 @@ import org.openide.util.lookup.ProxyLookup;
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-public class InternalMapNode extends BeanNode<MapBean> {
+public class InternalMapNode extends BeanNode<MapBean> implements PropertyChangeListener {
 
-    private MapItemsFactory factory;
-    private MapBean bean;
+    private MapitemsFactory factory;
+    private MapBean mapBean;
     private InstanceContent instContent;
 
-    public InternalMapNode(MapBean bean) throws IntrospectionException {
-        this(bean, new MapItemsFactory(bean), new InstanceContent());
-    }
+//    public InternalMapNode(MapBean bean) throws IntrospectionException {
+//        super(bean);
+//        this.mapBean = bean;
+//      
+//    }
 
-    public InternalMapNode(MapBean bean, final MapItemsFactory factory, InstanceContent instContent) throws IntrospectionException {
-        super(bean, Children.create(factory, true), new ProxyLookup(Lookups.singleton(bean), new AbstractLookup(instContent)));
+    public InternalMapNode(MapBean mapBean) throws IntrospectionException {
+        this(mapBean, new MapitemsFactory(mapBean), new InstanceContent());
+//        this(bean, null, new InstanceContent());
+    }
+    
+    public InternalMapNode(MapBean mapBean, final MapitemsFactory factory, InstanceContent instContent) throws IntrospectionException {
+        super(mapBean, Children.LEAF, new ProxyLookup(Lookups.singleton(mapBean), new AbstractLookup(instContent)));
+//        super(bean, Children.create(factory, true), new ProxyLookup(Lookups.singleton(bean), new AbstractLookup(instContent)));
 
         setIconBaseWithExtension("io/github/bpodolski/caspergis/res/map.png");
         this.instContent = instContent;
 
-        this.bean = bean;
-        this.factory = factory;
-        this.setDisplayName(bean.getName());
+        this.mapBean = mapBean;
+        this.setDisplayName(mapBean.getName());
         this.instContent = instContent;
 
-        instContent.add(new Index.Support() {
-
-            @Override
-            public Node[] getNodes() {
-                return getChildren().getNodes();
-            }
-
-            @Override
-            public int getNodesCount() {
-                return getNodes().length;
-            }
-
-            @Override
-            public void reorder(int[] perm) {
-                factory.reorder(perm);
-
-            }
-        });
 
         instContent.add(this);
+
+        this.mapBean = mapBean;
+        setIconBaseWithExtension("io/github/bpodolski/caspergis/res/map.png");
+        mapBean.addPropertyChangeListener(this);
     }
 
     @Override
@@ -86,7 +84,7 @@ public class InternalMapNode extends BeanNode<MapBean> {
 
     @Override
     public Action[] getActions(boolean context) {
-        if (bean.isActive()) {
+        if (mapBean.isActive()) {
             return new Action[]{
                 PasteAction.get(PasteAction.class),};
         } else {
@@ -105,13 +103,13 @@ public class InternalMapNode extends BeanNode<MapBean> {
 
     @Override
     public PasteType getDropType(final Transferable t, int arg1, int arg2) {
-        if (this.bean.isActive()) {
+        if (this.mapBean.isActive()) {
             if (t.isDataFlavorSupported(MapitemFlavor.MAPELEMENT_FLAVOR)) {
                 return new PasteType() {
                     @Override
                     public Transferable paste() throws IOException {
                         try {
-                            factory.add((MapitemBean) t.getTransferData(MapitemFlavor.MAPELEMENT_FLAVOR));
+                            factory.getModel().add((MapitemBean) t.getTransferData(MapitemFlavor.MAPELEMENT_FLAVOR));
                             final Node node = NodeTransfer.node(t, NodeTransfer.DND_MOVE + NodeTransfer.CLIPBOARD_CUT);
 //                        if (node != null) {
 //                            node.destroy();
@@ -134,7 +132,7 @@ public class InternalMapNode extends BeanNode<MapBean> {
                                 if (LayerFileFilter.LAYER_FILEFILTER.accept(file)) {
                                     LayerBean lb = new LayerBean(file.getName());
                                     lb.setConnectionStr(file.getAbsolutePath());
-                                    factory.add(lb);
+                                    factory.getModel().add(lb);
                                 }
                             }
                         } catch (UnsupportedFlavorException ex) {
@@ -151,13 +149,35 @@ public class InternalMapNode extends BeanNode<MapBean> {
         return null;
     }
 
-    public MapItemsFactory getFactory() {
+    public MapitemsFactory getFactory() {
         return factory;
     }
 
     @Override
     public MapBean getBean() {
-        return bean;
+        return mapBean;
+    }
+
+    @Override
+    public Image getIcon(int type) {
+        if (mapBean != null) {
+            if (mapBean.isActive()) {
+                return ImageUtilities.loadImage("io/github/bpodolski/caspergis/res/mapActive.png");
+            }
+        }
+        return ImageUtilities.loadImage("io/github/bpodolski/caspergis/res/map.png");
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+
+        if (this.mapBean.isActive()) {
+            setIconBaseWithExtension("io/github/bpodolski/caspergis/res/mapActive.png");
+        } else {
+            setIconBaseWithExtension("io/github/bpodolski/caspergis/res/map.png");
+        }
+
+        this.fireIconChange();
     }
 
 }

@@ -6,27 +6,21 @@
 package io.github.bpodolski.caspergis.gui.nodes;
 
 import io.github.bpodolski.caspergis.beans.MapBean;
-import io.github.bpodolski.caspergis.beans.ProjectBean;
 import io.github.bpodolski.caspergis.gui.MapDisplayerTopComponent;
-import io.github.bpodolski.caspergis.gui.nodes.factories.ProjectItemsFactory;
+import io.github.bpodolski.caspergis.gui.nodes.factories.ProjectitemsFactory;
+import io.github.bpodolski.caspergis.services.MapExplorerManagerMgr;
 import java.awt.Image;
 import java.beans.IntrospectionException;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 import javax.swing.Action;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import org.openide.DialogDisplayer;
-import org.openide.NotifyDescriptor;
 import org.openide.actions.MoveDownAction;
 import org.openide.actions.MoveUpAction;
 import org.openide.actions.OpenAction;
 import org.openide.actions.RenameAction;
-import org.openide.actions.ReorderAction;
 import org.openide.awt.Actions;
 import org.openide.cookies.OpenCookie;
 import org.openide.nodes.BeanNode;
@@ -34,7 +28,6 @@ import org.openide.nodes.Children;
 import org.openide.nodes.Index;
 import org.openide.nodes.Node;
 import org.openide.util.ImageUtilities;
-import org.openide.util.Utilities;
 import org.openide.util.actions.SystemAction;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
@@ -49,8 +42,9 @@ import org.openide.windows.WindowManager;
  */
 public class MapNode extends BeanNode<MapBean> implements PropertyChangeListener {
 
-    MapBean mapBean;
-    ProjectItemsFactory factory;
+    private MapBean mapBean;
+    private ProjectitemsFactory factory;
+    
 
     public MapNode(MapBean mapBean) throws IntrospectionException {
         this(mapBean, new InstanceContent());
@@ -58,6 +52,8 @@ public class MapNode extends BeanNode<MapBean> implements PropertyChangeListener
 
     public MapNode(MapBean mapBean, InstanceContent ic) throws IntrospectionException {
         super(mapBean, Children.LEAF, new ProxyLookup(new AbstractLookup(ic), Lookups.singleton(mapBean)));
+//        explorerManagerMgr = Lookups.forPath("Core").lookupAll(MapExplorerManagerMgr.class).iterator().next();
+        
         ic.add((OpenCookie) () -> {
             TopComponent tc = (TopComponent) findTopComponent(mapBean);
             if (tc == null) {
@@ -86,6 +82,7 @@ public class MapNode extends BeanNode<MapBean> implements PropertyChangeListener
         });
 
         this.mapBean = mapBean;
+//        explorerManagerMgr.addMapExplorerManager(mapBean);
         setIconBaseWithExtension("io/github/bpodolski/caspergis/res/map.png");
         mapBean.addPropertyChangeListener(this);
 
@@ -190,11 +187,11 @@ public class MapNode extends BeanNode<MapBean> implements PropertyChangeListener
         fireNodeDestroyed();
     }
 
-    public ProjectItemsFactory getFactory() {
+    public ProjectitemsFactory getFactory() {
         return factory;
     }
 
-    public void setFactory(ProjectItemsFactory factory) {
+    public void setFactory(ProjectitemsFactory factory) {
         this.factory = factory;
     }
 

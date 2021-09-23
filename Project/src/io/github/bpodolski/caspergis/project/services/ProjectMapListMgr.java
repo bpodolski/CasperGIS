@@ -7,14 +7,12 @@ package io.github.bpodolski.caspergis.project.services;
 
 import io.github.bpodolski.caspergis.beans.MapBean;
 import io.github.bpodolski.caspergis.beans.ProjectBean;
-import io.github.bpodolski.caspergis.model.ModelMapitemsList;
+import io.github.bpodolski.caspergis.model.ModelMapsList;
 import io.github.bpodolski.caspergis.project.CgRegistryProject;
 import io.github.bpodolski.caspergis.project.dao.ProjectDAO;
 import io.github.bpodolski.caspergis.project.datamodel.CgMap;
 import io.github.bpodolski.caspergis.services.MapListMgr;
 import io.github.bpodolski.caspergis.services.ProjectObjectMgr;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import org.openide.util.lookup.Lookups;
@@ -27,14 +25,8 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = MapListMgr.class, path = "Project")
 public class ProjectMapListMgr extends MapListMgr {
 
-    private final HashMap mapModelElementsManagers = new HashMap<MapBean, ModelMapitemsList>();
-    private final HashMap mapDaoMap = new HashMap<MapBean, ProjectDAO>();
-    private final HashMap mapMap = new HashMap<MapBean, CgMap>();
-
     @Override
     public void initModel(ProjectBean projectBean) {
-        ArrayList<MapBean> mapList = new <MapBean>ArrayList();
-
         ProjectObjectMgr projectObjectMgr = Lookups.forPath("Project").lookupAll(ProjectObjectMgr.class).iterator().next();
         ProjectDAO projectDAO = (ProjectDAO) projectObjectMgr.getDao(projectBean);
 
@@ -42,35 +34,22 @@ public class ProjectMapListMgr extends MapListMgr {
         while (itr.hasNext()) {
             CgMap cgMap = itr.next();
             MapBean mb = new MapBean(null, cgMap.getName());
+            ModelMapsList modelMapsList = new ModelMapsList();
 
-            mapMap.put(mb, cgMap);
-            mapDaoMap.put(mb, projectDAO);
+            CgRegistryProject.cgMapMap.put(mb, cgMap);
+            CgRegistryProject.cgMapDaoMap.put(mb, projectDAO);
+            CgRegistryProject.cgMapModelMap.put(projectBean, modelMapsList);
 
             mb.setActive(cgMap.isDefault_map());
-            mapList.add(mb);
+            modelMapsList.add(mb);
         }
 
     }
 
     @Override
     public List<MapBean> getMapList(ProjectBean projectBean) {
-        ArrayList<MapBean> mapList = new <MapBean>ArrayList();
-
-        ProjectObjectMgr projectObjectMgr = Lookups.forPath("Project").lookupAll(ProjectObjectMgr.class).iterator().next();
-        ProjectDAO projectDAO = (ProjectDAO) projectObjectMgr.getDao(projectBean);
-
-        Iterator<CgMap> itr = projectDAO.getCgMaps().iterator();
-        while (itr.hasNext()) {
-            CgMap cgMap = itr.next();
-            MapBean mb = new MapBean(null, cgMap.getName());
-
-//            CgRegistryProject.cgMapMap.put(mb, cgMap);
-//            CgRegistryProject.cgMapDaoMap.put(mb, projectDAO);
-
-            mb.setActive(cgMap.isDefault_map());
-            mapList.add(mb);
-        }
-        return mapList;
+        ModelMapsList modelMapsList = (ModelMapsList) CgRegistryProject.cgMapModelMap.get(projectBean);
+        return (List<MapBean>) modelMapsList.list();
     }
 
     @Override
@@ -79,33 +58,47 @@ public class ProjectMapListMgr extends MapListMgr {
         ProjectDAO projectDAO = (ProjectDAO) projectObjectMgr.getDao(projectBean);
 
         CgMap cgMap = projectDAO.addMap(mapBean.getName());
+        ModelMapsList modelMapsList = new ModelMapsList();
 
-//        CgRegistryProject.cgMapMap.put(mapBean, cgMap);
-//        CgRegistryProject.cgMapDaoMap.put(mapBean, projectDAO);
-
-    }
-
-    @Override
-    public void delete(MapBean mapBean) {
-//        ProjectObjectMgr projectObjectMgr = Lookups.forPath("Project").lookupAll(ProjectObjectMgr.class).iterator().next();
-//        ProjectDAO projectDAO = (ProjectDAO) projectObjectMgr.getDao(projectBean);
-//        CgMap cgMap = (CgMap) CgRegistryProject.cgMapMap.get(mapBean);
+        CgRegistryProject.cgMapMap.put(mapBean, cgMap);
+        CgRegistryProject.cgMapDaoMap.put(mapBean, projectDAO);
+        CgRegistryProject.cgMapModelMap.put(projectBean, modelMapsList);
 
     }
 
     @Override
-    public void close(MapBean mapBean) {
-//        ProjectDAO projectDAO = (ProjectDAO) CgRegistryProject.cgMapDaoMap.get(mapBean);
-//        CgMap cgMap = (CgMap) CgRegistryProject.cgMapMap.get(mapBean);
+    public void delete(MapBean mapBean, ProjectBean projectBean) {
+        close(mapBean, projectBean);
+
     }
 
     @Override
-    public void update(MapBean mapBean) {
-//        ProjectDAO projectDAO = (ProjectDAO) CgRegistryProject.cgMapDaoMap.get(mapBean);
-//        CgMap cgMap = (CgMap) CgRegistryProject.cgMapMap.get(mapBean);
-//
-//        projectDAO.saveMap(cgMap);
+    public void close(MapBean mapBean, ProjectBean projectBean) {
+        ProjectDAO projectDAO = (ProjectDAO) CgRegistryProject.cgMapDaoMap.get(mapBean);
+        ModelMapsList modelMapsList = (ModelMapsList) CgRegistryProject.cgMapModelMap.get(projectBean);
 
+        modelMapsList.remove(mapBean);
+        CgMap cgMap = (CgMap) CgRegistryProject.cgMapMap.get(mapBean);
+
+        projectDAO.deleteMap(cgMap);
+
+    }
+
+    @Override
+    public void update(MapBean mapBean, ProjectBean projectBean) {
+        ProjectDAO projectDAO = (ProjectDAO) CgRegistryProject.cgMapDaoMap.get(mapBean);
+        ModelMapsList modelMapsList = (ModelMapsList) CgRegistryProject.cgMapModelMap.get(projectBean);
+
+//        modelMapsList.notify();
+        CgMap cgMap = (CgMap) CgRegistryProject.cgMapMap.get(mapBean);
+
+        projectDAO.saveMap(cgMap);
+
+    }
+
+    @Override
+    public ModelMapsList getModel(ProjectBean projectBean) {
+        return (ModelMapsList) CgRegistryProject.cgMapModelMap.get(projectBean);
     }
 
 }

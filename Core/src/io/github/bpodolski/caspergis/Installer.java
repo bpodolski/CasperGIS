@@ -7,14 +7,16 @@ package io.github.bpodolski.caspergis;
 
 import io.github.bpodolski.caspergis.api.CasperInfo;
 import io.github.bpodolski.caspergis.gui.StartPageTopComponent;
+import io.github.bpodolski.caspergis.services.MapExplorerManagerMgr;
 import java.io.File;
 import org.openide.modules.ModuleInstall;
 import org.openide.util.NbPreferences;
+import org.openide.util.lookup.Lookups;
 import org.openide.windows.WindowManager;
 
 public class Installer extends ModuleInstall {
 
-    public static CgRegistry cgRegistry = new CgRegistry();
+    public static CgRegistryCore cgRegistry = new CgRegistryCore();
     
     @Override
     public void validate() {
@@ -30,7 +32,8 @@ public class Installer extends ModuleInstall {
         pliki projektów, systemowe, mienne są ustawione i sprawdzone
         aby móc korzystać z różnych narzędzi*/
         NbPreferences.forModule(CasperInfo.class).put("CG_READY", "F");
-
+        
+  
     }
 
     @Override

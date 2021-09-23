@@ -5,7 +5,7 @@
  */
 package io.github.bpodolski.caspergis.gui;
 
-import io.github.bpodolski.caspergis.CgRegistry;
+import io.github.bpodolski.caspergis.CgRegistryCore;
 import io.github.bpodolski.caspergis.Installer;
 import io.github.bpodolski.caspergis.gui.nodes.ProjectsRootNode;
 import io.github.bpodolski.caspergis.services.SystemMgr;
@@ -61,7 +61,7 @@ public final class ProjectListTopComponent extends TopComponent implements Explo
     
     private final ExplorerManager mgr = new ExplorerManager();
     private SystemMgr systemMgr;
-    CgRegistry cgr = Installer.cgRegistry;
+    CgRegistryCore cgr = Installer.cgRegistry;
     InputOutput io = IOProvider.getDefault().getIO("Output", false);
     
     public ProjectListTopComponent() throws IntrospectionException, PropertyVetoException {

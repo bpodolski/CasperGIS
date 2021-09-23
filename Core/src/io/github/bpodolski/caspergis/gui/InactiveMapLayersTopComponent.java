@@ -5,7 +5,7 @@
  */
 package io.github.bpodolski.caspergis.gui;
 
-import io.github.bpodolski.caspergis.CgRegistry;
+import io.github.bpodolski.caspergis.CgRegistryCore;
 import io.github.bpodolski.caspergis.beans.MapBean;
 import java.beans.IntrospectionException;
 import java.util.Collection;
@@ -75,7 +75,7 @@ public final class InactiveMapLayersTopComponent extends TopComponent implements
         putClientProperty(TopComponent.PROP_MAXIMIZATION_DISABLED, Boolean.TRUE);
 
         mapBean = mapBeanX;
-        CgRegistry.explorerManagerMap.put(mapBeanX, mgr);
+        CgRegistryCore.explorerManagerMap.put(mapBeanX, mgr);
         
         
         initView();
@@ -170,8 +170,8 @@ public final class InactiveMapLayersTopComponent extends TopComponent implements
                     mapBean = reg;
                     lbl.setText(mapBean.getName());
 
-                    if (CgRegistry.explorerManagerMap.get(mapBean) != null) {
-                        this.setExplorerManager((ExplorerManager) CgRegistry.explorerManagerMap.get(mapBean));
+                    if (CgRegistryCore.explorerManagerMap.get(mapBean) != null) {
+                        this.setExplorerManager((ExplorerManager) CgRegistryCore.explorerManagerMap.get(mapBean));
                     }
                     view.addNotify();
                 } else {
@@ -184,7 +184,7 @@ public final class InactiveMapLayersTopComponent extends TopComponent implements
                     lbl.setText("[no selection]");
                     view.addNotify();
                     
-                    this.setExplorerManager((ExplorerManager) CgRegistry.explorerManagerMap.get(mapBean));
+                    this.setExplorerManager((ExplorerManager) CgRegistryCore.explorerManagerMap.get(mapBean));
                 }
             }
         } else if (mapBean != null) {

@@ -8,6 +8,7 @@ package io.github.bpodolski.caspergis.services;
 import io.github.bpodolski.caspergis.beans.MapBean;
 import io.github.bpodolski.caspergis.beans.ProjectBean;
 import io.github.bpodolski.caspergis.model.ModelMapitemsList;
+import io.github.bpodolski.caspergis.model.ModelMapsList;
 import java.util.ArrayList;
 import java.util.List;
 import org.openide.explorer.ExplorerManager;
@@ -22,6 +23,8 @@ import org.openide.util.Lookup;
 public abstract class MapListMgr {
 
     public abstract void initModel(ProjectBean projectBean);
+    
+    public abstract ModelMapsList getModel(ProjectBean projectBean);
 
     /**
      * Base function of service - get the list of maps in project
@@ -30,6 +33,7 @@ public abstract class MapListMgr {
      * @return list of maps
      */
     public abstract List<MapBean> getMapList(ProjectBean projectBean);
+    
 
     /**
      * Add map
@@ -46,21 +50,21 @@ public abstract class MapListMgr {
      *
      * @param mapBean
      */
-    public abstract void delete(MapBean mapBean);
+    public abstract void delete(MapBean mapBean, ProjectBean projectBean);
 
     /**
      * Close map
      *
      * @param mapBean
      */
-    public abstract void close(MapBean mapBean);
+    public abstract void close(MapBean mapBean, ProjectBean projectBean);
 
     /**
      * Update map
      *
      * @param mapBean
      */
-    public abstract void update(MapBean mapBean);
+    public abstract void update(MapBean mapBean, ProjectBean projectBean);
 
     public static MapListMgr getDefault() {
         MapListMgr service = Lookup.getDefault().lookup(MapListMgr.class);
@@ -95,23 +99,28 @@ public abstract class MapListMgr {
         }
 
         @Override
-        public void delete(MapBean mapBean) {
+        public void delete(MapBean mapBean, ProjectBean projectBean) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
         @Override
-        public void close(MapBean mapBean) {
+        public void close(MapBean mapBean, ProjectBean projectBean) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
         @Override
-        public void update(MapBean mapBean) {
+        public void update(MapBean mapBean, ProjectBean projectBean) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
         @Override
         public void initModel(ProjectBean projectBean) {
             this.projectBean = projectBean;
+        }
+
+        @Override
+        public ModelMapsList getModel(ProjectBean projectBean) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
     }
 }

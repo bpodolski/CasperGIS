@@ -26,7 +26,7 @@ import java.util.ArrayList;
  */
 public class GroupBean extends MapitemBean {
 
-    private int transparency = 0;
+    private int transparency = 9;
     private boolean visible = true;
     
        public GroupBean(String name) {

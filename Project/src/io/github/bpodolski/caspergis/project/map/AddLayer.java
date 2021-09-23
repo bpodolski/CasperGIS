@@ -5,11 +5,15 @@
  */
 package io.github.bpodolski.caspergis.project.map;
 
+import io.github.bpodolski.caspergis.beans.LayerBean;
 import io.github.bpodolski.caspergis.beans.MapBean;
-import io.github.bpodolski.caspergis.services.MapExplorerManagerMgr;
+import io.github.bpodolski.caspergis.services.MapitemListMgr;
+import io.github.bpodolski.caspergis.utils.LayerFileFilter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Collection;
+import java.io.File;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.ActionID;
@@ -38,42 +42,43 @@ import org.openide.util.lookup.Lookups;
 @NbBundle.Messages("CTL_AddLayer=Add Layer")
 public class AddLayer implements ActionListener {
 
-    private MapBean context;
-    //Serwis 
-    MapExplorerManagerMgr explorerManagerMgr = null;
+    private MapBean mapBean;
+    MapitemListMgr mapitemListMgrProject = Lookups.forPath("Project").lookupAll(MapitemListMgr.class).iterator().next();
 
     public AddLayer(MapBean context) {
-        this.context = context;
-        Collection<? extends MapExplorerManagerMgr> srvMapExp = Lookups.forPath("Core").lookupAll(MapExplorerManagerMgr.class);
-        if (srvMapExp.iterator().hasNext()) {
-            this.explorerManagerMgr = srvMapExp.iterator().next();
-        }
+        this.mapBean = context;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        if (mapBean.isActive()) {
+            if (mapitemListMgrProject != null) {
+                var chooser = new JFileChooser();
+                chooser.setCurrentDirectory(new File("."));
+                chooser.setFileFilter(new FileNameExtensionFilter("SHP files", "shp", "shp"));
+                chooser.setAcceptAllFileFilterUsed(false);
+                chooser.setMultiSelectionEnabled(true);
+                int result = chooser.showOpenDialog(null);
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    var files = chooser.getSelectedFiles();
+                    for (int i = 0; i < files.length; i++) {
+                        var f = files[i];
+                        if (LayerFileFilter.LAYER_FILEFILTER.accept(f)) {
+                            LayerBean lb = new LayerBean(f.getName());
+                            lb.setConnectionStr(f.getAbsolutePath());
 
-        if (explorerManagerMgr != null) {
-            MapBean mb = explorerManagerMgr.getActiveMapBean();
-            if (mb.equals(context)){
+                            this.mapitemListMgrProject.add(lb, mapBean);
 
-            NotifyDescriptor d = new NotifyDescriptor.Confirmation(
-                    "" + context.getName(),
-                    "");
-            DialogDisplayer.getDefault().notify(d);
-            }else{
-            NotifyDescriptor d = new NotifyDescriptor.Confirmation(
-                    "ta mapa nie jest aktywna",
-                    "");
-            DialogDisplayer.getDefault().notify(d);
+                        }
+                    }
+                } else {
+                    NotifyDescriptor d = new NotifyDescriptor.Confirmation(
+                            "Message",
+                            "Title");
+                    DialogDisplayer.getDefault().notify(d);
+                }
+
             }
-
-        } else {
-            NotifyDescriptor d = new NotifyDescriptor.Confirmation(
-                    "Message",
-                    "Title");
-            DialogDisplayer.getDefault().notify(d);
         }
-
     }
 }

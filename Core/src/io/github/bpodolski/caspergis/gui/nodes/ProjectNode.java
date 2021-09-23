@@ -6,7 +6,7 @@
 package io.github.bpodolski.caspergis.gui.nodes;
 
 import io.github.bpodolski.caspergis.beans.ProjectBean;
-import io.github.bpodolski.caspergis.gui.nodes.factories.ProjectItemsFactory;
+import io.github.bpodolski.caspergis.gui.nodes.factories.ProjectitemsFactory;
 import io.github.bpodolski.caspergis.model.ModelMapsList;
 import io.github.bpodolski.caspergis.model.ModelProjectList;
 import java.beans.IntrospectionException;
@@ -39,21 +39,22 @@ public class ProjectNode extends BeanNode<ProjectBean> {
 
     InstanceContent ic = new InstanceContent();
     ModelMapsList model;
-    ProjectItemsFactory factory;
-//
-//    public ProjectNode(ProjectBean bean) throws IntrospectionException {
-//        this(bean, new ProjectItemsFactory(bean), new InstanceContent());
-//    }
+    ProjectitemsFactory factory;
 
-    //do testow:
     public ProjectNode(ProjectBean bean) throws IntrospectionException {
-        super(bean, Children.LEAF, Lookups.singleton(bean));
-        setIconBaseWithExtension("io/github/bpodolski/caspergis/res/project.png");
+        this(bean, new ProjectitemsFactory(bean), new InstanceContent());
     }
 
-    public ProjectNode(ProjectBean bean, ProjectItemsFactory factory, InstanceContent ic) throws IntrospectionException {
+//    //do testow:
+//    public ProjectNode(ProjectBean bean) throws IntrospectionException {
+//        super(bean, Children.LEAF, Lookups.singleton(bean));
+//        setIconBaseWithExtension("io/github/bpodolski/caspergis/res/project.png");
+//    }
+
+    public ProjectNode(ProjectBean bean, ProjectitemsFactory factory, InstanceContent ic) throws IntrospectionException {
         super(bean, Children.create(factory, true), new ProxyLookup(new AbstractLookup(ic), Lookups.singleton(bean)));
         setIconBaseWithExtension("io/github/bpodolski/caspergis/res/project.png");
+        this.setShortDescription(bean.getPath());
 
         this.factory = factory;
 

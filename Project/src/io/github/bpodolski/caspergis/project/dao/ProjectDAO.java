@@ -23,7 +23,7 @@ import org.hibernate.service.ServiceRegistry;
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-public class ProjectDAO implements DaoInterface{
+public class ProjectDAO implements DaoInterface {
 
     private SessionFactory sessionFactory;
     private CgProjectInfo cgProjectInfo;
@@ -197,6 +197,62 @@ public class ProjectDAO implements DaoInterface{
         return listMaps;
     }
 
+    public void deleteMap(CgMap cgMap) {
+        try (Session session = this.sessionFactory.openSession()) {
+            Transaction transaction = null;
+            try {
+                transaction = session.beginTransaction();
+                session.delete(cgMap);
+                transaction.commit();
+            } catch (Exception e) {
+                if (transaction != null) {
+                    transaction.rollback();
+                }
+            }
+        }
+    }
+
+    public CgLayer addLayer(CgMap cgMap, String name) {
+        CgLayer cgLayer = new CgLayer();
+        if (name.equals("")) {
+            name = "Layer";
+        }
+        cgLayer.setName(name);
+        cgLayer.setCgMap(cgMap);
+        try (Session session = this.sessionFactory.openSession()) {
+            Transaction transaction = null;
+            try {
+                transaction = session.beginTransaction();
+                session.save(cgLayer);
+                transaction.commit();
+                session.close();
+            } catch (HibernateException e) {
+                if (transaction != null) {
+                    transaction.rollback();
+                }
+            }
+        }
+        return cgLayer;
+    }
+    
+    public boolean addLayer(CgLayer cgLayer) {
+        try (Session session = this.sessionFactory.openSession()) {
+            Transaction transaction = null;
+            try {
+                transaction = session.beginTransaction();
+                session.save(cgLayer);
+                transaction.commit();
+                session.close();
+            } catch (HibernateException e) {
+                if (transaction != null) {
+                    transaction.rollback();
+                }
+                 return false;
+            }
+        }
+        return true;
+    }
+
     public List<CgLayer> getLayers(CgMap cgMap) {
         List<CgLayer> cgLayers;
         try (Session session = this.sessionFactory.openSession()) {
@@ -207,6 +263,21 @@ public class ProjectDAO implements DaoInterface{
             session.close();
         }
         return cgLayers;
+    }
+
+    public void deleteLayer(CgLayer cgLayer) {
+        try (Session session = this.sessionFactory.openSession()) {
+            Transaction transaction = null;
+            try {
+                transaction = session.beginTransaction();
+                session.delete(cgLayer);
+                transaction.commit();
+            } catch (Exception e) {
+                if (transaction != null) {
+                    transaction.rollback();
+                }
+            }
+        }
     }
 
     public CgMap addMap(String name) {

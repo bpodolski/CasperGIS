@@ -28,17 +28,27 @@ public class ModelMapitemsList {
     public ModelMapitemsList(List<MapitemBean> elementMapBeans) {
         this.elementMapBeans = elementMapBeans;
     }
-    
-    public List<? extends MapitemBean> list() {
+
+    public List<MapitemBean> list() {
         return elementMapBeans;
     }
 
     public void add(MapitemBean c) {
-        c.setPosition(elementMapBeans.size() + 1);
+//        c.setPosition(elementMapBeans.size() + 1);
         elementMapBeans.add(c);
         cs.fireChange();
     }
-    
+
+    public void addAll(List<MapitemBean> mapitemBean) {
+        elementMapBeans.addAll(mapitemBean);
+        cs.fireChange();
+    }
+
+    public void addAll(int index, List<MapitemBean> mapitemBean) {
+        elementMapBeans.addAll(index, mapitemBean);
+        cs.fireChange();
+    }
+
     public void remove(MapitemBean c) {
         elementMapBeans.remove(c);
         cs.fireChange();

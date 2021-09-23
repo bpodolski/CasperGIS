@@ -5,6 +5,7 @@
  */
 package io.github.bpodolski.caspergis.gui;
 
+import io.github.bpodolski.caspergis.CgRegistryCore;
 import io.github.bpodolski.caspergis.beans.MapBean;
 import io.github.bpodolski.caspergis.gui.geotools.JMapPanelCG;
 import io.github.bpodolski.caspergis.gui.nodes.InternalMapNode;
@@ -66,6 +67,8 @@ public class MapDisplayerTopComponent extends TopComponent implements ExplorerMa
         } else {
             this.explorerManagerMgr = MapExplorerManagerMgr.getDefault();
         }
+//        
+//        this.explorerManagerMgr = CgRegistryCore.coreMapExplorerManager;
 
         this.mapBean = mapBean;
         this.setName(mapBean.getName() + " - editor");

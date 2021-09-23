@@ -8,8 +8,9 @@ package io.github.bpodolski.caspergis.gui;
 import io.github.bpodolski.caspergis.beans.LayerBean;
 import io.github.bpodolski.caspergis.beans.MapBean;
 import io.github.bpodolski.caspergis.gui.nodes.InternalMapNode;
-import io.github.bpodolski.caspergis.gui.nodes.factories.MapItemsFactory;
+import io.github.bpodolski.caspergis.gui.nodes.factories.MapitemsFactory;
 import io.github.bpodolski.caspergis.services.MapExplorerManagerMgr;
+import io.github.bpodolski.caspergis.services.MapitemListMgr;
 import io.github.bpodolski.caspergis.utils.LayerFileFilter;
 import java.io.File;
 import java.util.Collection;
@@ -31,6 +32,8 @@ import org.openide.util.Lookup;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.actions.SystemAction;
+import org.openide.util.lookup.AbstractLookup;
+import org.openide.util.lookup.InstanceContent;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 
@@ -63,24 +66,19 @@ public final class LayerListTopComponent extends TopComponent implements Explore
 
     private MapBean mapBean = null;
     private final MapBean mapBeanX = new MapBean(null, "[No active map]");
+    private ExplorerManager explorerManagerX = new ExplorerManager();
+    private MapExplorerManagerMgr explorerManagerMgr = Lookups.forPath("Core").lookupAll(MapExplorerManagerMgr.class).iterator().next();
 
     //Serwis 
-    MapExplorerManagerMgr explorerManagerMgr;
-
+//    MapExplorerManagerMgr explorerManagerMgr;
     Lookup lookupMapBean = null;
     Lookup lookupAction = null;
     ProxyLookup proxyLookup;
+    
+    InstanceContent instanceContent = new InstanceContent();
 
     public LayerListTopComponent() {
         initComponents();
-   
-
-        Collection<? extends MapExplorerManagerMgr> srvMapExp = Lookups.forPath("Core").lookupAll(MapExplorerManagerMgr.class);
-        if (srvMapExp.iterator().hasNext()) {
-            this.explorerManagerMgr = srvMapExp.iterator().next();
-        } else {
-            this.explorerManagerMgr = MapExplorerManagerMgr.getDefault();
-        }
 
         setName(Bundle.CTL_LayerListTopComponent());
         setToolTipText(Bundle.HINT_LayerListTopComponent());
@@ -88,13 +86,8 @@ public final class LayerListTopComponent extends TopComponent implements Explore
         putClientProperty(TopComponent.PROP_MAXIMIZATION_DISABLED, Boolean.TRUE);
 
         mapBean = mapBeanX;
-
-        explorerManagerMgr.addMapExplorerManager(mapBean);
-        explorerManagerMgr.addChangeListener(this);
-        initActions();
-
-        associateLookup(this.lookupAction);
-
+        
+        associateLookup(new AbstractLookup(this.instanceContent));
     }
 
     /**
@@ -132,34 +125,37 @@ public final class LayerListTopComponent extends TopComponent implements Explore
         pnl.add(lblTest);
 
         add(pnl, java.awt.BorderLayout.NORTH);
-
-        view.setRootVisible(false);
         add(view, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAddLayerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddLayerActionPerformed
 
 //        if (this.getExplorerManager().getRootContext().getClass().isInstance(InternalMapNode.class)) {
-            InternalMapNode mn = (InternalMapNode) this.getExplorerManager().getRootContext();
-            if (mn.getBean().isActive()) {
-                MapItemsFactory factory = mn.getFactory();
-                var chooser = new JFileChooser();
-                chooser.setCurrentDirectory(new File("."));
-                chooser.setFileFilter(new FileNameExtensionFilter("SHP files", "shp", "shp"));
-                chooser.setAcceptAllFileFilterUsed(false);
-                chooser.setMultiSelectionEnabled(true);
-                int result = chooser.showOpenDialog(this);
-                if (result == JFileChooser.APPROVE_OPTION) {
-                    var files = chooser.getSelectedFiles();
-                    for (int i = 0; i < files.length; i++) {
-                        var f = files[i];
-                        if (LayerFileFilter.LAYER_FILEFILTER.accept(f)) {
-                            LayerBean lb = new LayerBean(f.getName());
-                            lb.setConnectionStr(f.getAbsolutePath());
-                            factory.add(lb);
-                        }
+        InternalMapNode mn = (InternalMapNode) this.getExplorerManager().getRootContext();
+        if (mn.getBean().isActive()) {
+            MapitemsFactory factory = mn.getFactory();
+            var chooser = new JFileChooser();
+            chooser.setCurrentDirectory(new File("."));
+            chooser.setFileFilter(new FileNameExtensionFilter("SHP files", "shp", "shp"));
+            chooser.setAcceptAllFileFilterUsed(false);
+            chooser.setMultiSelectionEnabled(true);
+            int result = chooser.showOpenDialog(this);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                var files = chooser.getSelectedFiles();
+                for (int i = 0; i < files.length; i++) {
+                    var f = files[i];
+                    if (LayerFileFilter.LAYER_FILEFILTER.accept(f)) {
+                        LayerBean lb = new LayerBean(f.getName());
+                        lb.setConnectionStr(f.getAbsolutePath());
+
+                        factory.getModel().add(lb);
+
+                        MapitemListMgr mapitemListMgr = Lookups.forPath("Project").lookupAll(MapitemListMgr.class).iterator().next();
+                        mapitemListMgr.add(lb, mapBean);
+
                     }
                 }
+            }
 //            }
         }
 
@@ -174,7 +170,9 @@ public final class LayerListTopComponent extends TopComponent implements Explore
     // End of variables declaration//GEN-END:variables
     @Override
     public void componentOpened() {
-
+        explorerManagerMgr.addMapExplorerManager(mapBean);
+        explorerManagerMgr.addChangeListener(this);
+        initActions();
     }
 
     @Override
@@ -196,7 +194,10 @@ public final class LayerListTopComponent extends TopComponent implements Explore
 
     @Override
     public ExplorerManager getExplorerManager() {
-        return this.explorerManagerMgr.getMapExplorerManager(mapBean);
+        if (this.explorerManagerMgr != null) {
+            return this.explorerManagerMgr.getMapExplorerManager(mapBean);
+        }
+        return explorerManagerX;
     }
 
     private void initActions() {
@@ -218,6 +219,7 @@ public final class LayerListTopComponent extends TopComponent implements Explore
         getActionMap().put(delete.getActionMapKey(), ExplorerUtils.actionDelete(mgr, true));
 
         this.lookupAction = ExplorerUtils.createLookup(mgr, map);
+        
     }
 
     @Override

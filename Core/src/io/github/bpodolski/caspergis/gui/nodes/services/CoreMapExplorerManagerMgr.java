@@ -7,7 +7,6 @@ package io.github.bpodolski.caspergis.gui.nodes.services;
 
 import io.github.bpodolski.caspergis.beans.MapBean;
 import io.github.bpodolski.caspergis.gui.nodes.InternalMapNode;
-import io.github.bpodolski.caspergis.model.ModelMapitemsList;
 import io.github.bpodolski.caspergis.services.MapExplorerManagerMgr;
 import java.beans.IntrospectionException;
 import java.beans.PropertyChangeEvent;
@@ -26,12 +25,12 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
 @ServiceProvider(service = MapExplorerManagerMgr.class, path = "Core")
-public class CoreMapExplorerManagerMgr extends MapExplorerManagerMgr implements PropertyChangeListener {
+public final class CoreMapExplorerManagerMgr extends MapExplorerManagerMgr implements PropertyChangeListener {
 
     private final HashMap mapExplorerManagers = new HashMap<MapBean, ExplorerManager>();
-    
+
     private final ExplorerManager defaultMgr = new ExplorerManager();
-    
+
     private MapBean activeMapBean;
     private final MapBean defaultMapBean = new MapBean(null, "[No active map]");
 
@@ -45,7 +44,7 @@ public class CoreMapExplorerManagerMgr extends MapExplorerManagerMgr implements 
             rootNode.setName("[No active map]");
             defaultMgr.setRootContext(rootNode);
             mapExplorerManagers.put(defaultMapBean, defaultMgr);
-            
+
             clearActiveMapBean();
 
         } catch (IntrospectionException ex) {
@@ -55,17 +54,18 @@ public class CoreMapExplorerManagerMgr extends MapExplorerManagerMgr implements 
 
     @Override
     public void addMapExplorerManager(MapBean mapBean, ExplorerManager mgr) {
-        mapExplorerManagers.put(mapBean, mgr);
-        mapBean.addPropertyChangeListener(this);
+        if (mapExplorerManagers.get(mapBean) == null) {
+            mapExplorerManagers.put(mapBean, mgr);
+            mapBean.addPropertyChangeListener(this);
+        }
     }
-
-    
 
     @Override
     public void addMapExplorerManager(MapBean mapBean) {
         ExplorerManager mgr = new ExplorerManager();
         try {
             // TODO test default add node to mgr
+//            BeanNode node = new BeanNode(mapBean);
             InternalMapNode node = new InternalMapNode(mapBean);
             mgr.setRootContext(node);
         } catch (IntrospectionException ex) {

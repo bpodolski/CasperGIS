@@ -8,6 +8,8 @@ package io.github.bpodolski.caspergis.project;
 import io.github.bpodolski.caspergis.beans.LayerBean;
 import io.github.bpodolski.caspergis.beans.MapBean;
 import io.github.bpodolski.caspergis.beans.ProjectBean;
+import io.github.bpodolski.caspergis.model.ModelMapitemsList;
+import io.github.bpodolski.caspergis.model.ModelMapsList;
 import io.github.bpodolski.caspergis.project.dao.ProjectDAO;
 import io.github.bpodolski.caspergis.project.datamodel.CgLayer;
 import io.github.bpodolski.caspergis.project.datamodel.CgMap;
@@ -19,9 +21,15 @@ import java.util.HashMap;
  */
 public class CgRegistryProject {
 
-//    public static final HashMap cgProjectDaoMap = new HashMap<ProjectBean, ProjectDAO>();
-//    public static final HashMap cgMapDaoMap = new HashMap<MapBean, ProjectDAO>();
-//    
-//    public static final HashMap cgMapMap = new HashMap<MapBean, CgMap>();
-//    public static final HashMap cgLayerMap = new HashMap<LayerBean, CgLayer>();
+    public static final HashMap cgProjectDaoMap = new HashMap<ProjectBean, ProjectDAO>();    
+    
+    public static final HashMap cgMapMap = new HashMap<MapBean, CgMap>();
+    public static final HashMap cgMapDaoMap = new HashMap<MapBean, ProjectDAO>();
+    public static final HashMap cgMapModelMap = new HashMap<ProjectBean, ModelMapsList>();
+    
+    public static final HashMap cgLayerMap = new HashMap<LayerBean, CgLayer>();
+    public static final HashMap cgLayerDaoMap = new HashMap<LayerBean, ProjectDAO>();
+    public static final HashMap cgLayerModelMap = new HashMap<MapBean, ModelMapitemsList>();
+    
+    
 }

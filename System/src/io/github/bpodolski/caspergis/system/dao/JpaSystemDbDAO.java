@@ -28,7 +28,7 @@ public final class JpaSystemDbDAO {
 
     private final SessionFactory sessionFactory;
     private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
-    
+
     private boolean daoReady = false;
 
     public static final String DAO_READY = "daoReady";
@@ -52,7 +52,6 @@ public final class JpaSystemDbDAO {
         this.daoReady = daoReady;
         propertyChangeSupport.firePropertyChange(DAO_READY, oldDaoReady, daoReady);
     }
-
 
     public JpaSystemDbDAO() {
         String DB_SYSTEM_PATH = NbPreferences.forModule(CasperInfo.class).get(CasperInfo.DB_SYSTEM_PATH, "");
@@ -121,7 +120,8 @@ public final class JpaSystemDbDAO {
                 }
                 e.printStackTrace();
             }
-        }    }
+        }
+    }
 
     public void deleteProject(CgSysProject project) {
         try (Session session = this.sessionFactory.openSession()) {
@@ -136,7 +136,8 @@ public final class JpaSystemDbDAO {
                 }
                 e.printStackTrace();
             }
-        }    }
+        }
+    }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         propertyChangeSupport.addPropertyChangeListener(listener);

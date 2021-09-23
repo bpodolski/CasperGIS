@@ -8,6 +8,7 @@ package io.github.bpodolski.caspergis.gui.nodes.factories;
 import io.github.bpodolski.caspergis.beans.ProjectBean;
 import io.github.bpodolski.caspergis.model.ModelProjectList;
 import io.github.bpodolski.caspergis.gui.nodes.ProjectNode;
+import io.github.bpodolski.caspergis.services.ProjectObjectMgr;
 import java.beans.IntrospectionException;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,7 @@ import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.openide.util.lookup.Lookups;
 
 /**
  *
@@ -38,10 +40,14 @@ public class SystemFactory extends ChildFactory.Detachable<ProjectBean> implemen
     }
 
     @Override
-    protected Node createNodeForKey(ProjectBean key) {
+    protected Node createNodeForKey(ProjectBean projectBean) {
         ProjectNode node = null;
         try {
-            node = new ProjectNode(key);
+            
+            ProjectObjectMgr projectObjectMgr = Lookups.forPath("Project").lookupAll(ProjectObjectMgr.class).iterator().next();
+            projectObjectMgr.setupProjectInfo(projectBean);
+            node = new ProjectNode(projectBean);
+            
         } catch (IntrospectionException ex) {
             Exceptions.printStackTrace(ex);
         }
