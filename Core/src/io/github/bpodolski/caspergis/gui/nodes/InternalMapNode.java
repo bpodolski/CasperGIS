@@ -10,7 +10,6 @@ import io.github.bpodolski.caspergis.beans.MapBean;
 import io.github.bpodolski.caspergis.beans.MapitemBean;
 import io.github.bpodolski.caspergis.beans.MapitemFlavor;
 import io.github.bpodolski.caspergis.gui.nodes.factories.MapitemsFactory;
-import io.github.bpodolski.caspergis.services.MapExplorerManagerMgr;
 import io.github.bpodolski.caspergis.utils.LayerFileFilter;
 import java.awt.Image;
 import java.awt.datatransfer.DataFlavor;
@@ -26,7 +25,6 @@ import javax.swing.Action;
 import org.openide.actions.PasteAction;
 import org.openide.nodes.BeanNode;
 import org.openide.nodes.Children;
-import org.openide.nodes.Index;
 import org.openide.nodes.Node;
 import org.openide.nodes.NodeTransfer;
 import org.openide.util.Exceptions;
@@ -47,11 +45,6 @@ public class InternalMapNode extends BeanNode<MapBean> implements PropertyChange
     private MapBean mapBean;
     private InstanceContent instContent;
 
-//    public InternalMapNode(MapBean bean) throws IntrospectionException {
-//        super(bean);
-//        this.mapBean = bean;
-//      
-//    }
 
     public InternalMapNode(MapBean mapBean) throws IntrospectionException {
         this(mapBean, new MapitemsFactory(mapBean), new InstanceContent());
@@ -59,8 +52,7 @@ public class InternalMapNode extends BeanNode<MapBean> implements PropertyChange
     }
     
     public InternalMapNode(MapBean mapBean, final MapitemsFactory factory, InstanceContent instContent) throws IntrospectionException {
-        super(mapBean, Children.LEAF, new ProxyLookup(Lookups.singleton(mapBean), new AbstractLookup(instContent)));
-//        super(bean, Children.create(factory, true), new ProxyLookup(Lookups.singleton(bean), new AbstractLookup(instContent)));
+        super(mapBean, Children.create(factory, true), new ProxyLookup(Lookups.singleton(mapBean), new AbstractLookup(instContent)));
 
         setIconBaseWithExtension("io/github/bpodolski/caspergis/res/map.png");
         this.instContent = instContent;

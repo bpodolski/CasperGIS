@@ -22,7 +22,7 @@ import org.openide.util.Lookup;
  */
 public abstract class MapitemListMgr {
 
-    public abstract void initModel(MapBean mapBean);
+    public abstract void initModel(MapBean mapBean, ModelMapitemsList modelMapitemsList);
 
     public abstract ModelMapitemsList getModel(MapBean mapBean);
 
@@ -82,7 +82,7 @@ public abstract class MapitemListMgr {
         }
 
         @Override
-        public void initModel(MapBean mapBean) {
+        public void initModel(MapBean mapBean, ModelMapitemsList modelMapitemsList) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
