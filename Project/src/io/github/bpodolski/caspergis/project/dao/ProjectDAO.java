@@ -157,6 +157,22 @@ public class ProjectDAO implements DaoInterface {
             }
         }
     }
+    
+        public void updateProjectInfo(CgProjectInfo cgProjectInfo) {
+        try (Session session = this.sessionFactory.openSession()) {
+            Transaction transaction = null;
+            try {
+                transaction = session.beginTransaction();
+                session.merge(cgProjectInfo);
+                transaction.commit();
+                session.close();
+            } catch (Exception e) {
+                if (transaction != null) {
+                    transaction.rollback();
+                }
+            }
+        }
+    }
 
     public void setProjectInfo() {
 
@@ -191,7 +207,7 @@ public class ProjectDAO implements DaoInterface {
         List<CgMap> listMaps;
 
         try (Session session = this.sessionFactory.openSession()) {
-            listMaps = session.createQuery("from CgMap", CgMap.class).list();
+            listMaps = session.createQuery("from CgMap  ORDER BY position", CgMap.class).list();
             session.close();
         }
         return listMaps;
@@ -235,6 +251,23 @@ public class ProjectDAO implements DaoInterface {
         return cgLayer;
     }
     
+    public void saveLayer(CgLayer cgLayer) {
+        try (Session session = this.sessionFactory.openSession()) {
+            Transaction transaction = null;
+            try {
+                transaction = session.beginTransaction();
+                session.merge(cgLayer);
+//                        .save(cgLayer);
+                transaction.commit();
+                session.close();
+            } catch (Exception e) {
+                if (transaction != null) {
+                    transaction.rollback();
+                }
+            }
+        }
+    }
+    
     public boolean addLayer(CgLayer cgLayer) {
         try (Session session = this.sessionFactory.openSession()) {
             Transaction transaction = null;
@@ -257,7 +290,7 @@ public class ProjectDAO implements DaoInterface {
         List<CgLayer> cgLayers;
         try (Session session = this.sessionFactory.openSession()) {
 
-            Query query = session.createQuery("select b from CgLayer b where b.cgMap = :cgMap").setParameter("cgMap", cgMap);
+            Query query = session.createQuery("select b from CgLayer b where b.cgMap = :cgMap ORDER BY b.position").setParameter("cgMap", cgMap);
             cgLayers = query.getResultList();
 
             session.close();
@@ -308,6 +341,22 @@ public class ProjectDAO implements DaoInterface {
             try {
                 transaction = session.beginTransaction();
                 session.save(cgMap);
+                transaction.commit();
+                session.close();
+            } catch (Exception e) {
+                if (transaction != null) {
+                    transaction.rollback();
+                }
+            }
+        }
+    }
+    
+    public void updateMap(CgMap cgMap) {
+        try (Session session = this.sessionFactory.openSession()) {
+            Transaction transaction = null;
+            try {
+                transaction = session.beginTransaction();
+                session.merge(cgMap);
                 transaction.commit();
                 session.close();
             } catch (Exception e) {

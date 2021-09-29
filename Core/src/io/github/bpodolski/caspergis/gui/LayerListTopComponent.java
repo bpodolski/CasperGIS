@@ -13,7 +13,7 @@ import io.github.bpodolski.caspergis.services.MapExplorerManagerMgr;
 import io.github.bpodolski.caspergis.services.MapitemListMgr;
 import io.github.bpodolski.caspergis.utils.LayerFileFilter;
 import java.io.File;
-import java.util.Collection;
+import javax.swing.Action;
 import javax.swing.ActionMap;
 import javax.swing.JFileChooser;
 import javax.swing.event.ChangeEvent;
@@ -26,6 +26,7 @@ import org.openide.actions.DeleteAction;
 import org.openide.actions.PasteAction;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
+import org.openide.awt.Actions;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.ExplorerUtils;
 import org.openide.util.Lookup;
@@ -69,13 +70,15 @@ public final class LayerListTopComponent extends TopComponent implements Explore
     private ExplorerManager explorerManagerX = new ExplorerManager();
     private MapExplorerManagerMgr explorerManagerMgr = Lookups.forPath("Core").lookupAll(MapExplorerManagerMgr.class).iterator().next();
 
-    //Serwis 
-//    MapExplorerManagerMgr explorerManagerMgr;
     Lookup lookupMapBean = null;
     Lookup lookupAction = null;
     ProxyLookup proxyLookup;
-    
+
     InstanceContent instanceContent = new InstanceContent();
+    
+    Action actAddLayer = Actions.forID("Map", "io.github.bpodolski.caspergis.project.map.AddLayer");
+    Action actMapProperties = Actions.forID("Map", "io.github.bpodolski.caspergis.project.map.MapProperties");
+    Action actSaveMap = Actions.forID("Map", "io.github.bpodolski.caspergis.project.map.SaveMap");
 
     public LayerListTopComponent() {
         initComponents();
@@ -86,8 +89,14 @@ public final class LayerListTopComponent extends TopComponent implements Explore
         putClientProperty(TopComponent.PROP_MAXIMIZATION_DISABLED, Boolean.TRUE);
 
         mapBean = mapBeanX;
+        instanceContent.add(mapBean);
+
+        initActions();
+
+        proxyLookup = new ProxyLookup(lookupAction, (new AbstractLookup(this.instanceContent)));
+        associateLookup(this.proxyLookup);
+
         
-        associateLookup(new AbstractLookup(this.instanceContent));
     }
 
     /**
@@ -101,7 +110,9 @@ public final class LayerListTopComponent extends TopComponent implements Explore
         jLabel1 = new javax.swing.JLabel();
         pnl = new javax.swing.JPanel();
         btnAddLayer = new javax.swing.JButton();
-        lblTest = new javax.swing.JLabel();
+        btnSaveMap = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JSeparator();
+        btnProperties = new javax.swing.JButton();
         view = new org.openide.explorer.view.BeanTreeView();
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(LayerListTopComponent.class, "LayerListTopComponent.jLabel1.text")); // NOI18N
@@ -114,6 +125,7 @@ public final class LayerListTopComponent extends TopComponent implements Explore
 
         btnAddLayer.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(btnAddLayer, org.openide.util.NbBundle.getMessage(LayerListTopComponent.class, "LayerListTopComponent.btnAddLayer.text")); // NOI18N
+        btnAddLayer.setToolTipText(org.openide.util.NbBundle.getMessage(LayerListTopComponent.class, "LayerListTopComponent.btnAddLayer.toolTipText")); // NOI18N
         btnAddLayer.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddLayerActionPerformed(evt);
@@ -121,50 +133,50 @@ public final class LayerListTopComponent extends TopComponent implements Explore
         });
         pnl.add(btnAddLayer);
 
-        org.openide.awt.Mnemonics.setLocalizedText(lblTest, org.openide.util.NbBundle.getMessage(LayerListTopComponent.class, "LayerListTopComponent.lblTest.text")); // NOI18N
-        pnl.add(lblTest);
+        org.openide.awt.Mnemonics.setLocalizedText(btnSaveMap, org.openide.util.NbBundle.getMessage(LayerListTopComponent.class, "LayerListTopComponent.btnSaveMap.text")); // NOI18N
+        btnSaveMap.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveMapActionPerformed(evt);
+            }
+        });
+        pnl.add(btnSaveMap);
+
+        jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
+        pnl.add(jSeparator1);
+
+        org.openide.awt.Mnemonics.setLocalizedText(btnProperties, org.openide.util.NbBundle.getMessage(LayerListTopComponent.class, "LayerListTopComponent.btnProperties.text")); // NOI18N
+        btnProperties.setToolTipText(org.openide.util.NbBundle.getMessage(LayerListTopComponent.class, "LayerListTopComponent.btnProperties.toolTipText")); // NOI18N
+        btnProperties.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPropertiesActionPerformed(evt);
+            }
+        });
+        pnl.add(btnProperties);
 
         add(pnl, java.awt.BorderLayout.NORTH);
+
+        view.setRootVisible(false);
         add(view, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAddLayerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddLayerActionPerformed
-
-//        if (this.getExplorerManager().getRootContext().getClass().isInstance(InternalMapNode.class)) {
-        InternalMapNode mn = (InternalMapNode) this.getExplorerManager().getRootContext();
-        if (mn.getBean().isActive()) {
-            MapitemsFactory factory = mn.getFactory();
-            var chooser = new JFileChooser();
-            chooser.setCurrentDirectory(new File("."));
-            chooser.setFileFilter(new FileNameExtensionFilter("SHP files", "shp", "shp"));
-            chooser.setAcceptAllFileFilterUsed(false);
-            chooser.setMultiSelectionEnabled(true);
-            int result = chooser.showOpenDialog(this);
-            if (result == JFileChooser.APPROVE_OPTION) {
-                var files = chooser.getSelectedFiles();
-                for (int i = 0; i < files.length; i++) {
-                    var f = files[i];
-                    if (LayerFileFilter.LAYER_FILEFILTER.accept(f)) {
-                        LayerBean lb = new LayerBean(f.getName());
-                        lb.setConnectionStr(f.getAbsolutePath());
-
-                        factory.getModel().add(lb);
-
-                        MapitemListMgr mapitemListMgr = Lookups.forPath("Project").lookupAll(MapitemListMgr.class).iterator().next();
-                        mapitemListMgr.add(lb, mapBean);
-
-                    }
-                }
-            }
-//            }
-        }
-
+        this.actAddLayer.actionPerformed(null);
     }//GEN-LAST:event_btnAddLayerActionPerformed
+
+    private void btnPropertiesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPropertiesActionPerformed
+        this.actMapProperties.actionPerformed(null);
+    }//GEN-LAST:event_btnPropertiesActionPerformed
+
+    private void btnSaveMapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveMapActionPerformed
+        this.actSaveMap.actionPerformed(null);
+    }//GEN-LAST:event_btnSaveMapActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddLayer;
+    private javax.swing.JButton btnProperties;
+    private javax.swing.JButton btnSaveMap;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel lblTest;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JPanel pnl;
     private org.openide.explorer.view.BeanTreeView view;
     // End of variables declaration//GEN-END:variables
@@ -219,7 +231,7 @@ public final class LayerListTopComponent extends TopComponent implements Explore
         getActionMap().put(delete.getActionMapKey(), ExplorerUtils.actionDelete(mgr, true));
 
         this.lookupAction = ExplorerUtils.createLookup(mgr, map);
-        
+
     }
 
     @Override
@@ -231,12 +243,13 @@ public final class LayerListTopComponent extends TopComponent implements Explore
     private void setActiveMapBean() {
 
         if (this.explorerManagerMgr.getActiveMapBean() != null) {
+            instanceContent.remove(mapBean);
             this.mapBean = this.explorerManagerMgr.getActiveMapBean();
+            instanceContent.add(this.mapBean);
             initActions();
         } else {
             this.mapBean = this.mapBeanX;
         }
-        this.lblTest.setText("ExpMgr. - " + mapBean.getName());
         view.addNotify();
     }
 

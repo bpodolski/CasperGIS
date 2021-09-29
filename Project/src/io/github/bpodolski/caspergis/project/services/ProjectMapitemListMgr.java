@@ -14,7 +14,6 @@ import io.github.bpodolski.caspergis.project.dao.ProjectDAO;
 import io.github.bpodolski.caspergis.project.datamodel.CgLayer;
 import io.github.bpodolski.caspergis.project.datamodel.CgMap;
 import io.github.bpodolski.caspergis.services.MapitemListMgr;
-import io.github.bpodolski.caspergis.utils.CgUtils;
 import java.util.Iterator;
 import java.util.List;
 import org.openide.util.lookup.ServiceProvider;
@@ -55,9 +54,9 @@ public class ProjectMapitemListMgr extends MapitemListMgr {
             
         }
         
-        CgUtils.io.getOut().println("ProjectMapitemListMgr.initModel - mapBean = " + mapBean.getName());
-        CgUtils.io.getOut().println("ProjectMapitemListMgr.initModel - modelMapitemsList.size() = " + modelMapitemsList.list().size());
-        
+//        CgUtils.io.getOut().println("ProjectMapitemListMgr.initModel - mapBean = " + mapBean.getName());
+//        CgUtils.io.getOut().println("ProjectMapitemListMgr.initModel - modelMapitemsList.size() = " + modelMapitemsList.list().size());
+//        
     }
     
     @Override
@@ -88,6 +87,18 @@ public class ProjectMapitemListMgr extends MapitemListMgr {
         ProjectDAO dao = (ProjectDAO) CgRegistryProject.cgLayerDaoMap.get(layerBean);
         CgLayer cgl = (CgLayer) CgRegistryProject.cgLayerMap.get(layerBean);
         
+        cgl.setName(layerBean.getName());
+        cgl.setDescription(layerBean.getName());
+        //TODO Do poprawy
+        cgl.setDescription(layerBean.getConnectionStr());
+        cgl.setPath(layerBean.getConnectionStr());
+        cgl.setPosition(layerBean.getPosition());
+        cgl.setPath(layerBean.getConnectionStr());
+        cgl.setTransparent(layerBean.getTransparency());
+        cgl.setVisible(layerBean.isVisible());
+        
+        dao.saveLayer(cgl);
+  
     }
     
     @Override

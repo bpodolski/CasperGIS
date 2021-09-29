@@ -93,7 +93,7 @@ public final class JpaSystemDbDAO {
     public List<CgSysProject> getProjects() {
         List<CgSysProject> listProjects;
         try (Session session = this.sessionFactory.openSession()) {
-            listProjects = session.createQuery("from CgSysProject", CgSysProject.class).list();
+            listProjects = session.createQuery("from CgSysProject  ORDER BY position", CgSysProject.class).list();
         }
         return listProjects;
 
@@ -113,6 +113,22 @@ public final class JpaSystemDbDAO {
             try {
                 transaction = session.beginTransaction();
                 session.save(project);
+                transaction.commit();
+            } catch (Exception e) {
+                if (transaction != null) {
+                    transaction.rollback();
+                }
+                e.printStackTrace();
+            }
+        }
+    }
+    
+        public void updateProject(CgSysProject project) {
+        try (Session session = this.sessionFactory.openSession()) {
+            Transaction transaction = null;
+            try {
+                transaction = session.beginTransaction();
+                session.merge(project);
                 transaction.commit();
             } catch (Exception e) {
                 if (transaction != null) {

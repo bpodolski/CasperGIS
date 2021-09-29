@@ -18,7 +18,11 @@
  */
 package io.github.bpodolski.caspergis.beans;
 
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.beans.PropertyChangeSupport;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,18 +30,16 @@ import java.util.List;
  *
  * @author Bartłomiej Podolski <bartp@poczta.fm>
  */
-public class MapitemBean {
+public class MapitemBean implements Transferable {
 
     private List<MapitemBean> mapElementBeans;
-    
-    
 
     private BeanType beanType = BeanType.MAP_ELEMENT;
     private String name = "Map Element";
     private String displayName = "Map Element";
-        //position in project list, used by comparator, (calculate by position in parent node children list)
+    //position in project list, used by comparator, (calculate by position in parent node children list)
     int position = 0;
-    
+
     private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
     public MapitemBean(List<MapitemBean> mapElementBeans, String name) {
@@ -82,6 +84,25 @@ public class MapitemBean {
 
     public void setPosition(int position) {
         this.position = position;
+    }
+
+    @Override
+    public DataFlavor[] getTransferDataFlavors() {
+        return new DataFlavor[]{MapitemFlavor.MAPELEMENT_FLAVOR};
+    }
+
+    @Override
+    public boolean isDataFlavorSupported(DataFlavor flavor) {
+        return flavor == MapitemFlavor.MAPELEMENT_FLAVOR;
+    }
+
+    @Override
+    public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
+        if (flavor == MapitemFlavor.MAPELEMENT_FLAVOR) {
+            return this;
+        } else {
+            return null;
+        }
     }
 
 }

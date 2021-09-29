@@ -8,7 +8,6 @@ package io.github.bpodolski.caspergis.gui.nodes;
 import io.github.bpodolski.caspergis.beans.MapBean;
 import io.github.bpodolski.caspergis.gui.MapDisplayerTopComponent;
 import io.github.bpodolski.caspergis.gui.nodes.factories.ProjectitemsFactory;
-import io.github.bpodolski.caspergis.services.MapExplorerManagerMgr;
 import java.awt.Image;
 import java.beans.IntrospectionException;
 import java.beans.PropertyChangeEvent;
@@ -52,7 +51,6 @@ public class MapNode extends BeanNode<MapBean> implements PropertyChangeListener
 
     public MapNode(MapBean mapBean, InstanceContent ic) throws IntrospectionException {
         super(mapBean, Children.LEAF, new ProxyLookup(new AbstractLookup(ic), Lookups.singleton(mapBean)));
-//        explorerManagerMgr = Lookups.forPath("Core").lookupAll(MapExplorerManagerMgr.class).iterator().next();
         
         ic.add((OpenCookie) () -> {
             TopComponent tc = (TopComponent) findTopComponent(mapBean);
@@ -64,25 +62,24 @@ public class MapNode extends BeanNode<MapBean> implements PropertyChangeListener
             tc.requestActive();
         });
 
-        ic.add(new Index.Support() {
-            @Override
-            public Node[] getNodes() {
-                return getChildren().getNodes(true);
-            }
-
-            @Override
-            public int getNodesCount() {
-                return getNodes().length;
-            }
-
-            @Override
-            public void reorder(int[] perm) {
-                factory.getModel().reorder(perm);
-            }
-        });
+//        ic.add(new Index.Support() {
+//            @Override
+//            public Node[] getNodes() {
+//                return getChildren().getNodes(true);
+//            }
+//
+//            @Override
+//            public int getNodesCount() {
+//                return getNodes().length;
+//            }
+//
+//            @Override
+//            public void reorder(int[] perm) {
+//                factory.getModel().reorder(perm);
+//            }
+//        });
 
         this.mapBean = mapBean;
-//        explorerManagerMgr.addMapExplorerManager(mapBean);
         setIconBaseWithExtension("io/github/bpodolski/caspergis/res/map.png");
         mapBean.addPropertyChangeListener(this);
 
@@ -97,13 +94,13 @@ public class MapNode extends BeanNode<MapBean> implements PropertyChangeListener
     public Action[] getActions(boolean context) {
         ArrayList actList = new ArrayList();
 
-        MoveUpAction moveUpAction = SystemAction.get(MoveUpAction.class);
-        MoveDownAction moveDownAction = SystemAction.get(MoveDownAction.class);
-        RenameAction renameAction = SystemAction.get(RenameAction.class);
-
-        actList.add(moveUpAction);
-        actList.add(moveDownAction);
-        actList.add(renameAction);
+//        MoveUpAction moveUpAction = SystemAction.get(MoveUpAction.class);
+//        MoveDownAction moveDownAction = SystemAction.get(MoveDownAction.class);
+//        RenameAction renameAction = SystemAction.get(RenameAction.class);
+//
+//        actList.add(moveUpAction);
+//        actList.add(moveDownAction);
+//        actList.add(renameAction);
 
         if (this.mapBean.isActive()) {
             actList.add(SystemAction.get(OpenAction.class));

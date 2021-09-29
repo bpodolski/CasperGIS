@@ -5,20 +5,14 @@
  */
 package io.github.bpodolski.caspergis.gui;
 
-import io.github.bpodolski.caspergis.CgRegistryCore;
 import io.github.bpodolski.caspergis.beans.MapBean;
 import io.github.bpodolski.caspergis.gui.geotools.JMapPanelCG;
-import io.github.bpodolski.caspergis.gui.nodes.InternalMapNode;
-import io.github.bpodolski.caspergis.gui.nodes.services.CoreMapExplorerManagerMgr;
 import io.github.bpodolski.caspergis.services.MapExplorerManagerMgr;
-import java.beans.IntrospectionException;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collection;
 import javax.swing.Action;
 import javax.swing.ActionMap;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import org.openide.actions.CopyAction;
 import org.openide.actions.CutAction;
 import org.openide.actions.DeleteAction;
@@ -26,8 +20,6 @@ import org.openide.actions.PasteAction;
 import org.openide.awt.Actions;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.ExplorerUtils;
-import org.openide.nodes.Node;
-import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.actions.SystemAction;
 import org.openide.util.lookup.AbstractLookup;
@@ -106,6 +98,8 @@ public class MapDisplayerTopComponent extends TopComponent implements ExplorerMa
         txt = new javax.swing.JTextArea();
         btnTest = new javax.swing.JButton();
         btnTest2 = new javax.swing.JButton();
+
+        view.setRootVisible(false);
 
         pnlMap.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         pnlMap.setLayout(new java.awt.BorderLayout());

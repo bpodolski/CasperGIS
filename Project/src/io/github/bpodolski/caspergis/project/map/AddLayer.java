@@ -14,8 +14,6 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import org.openide.DialogDisplayer;
-import org.openide.NotifyDescriptor;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -72,10 +70,10 @@ public class AddLayer implements ActionListener {
                         }
                     }
                 } else {
-                    NotifyDescriptor d = new NotifyDescriptor.Confirmation(
-                            "Message",
-                            "Title");
-                    DialogDisplayer.getDefault().notify(d);
+//                    NotifyDescriptor d = new NotifyDescriptor.Confirmation(
+//                            "Message",
+//                            "Title");
+//                    DialogDisplayer.getDefault().notify(d);
                 }
 
             }

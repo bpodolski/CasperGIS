@@ -73,9 +73,9 @@ public class MapItemNode extends BeanNode<MapitemBean> {
 
     @Override
     public void destroy() throws IOException {
-//        factory.removeChild(bean);
-//        fireNodeDestroyed();
+        
         factory.getModel().remove(getLookup().lookup(MapitemBean.class));
+        fireNodeDestroyed();
     }
 
     @Override

@@ -56,6 +56,9 @@
   </Layout>
   <SubComponents>
     <Component class="org.openide.explorer.view.BeanTreeView" name="view">
+      <Properties>
+        <Property name="rootVisible" type="boolean" value="false"/>
+      </Properties>
     </Component>
     <Container class="javax.swing.JPanel" name="pnlMap">
       <Properties>

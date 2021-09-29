@@ -142,20 +142,16 @@ public final class ProjectListTopComponent extends TopComponent implements Explo
     }
     
     void writeProperties(java.util.Properties p) {
-        // better to version settings since initial version as advocated at
-        // http://wiki.apidesign.org/wiki/PropertyFiles
-        p.setProperty("version", "1.0");
-        // TODO store your settings
+
     }
     
     void readProperties(java.util.Properties p) {
-        String version = p.getProperty("version");
-        // TODO read your settings according to their version
+
     }
     
     @Override
     public ExplorerManager getExplorerManager() {
-        return mgr; //To change body of generated methods, choose Tools | Templates.
+        return mgr; 
     }
     
     private void initActions() {
